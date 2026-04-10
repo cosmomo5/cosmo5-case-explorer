@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="description" content="Cosmo5 — an interactive 3D observatory of case studies. Explore proof points across countries, services, and years."/>
+<meta name="theme-color" content="#0B0C10"/>
+<title>Cosmo5 — The Case Study Cosmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Noto+Sans:wght@300;400;500;600;900&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="nebula"></div>
+<div id="gatherVignette"></div>
+
+<canvas id="starfield"></canvas>
+
+<div id="globe-stage">
+  <canvas id="globe-canvas"></canvas>
+</div>
+
+<canvas id="constellation-canvas"></canvas>
+<div id="star-labels"></div>
+<div id="focus-hint" class="focus-hint">
+  <span class="fh-dot"></span><span id="fh-text">Focused</span>
+  <span class="fh-close">click empty space to exit</span>
+</div>
+
+<header>
+  <div class="brand">
+    <div class="c5-logo">
+      <span class="c5-word">COSMO5</span>
+      <div class="c5-dots">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <span class="sub">Case Study Cosmos</span>
+  </div>
+</header>
+
+<div class="hero" id="hero">
+  <div class="eye">An Observatory</div>
+  <h1>A galaxy<br/>of <em>proof</em>.</h1>
+  <p>Each case a star. Each country a constellation. Click any lit territory to enter.</p>
+  <div class="hint">Drag · rotate &nbsp;<em>●</em>&nbsp; Click lit country</div>
+</div>
+
+<div class="stats" id="stats">
+  <div class="stat"><div class="n" id="s-c">—</div><div class="l">Case files</div></div>
+  <div class="stat"><div class="n" id="s-t">—</div><div class="l">Territories</div></div>
+  <div class="stat"><div class="n" id="s-s">—</div><div class="l">Services</div></div>
+  <div class="stat"><div class="n" id="s-y">—</div><div class="l">Year arc</div></div>
+</div>
+
+<div class="crumb" id="crumb">
+  <button class="back" id="back">◂ Earth</button>
+  <span class="sep">/</span>
+  <span class="here" id="here">—</span>
+  <span class="sep">/</span>
+  <span id="hereCount" style="color:var(--dim)">—</span>
+</div>
+
+<div class="filters-wrap" id="filtersWrap">
+  <div class="filters-tab" id="filtersTab">
+    <span class="ft-icon">◀</span>
+    <span>Filter</span>
+  </div>
+  <aside class="filters" id="filters">
+    <div class="filters-head">
+      <h3>Filter + Arrange</h3>
+      <button class="clr" id="filterClear">Reset</button>
+    </div>
+    <div class="f-search">
+      <svg class="fsi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search client, service, keyword…" autocomplete="off"/>
+      <button class="fsc" id="searchClear">×</button>
+    </div>
+    <div class="filters-body">
+      <div class="fgroup" id="fg-year">
+        <h4>Year</h4>
+        <div class="fchips" id="fc-year"></div>
+      </div>
+      <div class="fgroup" id="fg-scope">
+        <h4>Scope</h4>
+        <div class="fchips" id="fc-scope"></div>
+      </div>
+      <div class="fgroup" id="fg-service">
+        <h4>Service</h4>
+        <div class="fchips" id="fc-service"></div>
+      </div>
+    </div>
+    <div class="filters-foot">
+      <div class="f-stat"><span>Matching</span><b id="f-count">—</b></div>
+      <button class="gather-btn" id="gatherBtn" disabled>
+        <span class="gi"></span><span id="gatherLbl">Gather to center</span>
+      </button>
+    </div>
+  </aside>
+</div>
+
+<!-- Center stage for gather mode -->
+<div id="gatherStage">
+  <div class="gs-disc">
+    <span class="gs-label">Selection · Gather</span>
+  </div>
+  <div class="gs-caption" id="gsCaption"></div>
+</div>
+
+<div class="gather-list collapsed" id="gatherList">
+  <div class="gl-tab" id="glTab">
+    <span>GATHERED</span>
+    <span class="gl-badge" id="glBadge">0</span>
+  </div>
+  <div class="gl-panel">
+    <div class="gl-head">
+      <h3>Gathered</h3>
+      <span class="gl-count" id="glCount">0</span>
+    </div>
+    <div class="gl-sub" id="glSub">—</div>
+    <div class="gl-body" id="glBody"></div>
+  </div>
+</div>
+
+<div class="rail" id="countryRail"></div>
+
+<div class="search-wrap" id="searchWrap">
+  <svg class="si" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+    <circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/>
+  </svg>
+  <input type="text" id="globalSearch" placeholder="Search cases…" autocomplete="off"/>
+  <button class="sc" id="globalSearchClear">×</button>
+</div>
+
+<div class="cosmo-controls" id="cosmoControls">
+  <div class="cc-row">
+    <label class="cc-label" for="labelSlider">Labels</label>
+    <input type="range" id="labelSlider" class="cc-slider" min="0" max="100" value="0"/>
+    <span class="cc-val" id="labelVal">Auto</span>
+  </div>
+  <div class="cc-divider"></div>
+  <div class="cc-row cc-depth">
+    <span class="cc-label">Depth = Year</span>
+    <div class="cc-depth-items">
+      <span class="cc-yr">2026 <span class="cc-bar" style="width:28px"></span> Near</span>
+      <span class="cc-yr">2025 <span class="cc-bar" style="width:18px"></span> Mid</span>
+      <span class="cc-yr dim">2024 <span class="cc-bar" style="width:10px"></span> Far</span>
+    </div>
+  </div>
+  <div class="cc-divider"></div>
+  <div class="cc-row cc-keys">
+    <span class="cc-key">← → <span class="cc-keydesc">Switch country</span></span>
+    <span class="cc-key">Esc <span class="cc-keydesc">Back</span></span>
+    <span class="cc-key">Scroll <span class="cc-keydesc">Zoom</span></span>
+  </div>
+</div>
+
+<div class="panel-scrim" id="panelScrim"></div>
+<aside class="panel" id="panel">
+  <button class="close" id="close">×</button>
+  <div class="panel-inner">
+    <div class="p-eye"><span class="dot"></span><span id="p-region">—</span></div>
+    <div class="p-client" id="p-client">—</div>
+    <div class="p-title" id="p-title"></div>
+    <div class="p-meta" id="p-meta"></div>
+
+    <div class="p-section" id="p-chal-wrap">
+      <div class="p-section-label">The Challenge</div>
+      <div class="p-section-text" id="p-chal">—</div>
+    </div>
+
+    <div class="p-section" id="p-appr-wrap">
+      <div class="p-section-label">Our Approach</div>
+      <div class="p-section-text" id="p-appr">—</div>
+    </div>
+
+    <div class="p-impact" id="p-impact" style="display:none">
+      <div class="p-impact-label">The Impact</div>
+      <div class="metrics-grid" id="p-metrics"></div>
+    </div>
+
+    <div id="p-contrib-wrap" style="display:none">
+      <div class="p-contrib">
+        <div class="avatar" id="p-avatar">—</div>
+        <div>
+          <div class="cname" id="p-cname">—</div>
+          <div class="csrc" id="p-csrc">Cosmo5 Contributor</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-locked" id="p-locked" style="display:none">
+      ⚠ Confidential — this case study is not cleared for distribution in this view.
+    </div>
+  </div>
+</aside>
+
+<div class="ctip" id="ctip">
+  <span class="cn" id="ctip-n">—</span>
+  <span class="cc" id="ctip-c">—</span>
+</div>
+
+<div class="loader" id="loader">
+  <div>
+    <div class="lk">Cosmo<em>5</em> · Calibrating the observatory</div>
+    <div class="bar"><div></div></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<script src="cosmos.js"></script>
+</body>
+</html>

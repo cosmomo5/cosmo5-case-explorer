@@ -1,0 +1,2894 @@
+[
+  {
+    "id": "am-p001",
+    "client": "L'Oréal",
+    "year": 2025,
+    "services": [
+      "Media",
+      "Commerce"
+    ],
+    "countries": [
+      "Canada"
+    ],
+    "region": "Americas",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Dave Pinette",
+    "title": "Full Digital Media transition in 4 weeks delivering record-breaking Q4 & BFCM performance",
+    "challenge": "E-commerce required a near-complete reset, including rapid audience integration, account restructuring, and optimization pivots. High-intent audience allocation was formalized through platform guardrails embedded directly into account structure and delivered ahead of schedule across all brands in just four weeks with a lean transitional team and ongoing onboarding.",
+    "approach": "Commitment to Excellence E-Commerce: Shifted the campaign structure in Q4, enabling the algorithm to maximize performance, using AI to complement, not to dictate. Non-Ecommerce: Post-takeover, plans were shifted toward gaining more qualitative reach with improved engagement metrics like Video Completion.",
+    "metrics": [
+      {
+        "value": "+38.8%",
+        "label": "BFCM Conversion Value"
+      },
+      {
+        "value": "~1.2K",
+        "label": "Ttl # of Campaigns Trafficked"
+      },
+      {
+        "value": "+8.5%",
+        "label": "Total Social ROAS"
+      }
+    ]
+  },
+  {
+    "id": "am-p002",
+    "client": "Moose Knuckles",
+    "year": 2025,
+    "services": [
+      "Business strategy"
+    ],
+    "countries": [
+      "US",
+      "Canada",
+      "UK",
+      "Germany"
+    ],
+    "region": "Americas",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Rishica Tewari",
+    "title": "Drive new customer acquisition through awareness and consideration tactics during peak season.",
+    "challenge": "Moose Knuckles, a luxury outerwear brand known for its premium jackets and bold brand identity, had an ambitious growth plan for 2025, increasing both its brand awareness & its revenue while maintaining overall profitability.",
+    "approach": "A full-funnel strategy was executed at the start of the season to build demand and capture it during peak moments. Awareness activations were supported by mid-funnel initiatives across diversified channels including TikTok, Google Demand Gen & AI Max, OLV, and DOOH. Bottom-funnel campaigns were reinforced to capture high-intent users, maximizing revenue, and overall conversion efficiency. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+37%",
+        "label": "awareness lift; Meta Brand Recall absolute lift +8.6pts"
+      },
+      {
+        "value": "+17%",
+        "label": "sessions"
+      },
+      {
+        "value": "+75%",
+        "label": "Paid Media Revenue GA, with + 65% incremental investment"
+      },
+      {
+        "value": "7%",
+        "label": "ROAS improvement"
+      }
+    ]
+  },
+  {
+    "id": "am-p003",
+    "client": "Moroccanoil",
+    "year": 2025,
+    "services": [
+      "GEO"
+    ],
+    "countries": [
+      "US"
+    ],
+    "region": "Americas",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Carlos Spallarossa",
+    "title": "Scaling AI visibility for a premium brand, from fragmented discovery to measurable presence",
+    "challenge": "When users ask AI for hair care recommendations, independent editorial and review sources (TikTok, YT, Reddit) are cited more often than brand-owned content. Premium brands are often underrepresented when content lacks structure or comparability. Brands compete with retail partners' strong UGC outreach. AI prioritizes clarity, consistency, and credible product context over brand storytelling.",
+    "approach": "Analyzed Moroccanoil visibility across AI answers and key prompts. Restructured content for AI readability and comparability. Strengthened entity definitions across products and ingredients. Introduced GEO measurement (mentions, citations, Share of Answer). Enabled faster content activation across brand and content teams. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+38%",
+        "label": "in frequency and consistency of mentions"
+      },
+      {
+        "value": "+118%",
+        "label": "in Share of Answer across key categories Improved presence across recommendations + measurement system to empower team reactivity"
+      }
+    ]
+  },
+  {
+    "id": "am-p004",
+    "client": "Virgin Voyages",
+    "year": 2025,
+    "services": [
+      "GEO"
+    ],
+    "countries": [
+      "US"
+    ],
+    "region": "Americas",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Carlos Spallarossa",
+    "title": "Winning AI-driven travel discovery",
+    "challenge": "When users ask AI for travel recommendations, AI favors independent review/comparison sources (TripAdvisor, travel blogs) and a small set of highly cited publishers. It also favors structured, comparable content clearly outlining destinations, ships, and experiences. AI prioritizes clarity, structure, and perceived neutrality over simple brand awareness.",
+    "approach": "Mapped high-value travel prompts. Built structured, AI-ready content for planning, comparison, and booking journeys. Strengthened entity clarity (ships, itineraries, experiences). Expanded presence across trusted ecosystems (publishers, communities). Implemented GEO measurement tracking visibility, citations, and Share of Answer. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+68%",
+        "label": "in frequency and consistency of citations"
+      },
+      {
+        "value": "+186%",
+        "label": "in Share of Answer across key categories Stronger presence in comparison and recommendation moments"
+      }
+    ]
+  },
+  {
+    "id": "eu-p001",
+    "client": "ba&sh",
+    "year": 2025,
+    "services": [
+      "Business strategy",
+      "Organization"
+    ],
+    "countries": [
+      "US",
+      "France",
+      "Germany",
+      "Netherlands",
+      "Spain",
+      "UK",
+      "Hong Kong",
+      "Switzerland"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": null,
+    "title": "Partner in growth: Modeling for 2 years of sustained digital acceleration.",
+    "challenge": "Multichannel digital strategy & operations management across 8 markets. Key challenge was to meet aggressive revenue targets in each market while tailoring our digital strategy to local market challenges & specificities.",
+    "approach": "Modeling: development of a model based on the digital maturity stage in brand notoriety in each region. Methodology development to bring each region to the next digital maturity stage. Agile forecasting & budget allocation to push acceleration & meet aggressive targets. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+100%",
+        "label": "Yearly revenue growth rate across all markets maintained in the first 2 years of expansion"
+      },
+      {
+        "value": "106%",
+        "label": "of forecasts reached"
+      }
+    ]
+  },
+  {
+    "id": "eu-p003",
+    "client": "Chopard",
+    "year": 2025,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "France"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "Labelium France",
+    "contributor_name": "Labelium France",
+    "title": "Optimize SEA brand to feed the mid-funnel",
+    "challenge": "Chopard was looking to optimize its advertising spend on the exact brand keyword in Search. The idea was to maintain visibility and business performance while identifying savings to be reallocated to more strategic mid-funnel campaigns.",
+    "approach": "Activation of SmartBrand: Tested in one of the brand's main markets over a two-week period, with precise monitoring of traffic trends, sales and the impact of SEO on maintaining performance. Search Restriction: Exclusion of the brand from the search placements of our Performance Max campaigns. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-91%",
+        "label": "of branded keyword investment"
+      },
+      {
+        "value": "-79%",
+        "label": "SEA traffic on the exact brand"
+      },
+      {
+        "value": "+78%",
+        "label": "Investment in the most efficient PMax campaign"
+      }
+    ]
+  },
+  {
+    "id": "eu-p005",
+    "client": "Isabel Marant",
+    "year": 2025,
+    "services": [
+      "Feed",
+      "SEA"
+    ],
+    "countries": [
+      "US"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "Feed Manager",
+    "contributor_name": "Feed Manager",
+    "title": "Score Elevate: Intelligent campaign Segmentation for Google",
+    "challenge": "The client was facing the challenges of the Peak Season (sales concentration, increased competition, loss of control) & wanted to optimize the performance of their Shopping campaigns. The objective was to maximize revenue while maintaining a ROAS within a target range.",
+    "approach": "Context awareness: Consideration of the client's business challenges (segmentation model, performance-based pricing model). Data-driven method: Definition of performance criteria for the creation of Top, Flop, and Zombie labels. Media planning: 3 Pmax campaigns with clearly defined objectives to ensure a better allocation. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+224%",
+        "label": "Revenue YoY"
+      },
+      {
+        "value": "-40%",
+        "label": "Zombie products"
+      },
+      {
+        "value": "+220%",
+        "label": "Clicks YoY"
+      }
+    ]
+  },
+  {
+    "id": "eu-p007",
+    "client": "Moschino",
+    "year": 2025,
+    "services": [
+      "Video Ads"
+    ],
+    "countries": [
+      "Italy"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "Storeis",
+    "contributor_name": "Storeis",
+    "title": "How We Improved Moschino’s Brand Image",
+    "challenge": "We had three challenges to solve: Increase brand affinity and purchase consideration; Boost ad frequency and memorability of advertising messages; Drive higher-quality website traffic and translate Fashion Week energy into long-term brand lift through a structured digital advertising ecosystem.",
+    "approach": "We implemented a full-funnel strategy focused on awareness and consideration, using diverse ADV formats and ongoing monitoring and optimisation. We also conducted Brand Lift Studies to track changes in brand perception over time. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+17%",
+        "label": "Positive/neutral responses to “What do you think about Moschino?”"
+      },
+      {
+        "value": "+25%",
+        "label": "Positive/neutral responses to “Do you think Moschino is a trendsetter?”"
+      },
+      {
+        "value": "-41%",
+        "label": "Negative responses to “What do you think about Moschino?”"
+      }
+    ]
+  },
+  {
+    "id": "eu-p008",
+    "client": "De'Longhi",
+    "year": 2025,
+    "services": [
+      "Data"
+    ],
+    "countries": [
+      "Italy"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "Storeis",
+    "contributor_name": "Storeis",
+    "title": "How We Transformed De’Longhi’s Advertising Strategy to Drive Profit-Centered Growth",
+    "challenge": "Increase digital ROI by focusing on profit rather than revenue. Develop strategies to attract a more economically relevant audience and build an infrastructure for tracking and optimising actual profit",
+    "approach": "Implement a structured three-phase strategy to optimise online sales profitability. Develop technical solutions to track net profit, manage and validate data accuracy, and transition to profit-based campaign optimisation using POAS for sustainable, margin-focused growth. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "9%",
+        "label": "Increase in ecommerce sales margins across activated markets"
+      }
+    ]
+  },
+  {
+    "id": "eu-p009",
+    "client": "Santoni",
+    "year": 2025,
+    "services": [
+      "Consulting",
+      "Creative",
+      "SEA",
+      "SEO",
+      "Social Paid"
+    ],
+    "countries": [
+      "Italy"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "Storeis",
+    "contributor_name": "Storeis",
+    "title": "How We Scaled Santoni’s Brand and Performance Through Omnichannel Strategy",
+    "challenge": "Increase brand visibility, drive ecommerce revenue, and attract a new audience of luxury consumers. Build a scalable digital framework to support full-funnel performance, enhance content strategy, and optimise UX for conversions across markets.",
+    "approach": "Design a holistic cross-disciplinary strategy integrating full-funnel advertising, ecommerce sales forecasting, new market discovery, AI-powered content intelligence, SEO, analytics, and UX optimisation. Align creativity, media, data, and technology to drive seamless digital growth and improve customer engagement across the entire journey. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "3.6x",
+        "label": "US website sessions, while maintaining conversion rates above industry benchmarks"
+      },
+      {
+        "value": "+83%",
+        "label": "average monthly branded searches in the US"
+      },
+      {
+        "value": "+85%",
+        "label": "growth in digital business revenue"
+      }
+    ]
+  },
+  {
+    "id": "eu-p010",
+    "client": "Colnago",
+    "year": 2025,
+    "services": [
+      "SEA",
+      "Video Ads",
+      "Social Paid"
+    ],
+    "countries": [
+      "Italy"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "Storeis",
+    "contributor_name": "Storeis",
+    "title": "How We Positioned Colnago at the Crossroads of Sport and Fashion",
+    "challenge": "Expand Colnago’s reach beyond cycling to attract fashion-conscious, high-spending consumers. Develop a media strategy to boost visibility, engagement, and consideration for the new collection, guiding users from awareness to conversion and reinforcing the ecommerce experience.",
+    "approach": "Planning full-funnel digital advertising strategy to drive awareness, consideration, and conversion for Colnago’s new positioning. Analysing performance to optimise content, formats, and touchpoints. Leveraging video, product campaigns, and search for a 360° digital strategy. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+22%",
+        "label": "Video View Rate vs. previous product campaigns"
+      },
+      {
+        "value": "+33%",
+        "label": "CTR from international Meta campaigns vs. domestic (Italy)"
+      },
+      {
+        "value": "2x",
+        "label": "Revenue from on-bike apparel"
+      }
+    ]
+  },
+  {
+    "id": "eu-p012",
+    "client": "Abanca",
+    "year": 2025,
+    "services": [
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "ABANCA enters TikTok natively, aiming for virality through its organic account",
+    "challenge": "ABANCA set out to join TikTok in the most native way possible, adapting its content to the platform’s tone. The goal: quickly grow its organic follower base and spark virality in a vertical traditionally distant from finance.",
+    "approach": "To achieve this, a Community Interaction campaign focused on follower acquisition was launched. Using Spark Ads, ABANCA boosted posts from its organic account to drive traffic and visibility through Ads Manager. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "92,5%",
+        "label": "Followers on the organic account came through paid media"
+      },
+      {
+        "value": "-26,7%",
+        "label": "CPF vs benchmark"
+      },
+      {
+        "value": "-16,22%",
+        "label": "CTR vs benchmark"
+      }
+    ]
+  },
+  {
+    "id": "eu-p013",
+    "client": "ASUS",
+    "year": 2025,
+    "services": [
+      "Amazon"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": null,
+    "title": "ASUS grows through a full funnel strategy",
+    "challenge": "ASUS aimed to boost visibility of new launches and drive sales of priority products. They needed a full funnel strategy to impact the entire consumer journey, from discovery to purchase, achieving both goals simultaneously.",
+    "approach": "We designed a full funnel strategy where awareness campaigns introduced new products and laid groundwork for future conversions. Audiences reached at the top funnel were retargeted in consideration and conversion phases, optimizing each customer journey touchpoint. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "47,11%",
+        "label": "Sales YoY"
+      },
+      {
+        "value": "39%",
+        "label": "ROAS YoY"
+      },
+      {
+        "value": "80%",
+        "label": "Purchase rate In path to conversion full funnel"
+      }
+    ]
+  },
+  {
+    "id": "eu-p014",
+    "client": "ASUS",
+    "year": 2025,
+    "services": [
+      "Amazon",
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": null,
+    "title": "Social-to-CTV Innovation Meets AMC Analytics: How ASUS Achieved Full-Commerce Success on Prime Video",
+    "challenge": "ASUS aimed to make the Zenbook A14 stand out in a highly saturated technology market. The main challenge was to increase brand awareness and sales efficiency across the full funnel, turning visibility within the consumer electronics sector into real, measurable conversions in a competitive environment.",
+    "approach": "An innovative Social-to-CTV strategy was implemented by adapting social media content for Prime Video. With Amazon Marketing Cloud (AMC) as the technological backbone, the consumer journey was tracked from TV impression to final purchase, maintaining an intimate and memorable narrative on the big screen. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+98,96%",
+        "label": "Video Completion rate +3% above benchmark close to full VCR"
+      },
+      {
+        "value": "+17%",
+        "label": "Branded Searches during Activation period vs Annual average"
+      },
+      {
+        "value": "+200%",
+        "label": "Purchase Rate during Activation period vs Annual average"
+      }
+    ]
+  },
+  {
+    "id": "eu-p015",
+    "client": "ASUS",
+    "year": 2025,
+    "services": [
+      "Amazon",
+      "Programmatic"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": null,
+    "title": "How to Triple Advertising Efficiency on Amazon Through Upper-Funnel Innovation and DSP",
+    "challenge": "ASUS’s main challenge was to maximize return on investment and strengthen its performance on Amazon within the Notebook and Gaming categories. The brand aimed to sustain long-term growth, increase visibility at the early stages of the purchase journey, and improve advertising efficiency under tighter budgets.",
+    "approach": "Cosmo5 designed an Amazon DSP strategy focused on precise buyer persona targeting and upper-funnel formats. Shoppable OLV campaigns were launched, and innovation in Spain was led with the Social Streaming TV format on Prime Video Ads, connecting social media with direct conversion through QR codes. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+234%",
+        "label": "ROAS on Prime Day 2025 vs."
+      },
+      {
+        "value": "2024, tripling the profitability",
+        "label": "of every euro invested"
+      },
+      {
+        "value": "+308%",
+        "label": "Orders in the Gaming category between May and June"
+      },
+      {
+        "value": "+187%",
+        "label": "Impressions despite budget optimization"
+      }
+    ]
+  },
+  {
+    "id": "eu-p016",
+    "client": "Bioderma",
+    "year": 2025,
+    "services": [
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle",
+    "title": "Bioderma boosts Sensibio H2O on 30th anniversary",
+    "challenge": "In 2025, Bioderma (NAOS) celebrated the 30th anniversary of its iconic Sensibio H2O Micellar Water in a highly competitive and saturated market. The goal was to strengthen the product’s new positioning and connect with digitally active urban women aged 18-55, creating an emotional and relevant campaign that stood out from the competition.",
+    "approach": "The strategy focused on Sensibio H2O’s legacy, supported by Victoria Beckham to add sophistication. On YouTube, organic content was combined with a Video Reach campaign featuring teasers and videos adapted to attention levels, achieving segmented and emotional reach with an aspirational narrative blending inspiration and information. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "110%",
+        "label": "Views vs previous campaign"
+      },
+      {
+        "value": "4900%",
+        "label": "CTR vs historical (YouTube)"
+      },
+      {
+        "value": "+26%",
+        "label": "Unique users vs initial estimates"
+      }
+    ]
+  },
+  {
+    "id": "eu-p017",
+    "client": "Bioderma",
+    "year": 2024,
+    "services": [
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Creative and media: The perfect combo for an awareness strategy",
+    "challenge": "Bioderma (NAOS), global leader in Micellar Hygiene, was faced with the challenge of strengthening awareness and consideration of the Sensibio range in Spain, with the aim of helping to create brand presence and generate traffic to increase purchases of its flagship products: the Micellar Hygiene collection.",
+    "approach": "With the help of Cosmo5 and Jirada, Bioderma produced a series of audiovisual pieces, tailored to each target. On TikTok, the unique benefits of the product were highlighted through engaging and educational audiovisual content. An internationally recognised influencer was used as a product prescriber, as well as various Add-Ons to add an interactive touch. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-48%",
+        "label": "CPM vs In Feed Reach benchmark"
+      },
+      {
+        "value": "172%",
+        "label": "Clics vs In Feed Traffic benchmark"
+      },
+      {
+        "value": "89%",
+        "label": "CTR vs In Feed Traffic benchmark"
+      }
+    ]
+  },
+  {
+    "id": "eu-p018",
+    "client": "Bioderma",
+    "year": 2025,
+    "services": [
+      "Social Paid",
+      "Feed"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Celebrating Sensibio’s 30th Anniversary with Influence and Authenticity",
+    "challenge": "To celebrate the 30th anniversary of Sensibio H2O, Bioderma launched a limited edition in collaboration with Victoria Beckham, aiming to boost brand awareness among new audiences. Together with Cosmo5, they developed a strategy to drive awareness and qualified traffic, identifying TikTok as the ideal platform thanks to its native formats, precise targeting and beauty-focused audience.",
+    "approach": "A dual In Feed strategy was deployed, combining reach and traffic. First, a teaser campaign (In Feed Reach) built anticipation ahead of launch, followed by institutional content during launch week. Simultaneously, a traffic campaign (In Feed LPV) featured top Spanish beauty influencers, whose native-style content blended seamlessly into TikTok’s ecosystem, driving trust and engagement. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-52%",
+        "label": "CPM vs In-Feed Benchmark for the brand"
+      },
+      {
+        "value": "+66%",
+        "label": "CTR vs In-Feed Benchmark for the brand"
+      },
+      {
+        "value": "+82%",
+        "label": "VTR vs same campaign from previous year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p019",
+    "client": "Bioderma",
+    "year": 2025,
+    "services": [
+      "Amazon",
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle",
+    "title": "30 años Sensibio H2O en Prime Video",
+    "challenge": "Bioderma (NAOS) celebrated the 30th anniversary of the Sensibio H2O with a special edition in collab with Victoria Beckham. The goal was to boost brand awareness, position the limited edition in a premium environment aligned with the female target, while preserving the product’s essence and amplifying the message during an emotionally relevant moment.",
+    "approach": "Prime Video Ads was used to leverage full-screen, high attention placements. The strategy focused on content aligned with the target, especially Love & Romance, complemented by audiences interested in cosmetics and personal care, maximizing impact on users with category affinity. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+4%",
+        "label": "Unique Users reached vs forecast"
+      },
+      {
+        "value": "-11%",
+        "label": "Frequency vs forecast"
+      },
+      {
+        "value": "+2%",
+        "label": "Video Completion Rate vs format benchmark"
+      }
+    ]
+  },
+  {
+    "id": "eu-p020",
+    "client": "Bioderma",
+    "year": 2025,
+    "services": [
+      "Amazon",
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle",
+    "title": "Prime Video Ads boosts Photoderm XDefense",
+    "challenge": "With the launch of Photoderm XDefense SPF 50, Bioderma (NAOS) aimed to position a daily tinted sunscreen adaptable to all skin tones. The objective was twofold: to leverage the seasonal momentum before summer, when interest in sun protection increases, and to reinforce its daily use as an essential part of a skincare routine.",
+    "approach": "A campaign was activated on Prime Video Ads, leveraging the impact of non-skippable ads on Connected TV and, above all, the possibility of advanced segmentation thanks to Amazon data. The strategy targeted women interested in cosmetics and personal care, ensuring strong audience affinity and maximizing message relevance in a premium audiovisual environment. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-8%",
+        "label": "CPM vs achieved in Sensibio"
+      },
+      {
+        "value": "30th Anniversary",
+        "label": ""
+      },
+      {
+        "value": "+79,6%",
+        "label": "Impressions vs achieved in Sensibio 30th Anniversary"
+      },
+      {
+        "value": "+69,3%",
+        "label": "Unique users vs achieved in Sensibio 30th Anniversary"
+      }
+    ]
+  },
+  {
+    "id": "eu-p021",
+    "client": "Bioderma",
+    "year": 2024,
+    "services": [
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle Lucía López",
+    "title": "Upper and Mid Funnel Campaigns",
+    "challenge": "Bioderma (NAOS), a global leader in micellar hygiene, faced the challenge of strengthening awareness and consideration of its Sensibio range in Spain, aiming to increase purchases of its flagship products, the Micellar Hygiene collection.",
+    "approach": "To achieve this, a full-funnel strategy was developed focusing on YouTube, TikTok, Meta, Pinterest, and Google. Engaging creatives featuring Ana Moya were used, with each asset adapted based on our creative team’s recommendations: more advertising-focused on YouTube, more native on TikTok, and more product-centered on Pinterest. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-15% / -45%",
+        "label": "CPM vs 2023 Micellar Hygiene Campaign"
+      },
+      {
+        "value": "+1550%",
+        "label": "CTR vs historical (Demand Gen)"
+      },
+      {
+        "value": "+345%",
+        "label": "Click-to-retailer conversions vs 2023 Micellar Hygiene Campaign (Meta)"
+      }
+    ]
+  },
+  {
+    "id": "eu-p022",
+    "client": "BRA",
+    "year": 2024,
+    "services": [
+      "Amazon",
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Patricia Pérez María López de Garayo maria.lopezdegarayo @cosmo5.com",
+    "title": "How BRA Boosted Brand and Sales with a Full-Funnel Strategy at BF",
+    "challenge": "BRA (Isogona) wanted to increase brand awareness in Spain and drive sales during Q4, with a special focus on Black Friday. Until then, their advertising strategy mainly targeted the mid-lower funnel, limiting their ability to build awareness and attract new audiences.",
+    "approach": "We implemented a full-funnel strategy combining Prime Video Ads (PVA), DSP Display, and Sponsored Ads. PVA reached audiences 25+ with TV-quality creatives. DSP investment increased, prioritizing key days. Sponsored Ads budgets were adjusted for visibility during Black Friday. Impact was measured with AMC. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "37%",
+        "label": "Unique reach total users reached by PVA"
+      },
+      {
+        "value": "+5349%",
+        "label": "Purchase rate combining PVA + DSP Awareness + DSP Conversion + Sponsored Ads vs only Sponsored Ads"
+      },
+      {
+        "value": "+59%",
+        "label": "Sponsored Ads sales Nov"
+      },
+      {
+        "value": "2024 vs 2023 (similar",
+        "label": "investment)"
+      }
+    ]
+  },
+  {
+    "id": "eu-p023",
+    "client": "Cocunat",
+    "year": 2024,
+    "services": [
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "From Acquisition to Conversion: Cocunat's Full-Funnel Strategy on TikTok for Their Annual Sale Campaign 'Cocunat Days",
+    "challenge": "Cocunat, a leader in effective skincare, aimed to maximize the impact of its annual “Cocunat Days” campaign in Spain. The goal was to increase revenue, reduce cost per sale, and achieve an ROI above 2, with a special focus on acquiring new users in a highly competitive market.",
+    "approach": "We designed a full-funnel strategy on TikTok, combining the platform’s discovery and engagement power with its conversion efficiency. A 360° strategy for a high-demand period like sales season, which exceeded all expectations. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+56%",
+        "label": "CTR vs previous sales period, significantly increasing engagement"
+      },
+      {
+        "value": "124%",
+        "label": "ROI making this the most profitable period for the channel"
+      },
+      {
+        "value": "-51%",
+        "label": "CPA for complete payment compared to the previous year's sales period"
+      }
+    ]
+  },
+  {
+    "id": "eu-p024",
+    "client": "Cocunat",
+    "year": 2024,
+    "services": [
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Cocunat boosts performance with Smart+",
+    "challenge": "COCUNAT faced the challenge of boosting sales and standing out in a crowded Black Friday market. The goal: maximize conversions through UGC ads, incentives, and a platform strategy that combined urgency, authenticity, and profitability to attract high-intent audiences.",
+    "approach": "COCUNAT and Cosmo5 launched a full-funnel strategy on TikTok using Smart+, which automates targeting, ad management, and creative generation. The campaign featured visible discounts, catalog optimization, and over six creative assets to avoid ad fatigue and ensure peak performance. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+240%",
+        "label": "CTR vs previous period campaign in VSA format"
+      },
+      {
+        "value": "-64%",
+        "label": "CPA vs previous period campaign in VSA format"
+      },
+      {
+        "value": "+244%",
+        "label": "ROAS vs previous period campaign in VSA format"
+      }
+    ]
+  },
+  {
+    "id": "eu-p025",
+    "client": "COCUNAT",
+    "year": 2025,
+    "services": [
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "TikTok as a key channel during COCUNAT’s spring campaign",
+    "challenge": "COCUNAT chose TikTok as a key pillar of its digital strategy to stand out during the Spring Sales, one of the year’s most competitive seasons. The goal: boost sales with more than just discounts—adding real value, building audience connection, and strengthening brand presence in a saturated market.",
+    "approach": "COCUNAT combined Smart+ campaigns, native content, and UGC across the full funnel. Using Value Based Bidding and smart targeting, they prioritized high-value users. The strategy included six+ vertical creatives, text overlays with discounts, Display Card add-ons, and a spotlight on the hero product: Clinical Beauty Filler. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-2,72%",
+        "label": "CPA vs previous campaign"
+      },
+      {
+        "value": "+24,50%",
+        "label": "ROAS vs previous campaign"
+      },
+      {
+        "value": "+21,44%",
+        "label": "AOV vs previous campaign"
+      }
+    ]
+  },
+  {
+    "id": "eu-p026",
+    "client": "Cupper",
+    "year": 2025,
+    "services": [
+      "Social Paid",
+      "Feed"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Infusing Awareness: Cupper Elevates Its Tea Ranges with Creativity and Reach",
+    "challenge": "Cupper turned to TikTok to boost awareness of its main tea ranges in Spain, aiming to connect with younger audiences in a meaningful and relevant way. Together with Cosmo5, the brand set out to build a stronger, more aspirational identity while driving quality traffic through a platform with high potential for its health-conscious target.",
+    "approach": "They launched a dual strategy combining a Top Feed awareness campaign with precise targeting (users interested in plant-based drinks and wellness) and an In Feed Landing Page Views campaign. To ensure native affinity, they collaborated with TTCX and micro-influencers, delivering organic-feeling content that blended into the feed and enhanced brand recall. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+20%",
+        "label": "Landing Page View Rate vs same campaign from the previous year"
+      },
+      {
+        "value": "-16,22%",
+        "label": "Coste por Landing Page vs same campaign from the previous year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p027",
+    "client": "Cupper",
+    "year": 2024,
+    "services": [
+      "Amazon",
+      "Video Ads",
+      "Data"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle",
+    "title": "Boosting Brand Awareness with Prime Video",
+    "challenge": "Cupper (Biogran) aimed to maximize visibility of its tea range in December, one of the most competitive months, avoiding ad saturation while driving awareness that impacted the purchase journey within Amazon, the brand’s key ecosystem.",
+    "approach": "A Prime Video Ads campaign, premium and high-attention, was launched to complement existing conversion campaigns on Amazon. This strategy allowed measuring how awareness influenced the purchase funnel, combining formats to optimize visibility without overwhelming users. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+200%",
+        "label": "Brand Searches vs non-event month (September)"
+      },
+      {
+        "value": "+2,62%",
+        "label": "Video Completion Rate vs forecast"
+      },
+      {
+        "value": "+50%",
+        "label": "Unique users vs Amazon DSP conversion campaigns"
+      }
+    ]
+  },
+  {
+    "id": "eu-p028",
+    "client": "Ecocesta",
+    "year": 2024,
+    "services": [
+      "Amazon",
+      "Programmatic"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Patricia Pérez María López de Garayo maria.lopezdegarayo @cosmo5.com",
+    "title": "Ecocesta Increases Brand Store Visits by 4,609%",
+    "challenge": "Ecocesta, an organic food brand, aimed to boost brand awareness of its plant-based drinks among a young, health-conscious audience.",
+    "approach": "Amazon DSP campaigns were launched using OLV and Standard Display formats, both driving traffic to Ecocesta’s Brand Store to encourage product discovery on Amazon. At the same time, an always-on Sponsored Ads strategy focused on conversion was maintained, leveraging all available ad formats. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-81%",
+        "label": "CPM OLV vs forecast"
+      },
+      {
+        "value": "+219%",
+        "label": "CTR Standard Display vs forecast"
+      },
+      {
+        "value": "57%",
+        "label": "Total Brand Store visits driven by these campaigns"
+      }
+    ]
+  },
+  {
+    "id": "eu-p029",
+    "client": "Ecocesta",
+    "year": 2025,
+    "services": [
+      "Amazon",
+      "Programmatic",
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle Alba",
+    "title": "Disney and the success of healthy food on Amazon",
+    "challenge": "The brand aimed to position its new organic line by leveraging Disney’s licensing to capture the family market. The main challenge was simultaneously engaging children (demand generators) and parents (purchasing decision-makers), ensuring brand recognition translated into actual sales.",
+    "approach": "An omnichannel programmatic video and CTV strategy was deployed. Children were reached via Boing (TV and App), while parents were targeted through Prime Video and YouTube. Amazon DSP served as the strategic core, using precise segmentation and Amazon Marketing Cloud (AMC) to bridge awareness with direct conversion. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+120,7%",
+        "label": "Brand Store Visits vs. target"
+      },
+      {
+        "value": "44%",
+        "label": "Purchase Rate among users reached via Prime Video Ads"
+      },
+      {
+        "value": "+2.300%",
+        "label": "ROAS across conversion paths integrating Awareness and Online Video"
+      }
+    ]
+  },
+  {
+    "id": "eu-p030",
+    "client": "Einhell",
+    "year": 2025,
+    "services": [
+      "Amazon"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": null,
+    "title": "Full Funnel Strategy and Amazon DSP Retargeting",
+    "challenge": "Einhell aimed to maximize sales and acquire new Amazon customers through an always-on strategy. The primary hurdle arose during an extended Prime Day event; moderate discounts lengthened the customer consideration phase, leading many users to abandon products in their carts without finalizing their initial purchase.",
+    "approach": "A full-funnel strategy was implemented using Amazon DSP and Display formats. To address shifting consumer behavior, Amazon Marketing Cloud (AMC) audiences were leveraged to identify and retarget \"Add to Cart\" (ATC) users specifically, effectively capturing purchase intent and driving conversions during the post-campaign window. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+510%",
+        "label": "Order growth in the 7 days following Prime Day"
+      }
+    ]
+  },
+  {
+    "id": "eu-p031",
+    "client": "Erborian",
+    "year": 2024,
+    "services": [
+      "Programmatic"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Global impact to drive brand awareness",
+    "challenge": "Erborian expanded its retail network across Spain and needed to boost visibility for its star product, CC Cream. The goal was to reach nationwide audiences with a powerful, high-impact campaign, driving large-scale awareness at the top of the funnel.",
+    "approach": "Together with Cosmo5, a multichannel campaign was launched with linear TV and outdoor as main pillars. Three buses in Madrid were wrapped and over 500 digital screens activated across Madrid, Barcelona, Málaga, Seville, Valencia, Zaragoza, and Bilbao, ensuring maximum coverage and brand presence. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-21%",
+        "label": "Impressions vs Forecast (DOOH)"
+      },
+      {
+        "value": "+5,1%",
+        "label": "Reach vs Forecast (TV)"
+      },
+      {
+        "value": "+25%",
+        "label": "Brand Recall (BLS) - Happymetrics"
+      }
+    ]
+  },
+  {
+    "id": "eu-p032",
+    "client": "Eurocaja Rural",
+    "year": 2025,
+    "services": [
+      "Amazon",
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": null,
+    "title": "Eurocaja The machine",
+    "challenge": "revolution Eurocaja Rural sought to strengthen its brand positioning in a premium environment with maximum attention, ensuring qualified coverage among strategic audiences. The goal was to maximize awareness and recall, avoiding overexposure and optimizing investment.",
+    "approach": "A Prime Video Ads campaign was designed with three 20-second creative assets—one for each product (cashier, Home and Appointment)—targeting Prime Video users. In addition to interest-based targeting, stable pacing was applied, ensuring consistency in delivery and reaching users in high-quality contexts, such as high-demand titles on Prime Video. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "98,5%",
+        "label": "Video Completion Rate"
+      },
+      {
+        "value": "513.734",
+        "label": "Unique Users"
+      },
+      {
+        "value": "1.14M",
+        "label": "Total Impressions"
+      }
+    ]
+  },
+  {
+    "id": "eu-p033",
+    "client": "Eurocaja Rural",
+    "year": 2025,
+    "services": [
+      "Amazon",
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": null,
+    "title": "Eurocaja The machine",
+    "challenge": "revolution Eurocaja Rural sought to maximize brand awareness for a financial product within the competitive banking sector via CTV. The goal was to reach qualified audiences through impactful, personalized messaging while optimizing spend and preventing ad fatigue.",
+    "approach": "Different creative assets were developed and tailored to each audience segment, activated through Amazon’s 1P audiences, which enhanced targeting precision and improved engagement metrics. The campaign was deployed within a premium content environment (such as La Frontera), consolidating all measurement within a single platform and optimizing exposure frequency. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+58%",
+        "label": "Web traffic during Prime Video month"
+      },
+      {
+        "value": "68%",
+        "label": "Leads generated during Prime Video month"
+      },
+      {
+        "value": "+24%",
+        "label": "New client sign-ups vs post-campaign"
+      }
+    ]
+  },
+  {
+    "id": "eu-p034",
+    "client": "Farlabo",
+    "year": 2024,
+    "services": [
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle Patricia Lozano",
+    "title": "Artificial Intelligence comes to Lolita Lempicka's creatives to increase their virality",
+    "challenge": "Lolita Lempicka aimed to increase visibility of its perfumes Mon Premier and Le Parfum in retailers with an innovative approach. They launched two reach campaigns with differentiated creatives and add-ons to maximize reach.",
+    "approach": "Two innovative video pieces were created for each audience. For Le Parfum, an elegant piece with advanced visuals highlighting the packaging. For Mon Premier, a native piece that didn’t feel like traditional advertising. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-44%/-30%",
+        "label": "Average CPM compared to the forecast"
+      },
+      {
+        "value": "56%",
+        "label": "Impressions compared to the forecast"
+      },
+      {
+        "value": "466%",
+        "label": "of views (combined) compared to the forecast"
+      }
+    ]
+  },
+  {
+    "id": "eu-p035",
+    "client": "Freshly Cosmetics",
+    "year": 2025,
+    "services": [
+      "Search",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Cosmo5 boosts Freshly with Search Ads",
+    "challenge": "Freshly Cosmetics aimed to drive qualified traffic and enhance its digital positioning on TikTok—a key platform influencing beauty audience purchase decisions—through an innovative and efficient solution: Search Ads.",
+    "approach": "TikTok Search Ads were activated, combining keyword targeting with native and relevant ads, connecting with users at the exact moment of their interest and enhancing visibility through an immersive, non-intrusive format. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "57%",
+        "label": "Of TikTok users use the platform’s search function"
+      },
+      {
+        "value": "23%",
+        "label": "Search for something within the first 30 seconds after opening the app"
+      }
+    ]
+  },
+  {
+    "id": "eu-p036",
+    "client": "Freshly Cosmetics",
+    "year": 2025,
+    "services": [
+      "Marketplaces",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "How to boost TikTok Shop sales by 1092% and multiple ROI by 710% in just one month",
+    "challenge": "Boost sales without compromising profitability. Freshly aimed to expand its sales channels by launching its own TikTok Shop. The goal: showcase the competitive edge of its products through content while strengthening its presence as a pioneer in natural beauty in Spain.",
+    "approach": "Product GMV Max, ROI targeting & affiliate UGC to scale. They restructured their TikTok accounts and launched Product GMV Max, mixing maximum delivery and Target ROI. The key driver was the use of affiliate-generated UGC via TikTok’s Affiliate Center, which boosted reach and trust through authentic, relatable content. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+1092%",
+        "label": "Orders in May vs April (from"
+      },
+      {
+        "value": "108 to 1287)",
+        "label": ""
+      },
+      {
+        "value": "+710%",
+        "label": "ROI in May vs April (from 0,82 to 6,64)"
+      },
+      {
+        "value": "+114%",
+        "label": "Revenue in May vs April (from"
+      },
+      {
+        "value": "3.090€ to 38.589€)",
+        "label": ""
+      }
+    ]
+  },
+  {
+    "id": "eu-p037",
+    "client": "Freshly Cosmetics",
+    "year": 2025,
+    "services": [
+      "Marketplaces",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "How GMV Max Helped Freshly Cosmetics Conquer TikTok Shop",
+    "challenge": "Freshly Cosmetics aimed to expand its reach on TikTok Shop. With over 2 million customers and a strong presence both online and in retail, the brand sought to attract new audiences and drive sales through authentic, community-aligned content that resonated with the platform’s culture—without losing profitability or its community-driven essence.",
+    "approach": "In collaboration with Cosmo5, the brand activated GMV Max, TikTok’s AI-powered solution. A hybrid bidding strategy (Target ROI + Maximum Delivery) was implemented to scale volumes, while leveraging approved organic content, affiliate assets, and paid media. UGC-style videos proved key for their authenticity and ability to connect with audiences. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-90%",
+        "label": "Cost per order vs starting period"
+      },
+      {
+        "value": "+2.000%",
+        "label": "Sales increase vs starting period"
+      },
+      {
+        "value": "+411%",
+        "label": "ROI vs starting period"
+      }
+    ]
+  },
+  {
+    "id": "eu-p038",
+    "client": "Freshly Cosmetics",
+    "year": 2025,
+    "services": [
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Scaling Beauty E-commerce through Full-Funnel Innovation and Native TikTok Creativity",
+    "challenge": "The main challenge was to outperform previous Freshly Days editions. The brand aimed to raise the bar for its flagship event, turning it into an e-commerce accelerator that showcased constant growth and reinvention for an increasingly demanding audience.",
+    "approach": "The brand implemented a full-funnel strategy on TikTok, blending automation with pioneering formats. Key highlights included the use of Search Ads (Alpha in Spain) to capture high-purchase intent and AI-driven optimization via Smart+. This was fueled by a TikTok-first narrative centered on authentic UGC and local creators across international markets. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+27%",
+        "label": "ROAS vs. previous year (strengthening year-over-year profitability)"
+      },
+      {
+        "value": "+136%",
+        "label": "VTR driven by a TikTok-first creative narrative and authentic UGC"
+      },
+      {
+        "value": "-16,5%",
+        "label": "CPA through AI-powered audience optimization and Smart+ formats"
+      }
+    ]
+  },
+  {
+    "id": "eu-p039",
+    "client": "Freshly Cosmetics",
+    "year": 2025,
+    "services": [
+      "Video Ads",
+      "Programmatic"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle",
+    "title": "Leading the Beauty Sector: Achieving Massive Brand Awareness and Efficiency Through Amazon DSP Programmatic Strategy",
+    "challenge": "The primary challenge was to position the Bronzing and Body Lotion lines within a saturated summer market. The brand needed to generate massive, high-quality awareness in Spain, breaking down the cost barriers of Connected TV (CTV) to maximize reach without sacrificing budget efficiency.",
+    "approach": "A two-phase programmatic strategy was executed via Amazon DSP, prioritizing Prime Video Ads and reinforcing coverage through MiTele and A3Player. This big-screen impact was paired with high-impact creative formats on Showheroes and premium web inventory in lifestyle media via Invibes, achieving holistic coverage. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+62%",
+        "label": "Impressions vs. initial target"
+      },
+      {
+        "value": "-4,76%",
+        "label": "CPM vs. budget estimate"
+      },
+      {
+        "value": "+48%",
+        "label": "Unique audience reach"
+      }
+    ]
+  },
+  {
+    "id": "eu-p040",
+    "client": "Freshly Cosmetics",
+    "year": 2025,
+    "services": [
+      "Video Ads",
+      "Programmatic"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle",
+    "title": "Maximizing Freshly Cosmetics’ Top-of-Mind Awareness Through the New Digital Video Ecosystem",
+    "challenge": "The main challenge was to drive massive brand awareness and position Freshly Cosmetics as a top-of-mind brand during key commercial moments: Freshly Days and Black Week. The goal was to reach multiple audiences (from hair care to skincare) while ensuring visibility in premium, highly qualified environments to maximize brand recognition.",
+    "approach": "The strategy focused on incremental reach through CTV, leveraging Amazon first-party data on Prime Video Ads for precise audience targeting. This was complemented by Netflix and disruptive formats such as Invibes and the HBBTV L-format (A3Media), creating a strong multichannel synergy that optimized creative impact. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+78,2%",
+        "label": "Impressions vs. initial campaign objectives"
+      },
+      {
+        "value": "-7,77%",
+        "label": "Average CPM vs. platform benchmark in Spain"
+      },
+      {
+        "value": "97,2%",
+        "label": "Average VTR across all CTV and video environments"
+      }
+    ]
+  },
+  {
+    "id": "eu-p041",
+    "client": "ghd",
+    "year": 2024,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Alejandro Pereiro Pablo García Lucía López",
+    "title": "GHD boosts new tool with Demand Gen campaigns",
+    "challenge": "With the launch of Duet Blowdry and lower ad activity in August, a comprehensive strategy was essential to not only increase product visibility but also achieve a significant sales boost.",
+    "approach": "Demand Generation campaigns complemented Google awareness efforts with dynamic formats that target users based on their stage in the purchase journey. This maximized results and optimized performance while expanding reach across multiple Google ecosystem inventories. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-39%",
+        "label": "CPA vs the account average"
+      },
+      {
+        "value": "+77%",
+        "label": "ROAS vs the account average"
+      }
+    ]
+  },
+  {
+    "id": "eu-p042",
+    "client": "ghd",
+    "year": 2025,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Alejandro Pereiro Pablo García Lucía López",
+    "title": "ghd boosts sales with Google Ads",
+    "challenge": "ghd aimed to achieve double-digit growth, attract new users, and support key product launches, including Duet Blowdry, through a profitable digital strategy.",
+    "approach": "Demand Gen campaigns were launched to build valuable audiences, while Search was optimized with broad match and Target ROAS-based bidding portfolios, enhancing Performance Max impact. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+32%",
+        "label": "Uplift in revenue"
+      },
+      {
+        "value": "+12%",
+        "label": "ROAS across the brand’s entire paid media ecosystem"
+      }
+    ]
+  },
+  {
+    "id": "eu-p043",
+    "client": "ghd",
+    "year": 2024,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Tania Lestón Alejandro Pereiro",
+    "title": "ghd boosts its Holiday Collection with PMax",
+    "challenge": "With the launch of its new Holiday Collection—and the dual challenge of the DANA weather event and growing during the peak sales season—it was essential to develop a comprehensive strategy that increased both product visibility and overall sales.",
+    "approach": "Two non-overlapping asset groups were launched: one focused on driving Black Friday sales (Shopping/Search) and the other on highlighting the creative assets of the Holiday Collection. Both campaigns dynamically adapted to the user's purchase journey, leveraging multiple formats and Google inventory to maximize performance and reach. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+10%",
+        "label": "Revenue vs same period from previous year"
+      },
+      {
+        "value": "+33%",
+        "label": "ROAS vs same period from previous year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p044",
+    "client": "ghd",
+    "year": 2025,
+    "services": [
+      "Video Ads",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "ghd boosts sales with Smart+ for one of its key brand events",
+    "challenge": "ghd, a leader in hair styling innovation, aimed to turn its iconic Good Hair Days into a high-impact, full-funnel campaign. Together with Cosmo5, the brand set out to reach users across the funnel—from awareness to conversion—boosting sales and exceeding the results of the previous year.",
+    "approach": "Smart+ was the cornerstone to scale reach and efficiency, helping ghd attract new audiences and drive conversions. The campaign used AI-powered optimization, frequent creative refreshes, and best practices for seasonal activations—outperforming previous editions of the event. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-20,39%",
+        "label": "CPA vs last year's OGHD activation"
+      },
+      {
+        "value": "+31,84%",
+        "label": "ROAS vs last year's OGHD activation"
+      },
+      {
+        "value": "-69,20%",
+        "label": "CPLPV vs last year's OGHD activation"
+      }
+    ]
+  },
+  {
+    "id": "eu-p045",
+    "client": "ghd",
+    "year": 2024,
+    "services": [
+      "Video Ads",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Transforming Black Friday into a Full-Funnel Growth Engine",
+    "challenge": "ghd sought to solidify TikTok as a comprehensive growth engine during a highly competitive Black Friday season. The challenge was to master the full sales funnel, balancing brand awareness with commercial urgency to maximize online sales through a sustainable and scalable performance-driven approach.",
+    "approach": "The brand executed a full-funnel strategy using native formats—ranging from Top Feed for massive reach to Video Shopping Ads for retargeting. The creative direction merged TikTok trends with the authority of beauty creators, leveraging the Smart+ tool to optimize audiences, bidding, and high-impact dynamic assets in real time. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+27%",
+        "label": "ROAS vs. previous campaign benchmarks"
+      },
+      {
+        "value": "+46%",
+        "label": "Conversion Rate through Smart+ and Video Shopping Ads integration"
+      },
+      {
+        "value": "+60%",
+        "label": "Revenue growth driven by a native-first creative strategy"
+      }
+    ]
+  },
+  {
+    "id": "eu-p046",
+    "client": "ghd",
+    "year": 2025,
+    "services": [
+      "Video Ads",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "ghd Breaks Sales Records on TikTok with Its Upgrade Program",
+    "challenge": "The main challenge was to encourage product upgrades among existing ghd users in a highly saturated digital environment. The objective was to stand out as a premium brand and maximize online sales, ensuring the upgrade message resonated effectively across all stages of the sales funnel.",
+    "approach": "A full-funnel strategy was implemented on TikTok using a dynamic media architecture. In-Feed formats were combined with the Smart+ solution to optimize investment through AI. This sequential activation enabled real-time message adaptation based on each user’s likelihood to convert. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+136%",
+        "label": "Total revenue vs. previous period"
+      },
+      {
+        "value": "+67%",
+        "label": "ROAS through improved channel profitability"
+      },
+      {
+        "value": "-24%",
+        "label": "CPA driven by algorithmic optimization"
+      }
+    ]
+  },
+  {
+    "id": "eu-p047",
+    "client": "Gibobs Allbanks",
+    "year": 2024,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Sergio Ferrer",
+    "title": "High-Quality Mortgage Lead Generation",
+    "challenge": "Gibobs aimed to capture the highest possible volume of high-quality leads, meeting optimal financial conditions to ensure mortgage approvals. In a complex and competitive market, the strategy needed to generate leads that were not only numerous but also valuable and viable for the business.",
+    "approach": "Performance campaigns were launched on Google and Meta, focusing on high-viability conversions. Using Value Bidding on Google and value-based bidding on Meta, lead quality was maximized while reducing CPA. Generic campaigns expanded reach and market share, complementing branding efforts. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-24%",
+        "label": "Global CPC in Generic campaigns"
+      },
+      {
+        "value": "+109%",
+        "label": "Conversion rate in Generic campaigns"
+      },
+      {
+        "value": "+221%",
+        "label": "High-viability leads across all campaigns"
+      }
+    ]
+  },
+  {
+    "id": "eu-p048",
+    "client": "Guerlain",
+    "year": 2024,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Lucía López Luis Otero",
+    "title": "Guerlain boosts ROAS and sales with Demand Gen",
+    "challenge": "Guerlain, one of the most iconic French luxury brands in the fragrance and cosmetics sector, aimed to improve overall account performance on Google. To achieve this, they chose to strengthen their Demand Gen strategy as a key lever to feed the funnel and boost the impact of other active campaigns.",
+    "approach": "A Demand Gen campaign was launched with over 40% of the account's total budget. It focused on driving micro-conversions such as visits, add to cart, and newsletter sign-ups. The goal was to nurture qualified audiences, increase brand consideration, and enhance overall performance through more relevant traffic. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+65%",
+        "label": "Global ROAS of the account"
+      },
+      {
+        "value": "+125%",
+        "label": "Total revenue of the account"
+      },
+      {
+        "value": "-28%",
+        "label": "Global CPC of the account"
+      }
+    ]
+  },
+  {
+    "id": "eu-p049",
+    "client": "Hisense",
+    "year": 2024,
+    "services": [
+      "Amazon",
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Patricia Pérez Javier del Valle María López de Garayo Patricia Lozano maria.lopezdegarayo @cosmo5.com",
+    "title": "Full Funnel Strategy with Prime Video Ads for EURO2024",
+    "challenge": "Hisense, a leading appliance and TV brand, aimed to boost presence and sales during EURO2024 and the Olympic Games. The goal was to drive brand awareness and conversions in key categories using multiple Amazon formats and exclusive EURO2024 deals to increase both consideration and sales.",
+    "approach": "A comprehensive full funnel strategy combined Amazon formats: awareness via Online Video and Prime Video Ads to broaden the user base, and consideration plus conversion through contextual audiences, retargeting, and Amazon Marketing Cloud, maximizing conversion rates. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+46%",
+        "label": "Branded Searches vs prior months without full-funnel strategy"
+      },
+      {
+        "value": "+510%",
+        "label": "Conversion Rate during full-funnel strategy months"
+      },
+      {
+        "value": "+12%",
+        "label": "ROAS during campaign months vs prior months"
+      }
+    ]
+  },
+  {
+    "id": "eu-p050",
+    "client": "Hisense",
+    "year": 2025,
+    "services": [
+      "Amazon"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Marta Casero",
+    "title": "Hisense Full Funnel strategy to drive record sales growth and customer acquisition through Amazon DSP",
+    "challenge": "The primary challenge was to maximize Hisense's visibility and profitability during Brand Week 2025. The goal was to outperform previous periods through an advertising structure that not only generated massive reach but also effectively captured and converted new customers in a highly competitive environment.",
+    "approach": "A Full Funnel strategy was implemented on Amazon DSP, integrating Awareness and Video to nurture the pipeline. Investment in Consideration for the TV line was scaled, while Conversion tactics were optimized. Using Amazon Marketing Cloud, it was identified that combining multiple ad formats was the key to success. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+122%",
+        "label": "Total sales compared to the pre-Brand Week period"
+      },
+      {
+        "value": "+72%",
+        "label": "New customer acquisition within the TV category"
+      },
+      {
+        "value": "+229%",
+        "label": "Total clicks driving a massive surge in brand interest"
+      }
+    ]
+  },
+  {
+    "id": "eu-p051",
+    "client": "Institut Esthederm",
+    "year": 2024,
+    "services": [
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle Patricia Lozano",
+    "title": "Boosts presence with VRC",
+    "challenge": "Institut Esthederm Spain (NAOS) aimed to increase brand reach and presence for the launch of its new Pro-Collagen+ range amid a highly saturated digital environment. The goal was to generate qualified engagement through an Upper Funnel strategy on YouTube, positioning the brand as Top of Mind in its category and standing out from competitors.",
+    "approach": "To reach the widest possible audience, the VRC format was used alongside a creative strategy focused on institutional content highlighting the product’s main benefits. Campaigns were served across multiple inventories — In Feed, In Stream, and Shorts — to maximize visibility and engagement. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-50%",
+        "label": "CPM vs estimated benchmark for VRC"
+      },
+      {
+        "value": "-88%",
+        "label": "CPC vs estimated benchmark for VRC"
+      },
+      {
+        "value": "3.7M",
+        "label": "Unique Users with a frequency of 2"
+      }
+    ]
+  },
+  {
+    "id": "eu-p052",
+    "client": "Institut Esthederm",
+    "year": 2024,
+    "services": [
+      "Video Ads",
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle",
+    "title": "Mass Awareness & Sales",
+    "challenge": "Institut Esthederm (NAOS) aimed to drive awareness, consideration, and sales for its sun care line, which required assets adapted to very different target audiences while following each platform’s best practices. The goal was to make creatives as native as possible, a moment where Jirada’s creative team played a key role.",
+    "approach": "IE developed a full-funnel strategy across YouTube, Meta, Pinterest, and Google. Institutional and influencer creatives were central to achieving the campaign objectives. Collaborating from the creative brief to production, Jirada ensured materials were seamless, minimally disruptive, and fully integrated into the user’s organic experience. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-27%",
+        "label": "CPM vs Sunscreen Campaign"
+      },
+      {
+        "value": "2023 (YouTube)",
+        "label": ""
+      },
+      {
+        "value": "-25%/-39%",
+        "label": "CPC vs Benchmark (Pinterest/Meta)"
+      },
+      {
+        "value": "-82%",
+        "label": "CPClicks to retailer vs Sunscreen Campaign 2023 (Meta)"
+      }
+    ]
+  },
+  {
+    "id": "eu-p053",
+    "client": "Isogona",
+    "year": 2024,
+    "services": [
+      "Amazon",
+      "Programmatic"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Patricia Pérez María López de Garayo maria.lopezdegarayo @cosmo5.com",
+    "title": "How BRA Boosted Brand and Sales with a Full-Funnel Strategy at BF",
+    "challenge": "Isogona, owner of BRA and Monix kitchenware brands, aimed to surpass June’s previous year results, a key month due to Amazon Home Living Week. After recently switching to Cosmo5 as their agency, the goal was to improve sales and performance in a highly competitive kitchenware market.",
+    "approach": "An always-on strategy was implemented alongside Amazon DSP campaigns. Campaigns were restructured to better monitor performance and set clear objectives. Creative assets were tailored to the target audience, and product selection was optimized during promotions to maximize results. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+160%",
+        "label": "Sales (Sponsored Ads + DSP) vs 2023 (similar en Sponsored Ads investment)"
+      },
+      {
+        "value": "+133%",
+        "label": "Clicks (Sponsored Ads + DSP) vs 2023 (similar Sponsored Ads investment)"
+      },
+      {
+        "value": "+84%",
+        "label": "ROAS (Sponsored Ads + DSP) vs 2023 (similar Sponsored Ads investment)"
+      }
+    ]
+  },
+  {
+    "id": "eu-p054",
+    "client": "Isogona",
+    "year": 2025,
+    "services": [
+      "Amazon"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Alba Escudero",
+    "title": "Isogona drives Amazon profitability with 35% sales growth",
+    "challenge": "Isogona aimed to outperform its previous agency’s results and maximize Return on Ad Spend (ROAS) on Amazon. The primary challenge was to optimize Sponsored Ads efficiency and expand the reach of its brands (BRA and Monix) through a strategic management approach that converted impressions into actual sales.",
+    "approach": "We implemented a full-funnel strategy, combining always-on product listings with high-visibility placement for bi-weekly deals. The plan integrated DSP and Prime Video Ads to capture new users, alongside daily bid optimizations that successfully lowered CPC while increasing impact relevance. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+199,73%",
+        "label": "Clicks vs. previous period"
+      },
+      {
+        "value": "+35,16%",
+        "label": "Sales following Always-On and DSP strategy implementation"
+      },
+      {
+        "value": "-16,6%",
+        "label": "CPC via daily optimization and enhanced audience relevance"
+      }
+    ]
+  },
+  {
+    "id": "eu-p055",
+    "client": "Karl Lagerfeld",
+    "year": 2024,
+    "services": [
+      "Video Ads",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle",
+    "title": "The Top",
+    "challenge": "format boosts the Karl Lagerfeld aimed to launch national success of its new perfume IKONIK by highlighting both the product Karl Lagerfeld's and its distinctive packaging. The goal: create a memorable IKONIK perfume first impact, ensuring massive reach and immediate connection with the target audience.",
+    "approach": "An innovative strategy on TikTok centered on the Top View format to ensure the launch was the first user impact of the day. Two gender-targeted creatives formed the core, supported by an interactive Shake Surprise showcasing the perfume’s packaging. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-38%",
+        "label": "CPM medio vs forecast"
+      },
+      {
+        "value": "+57%",
+        "label": "Impresiones vs forecast"
+      },
+      {
+        "value": "+1.310%",
+        "label": "CTR vs Spanish market Top View format"
+      }
+    ]
+  },
+  {
+    "id": "eu-p056",
+    "client": "KETER",
+    "year": 2024,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Alejandro Pereiro Nacho Exposito",
+    "title": "KETER multiplies sales and ROAS with PMax",
+    "challenge": "KETER, a leading brand in outdoor furniture and storage, aimed to expand its presence on Google and increase e-commerce sales after success on Amazon.",
+    "approach": "At the beginning of 2024, with an 88% higher investment, they replaced their Shopping campaign with Performance Max, leveraging Google’s AI to optimize bids, precisely segment audiences, and focus budget on the most profitable and high-conversion channels. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "956%",
+        "label": "Sales in GA4 with PMax vs Shopping from previous year (2023)"
+      },
+      {
+        "value": "107%",
+        "label": "Sessions (PMax January-August 2024) vs Shopping August-December"
+      },
+      {
+        "value": "2023",
+        "label": ""
+      },
+      {
+        "value": "484%",
+        "label": "Higher ROAS in GA4 vs Shopping 2023"
+      }
+    ]
+  },
+  {
+    "id": "eu-p057",
+    "client": "Keter",
+    "year": 2025,
+    "services": [
+      "Amazon"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": null,
+    "title": "Maximizing Amazon Growth Through Full-Funnel Strategies and High-Impact Video Formats",
+    "challenge": "Keter aimed to solidify its leadership in Amazon’s Home Improvement and Garden category. The primary objective was to maximize sales and capture market share while optimizing ad spend. They needed to reach users who weren't yet proactively searching for the brand, significantly improving advertising efficiency compared to the previous year.",
+    "approach": "Cosmo5 implemented a comprehensive full-funnel strategy. On the DSP side, they leveraged contextual audiences and advanced segmentation via Amazon Marketing Cloud (AMC). For Sponsored Ads, the team pivoted toward high-impact audiovisual formats like Sponsored Brands Video and Sponsored TV, prioritizing brand discovery and visual storytelling. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+88,1%",
+        "label": "DSP Clicks with an 11.74% budget reduction year-over-year"
+      },
+      {
+        "value": "+27,7%",
+        "label": "Monthly Impressions driven by diversification into Sponsored TV & Video"
+      },
+      {
+        "value": "+18,6%",
+        "label": "Order Volume following the strategic overhaul of Sponsored Ads"
+      }
+    ]
+  },
+  {
+    "id": "eu-p058",
+    "client": "KIABI",
+    "year": 2024,
+    "services": [
+      "Search"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Fernando Alonso Nacho Exposito",
+    "title": "KIABI increases sales and ROAS in Search Campaigns",
+    "challenge": "KIABI, a leading fashion brand, aimed to boost sales and ROAS in campaigns targeting generic searches without including the KIABI brand, to attract new users interested in their products but not specifically searching for the brand.",
+    "approach": "The generic campaign structure was simplified to just 4 campaigns segmented by key clothing categories. This allowed a higher volume of data per campaign, better granularity in ad groups and destination URLs, enabling Smart Bidding to optimize more effectively and improve results. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+79,8%",
+        "label": "Investment vs same period last year"
+      },
+      {
+        "value": "+103,7%",
+        "label": "Sales vs same period last year"
+      },
+      {
+        "value": "+17,3%",
+        "label": "ROAS vs same period last year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p059",
+    "client": "KIABI",
+    "year": 2025,
+    "services": [
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Fernando Alonso Nacho Exposito",
+    "title": "KIABI boosts Summer Collection 2025",
+    "challenge": "With the arrival of warm weather, KIABI aimed to launch its Summer 2025 Swimwear collection alongside a YouTube branding campaign supported by offline branding. This key initiative included a Brand Lift study to measure the campaign’s impact on brand recall and perception.",
+    "approach": "A YouTube campaign targeted women aged 25-45 segmented into three groups: swimwear and fashion interests, Custom Intent with swimwear-related keywords, and users visiting competitor sites, plus segmentation by fashion and women’s clothing content. The goal was to measure Brand Lift and evaluate brand recall impact. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+3,87%",
+        "label": "Absolute Impact"
+      },
+      {
+        "value": "106.000",
+        "label": "Users Influenced 0,04€ Cost per User Influenced"
+      }
+    ]
+  },
+  {
+    "id": "eu-p060",
+    "client": "KIABI",
+    "year": 2025,
+    "services": [
+      "Programmatic"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Fernando Alonso",
+    "title": "KIABI Wins in the Connected TV Environment with a Premium Cross-Platform Strategy",
+    "challenge": "The main challenge was to increase KIABI’s brand awareness during the highly saturated holiday season. The objective was to break through media fragmentation and position the brand as a relevant and approachable option for families, reaching high-value audiences through a premium, highly qualified audiovisual environment.",
+    "approach": "An innovative Connected TV strategy was executed by seamlessly integrating Disney+, Netflix, and Prime Video. This cross-platform deployment enabled KIABI to reach streaming audiences with an affinity for accessible fashion in key cities, while ensuring optimal frequency control and leveraging contexts of maximum attention and content quality. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+95%",
+        "label": "VTR (View-Through Rate) on Disney+, Netflix, and Prime Video 1,35 Optimized average frequency to maximize incremental reach"
+      },
+      {
+        "value": "12M",
+        "label": "Total impressions in high-attention Connected TV environments"
+      }
+    ]
+  },
+  {
+    "id": "eu-p061",
+    "client": "Lefebvre",
+    "year": 2024,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "José Luis Culebras Marcos Gómez",
+    "title": "Lefebvre boosts editorial sales by 137%",
+    "challenge": "Lefebvre, a leading company in Spain providing management and knowledge solutions for professionals in the legal and business sectors, aimed to increase sales of both digital and print publications most used by legal professionals.",
+    "approach": "We optimized Performance Max with high-quality signals based on each type of editorial publication, improved ad copy to better communicate key benefits, and restructured Google and Bing accounts to maximize efficiency through Smart Bidding—excluding low-performing products. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+137%",
+        "label": "Editorial sales in 2024 vs same period in 2023"
+      }
+    ]
+  },
+  {
+    "id": "eu-p062",
+    "client": "LOEWE",
+    "year": 2025,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Tania Lestón Alejandro Pereiro",
+    "title": "LOEWE boosts performance with PMax",
+    "challenge": "In a highly competitive context with rising costs, LOEWE needed to strengthen its visibility and positioning efficiently. The goal was to maximize results and profitability, lowering CPA and improving campaign performance in an increasingly demanding market.",
+    "approach": "Shopping Standard was replaced by Performance Max for the entire catalog, adding featured collections and search themes around brand, luxury, and seasonality. Key audiences and audiovisual creatives were incorporated, with P.Max running alongside Shopping until performance was ensured, leveraging Google AI to reach users across the funnel. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+20%",
+        "label": "Revenue vs same period from previous year (2023)"
+      },
+      {
+        "value": "+17%",
+        "label": "ROAS vs same period from previous year (2023)"
+      }
+    ]
+  },
+  {
+    "id": "eu-p063",
+    "client": "LOEWE",
+    "year": 2024,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Luisa Cano Alejandro Pereiro",
+    "title": "LOEWE Perfumes: Christmas Collection 2025, US",
+    "challenge": "In the highly competitive holiday season and the broad US market, LOEWE Perfumes launched its Gifting collection and Christmas Gift Sets to boost product visibility and drive e-commerce sales.",
+    "approach": "With 300% more investment than last year, two PMAX campaigns were created by category: Fragrances and Home Scents. Based on past performance, budgets and targets were set. Daily optimization, precise targeting, and Google AI ensured the most relevant ad reached each user at the right time. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+30%",
+        "label": "AOV vs previous year"
+      },
+      {
+        "value": "+214%",
+        "label": "revenue vs previous year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p064",
+    "client": "Loewe Perfumes",
+    "year": 2025,
+    "services": [
+      "Social Paid",
+      "Feed"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "How Loewe Perfumes connected with key market audiences.",
+    "challenge": "Loewe Perfumes aimed to strengthen its global positioning in the luxury beauty space. In a phase of international expansion, the brand sought to build an aspirational, relevant, and cohesive identity in key markets like the US, UK, and Japan—reinforcing its artisanal roots and contemporary design DNA.",
+    "approach": "In partnership with Cosmo5, Loewe activated a multi-market strategy centered on the launch of Paula’s Ibiza, with tailored segmentation per country. Japan played a key role, featuring Giselle (Aespa) as ambassador. The campaign targeted niche interests like K-Pop and music, and was backed by Fospha, a third-party measurement tool validating the campaign’s real impact. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-54,01%",
+        "label": "CPM vs same campaign from the previous year"
+      },
+      {
+        "value": "-47,94%",
+        "label": "Cost per 1.000 users vs same campaign from the previous year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p065",
+    "client": "Louis Vuitton",
+    "year": 2024,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Carolina Abellán Pilar Martínez",
+    "title": "Louis Vuitton boosts its campaign with Demand Gen",
+    "challenge": "Louis Vuitton, the iconic luxury Maison, aimed to increase engagement for its new collection LV by the Pool. Through a mid-funnel strategy, the goal was to generate qualified traffic to boost microconversions that drive final sales.",
+    "approach": "DemandGen powered by AI was activated to increase demand in Google’s visually rich spaces, using conversion bidding focused on purchases, page views, and add to carts. To drive traffic and microconversions, remarketing audiences, lookalikes, and intent segments were added alongside optimized targeting to expand signals and maximize reach. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+66,23%",
+        "label": "Clicks vs estimated"
+      },
+      {
+        "value": "-99%",
+        "label": "CPC vs lo estimated"
+      },
+      {
+        "value": "4,34%",
+        "label": "CTR with image ads"
+      }
+    ]
+  },
+  {
+    "id": "eu-p066",
+    "client": "Majorica",
+    "year": 2025,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Luisa Cano Alejandro Pereiro",
+    "title": "Maximizing Demand Gen Capabilities",
+    "challenge": "In partnership with the Cosmo5 team, Majorica sought to maximize Demand Gen’s capabilities, drive higher traffic volume to the landing page, and establish this campaign type as a strategic pillar within the account, one capable of delivering both direct results and contributing to overall acquisition goals.",
+    "approach": "The strategy focused on implementing an always-on Demand Gen model, keeping it active year-round while scaling up its prominence during the brand's key dates. This ensured a constant and competitive market presence while driving a consistent additional stream of qualified traffic. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+180%",
+        "label": "Sales vs last year"
+      },
+      {
+        "value": "+790%",
+        "label": "CR vs last year"
+      },
+      {
+        "value": "+142%",
+        "label": "ROAS vs last year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p067",
+    "client": "Orange Empresas",
+    "year": 2026,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Carolina Abellán",
+    "title": "Orange Business Increases Qualified Calls by +40.87% with VBB",
+    "challenge": "Orange Business faced the need to transform its acquisition model in a saturated market. The main challenge was shifting from a high volume of contacts to generating qualified leads, prioritizing quality over quantity to maximize close rates and optimize investment.",
+    "approach": "A Value-Based Bidding (VBB) strategy supported by Smart Bidding was implemented. By integrating real quality data and advanced signals, the algorithm identified high-value profiles. This approach aligned advertising efforts with business objectives, enabling intelligent bidding on the most profitable opportunities. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+40,87%",
+        "label": "Qualified Calls"
+      }
+    ]
+  },
+  {
+    "id": "eu-p068",
+    "client": "PepeEnergy",
+    "year": 2026,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Luis Otero",
+    "title": "PepeEnergy leads energy efficiency on Reddit, outperforming Meta",
+    "challenge": "The main challenge was positioning PepeEnergy in a highly credible environment like Reddit. The brand aimed to break through traditional social media channels to connect with skeptical users, turning organic conversations about energy savings and home efficiency into a direct opportunity for acquisition and trust-building.",
+    "approach": "A two-phase hybrid targeting strategy was executed: first, highly relevant placements within specific energy and savings threads; second, expanded reach into broader-interest communities. This balance between technical niche audiences and mass communities enabled the campaign to scale without losing contextual precision. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-46%",
+        "label": "CPA from the first month vs. the last month"
+      },
+      {
+        "value": "55%",
+        "label": "Lower CPA on Reddit compared to Meta"
+      },
+      {
+        "value": "+105%",
+        "label": "Conversions November vs. January"
+      }
+    ]
+  },
+  {
+    "id": "eu-p069",
+    "client": "PepePhone",
+    "year": 2025,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Marcos Gómez",
+    "title": "Pepephone boosts sales with Demand Gen +295%",
+    "challenge": "Pepephone, together with Cosmo5, aimed to maximize Demand Gen's capabilities — not only increasing landing traffic and demand generation but also boosting the number of acquisitions (via web and calls) driven by these campaigns.",
+    "approach": "A test was launched comparing Image vs. Video formats: Video Action Campaigns focused on conversions with tROAS, while Image Demand Gen campaigns drove traffic. This goal-based budget allocation improved assisted conversion value by 295% and reduced CPA by 37% in DGen. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+223%",
+        "label": "Sig-ups vs previous year"
+      },
+      {
+        "value": "-37%",
+        "label": "CPA vs previous year"
+      },
+      {
+        "value": "+295%",
+        "label": "Assisted sales value vs previous year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p070",
+    "client": "Pepephone",
+    "year": 2024,
+    "services": [
+      "Video Ads",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Pepephone boosts Mobile Plan Sales Conversions and Cost Efficiency with TikTok's Smart+ AI Solution",
+    "challenge": "Pepephone, part of MASORANGE, aimed to expand its customer base through an efficient online acquisition strategy. The goal: go beyond niche targeting and achieve sustainable growth via high-conversion platforms like TikTok, connecting with the right audience in the digital space.",
+    "approach": "In partnership with Cosmo5, Pepephone pioneered Smart+, replacing traditional In-Feed campaigns. Leveraging generative AI and automated learning, they optimized conversion rates and boosted lower-funnel actions through Smart+ Web Campaigns. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-58,9%",
+        "label": "CPA vs In-Feed (manual campaigns)"
+      },
+      {
+        "value": "+264,4%",
+        "label": "CR vs In-Feed (manual campaigns)"
+      }
+    ]
+  },
+  {
+    "id": "eu-p071",
+    "client": "Pepephone",
+    "year": 2025,
+    "services": [
+      "Video Ads",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Pepephone transforms its digital strategy by doubling form submissions",
+    "challenge": "Pepephone set Cosmo5 the challenge of increasing form submissions while optimizing costs. In a highly competitive sector like telecommunications—and with limited creative resources—the brand needed an effective strategy to boost efficiency without compromising on volume.",
+    "approach": "Smart+ Leads was activated with a rotation of 3 customizable Instant Forms and 5 copy variants, allowing for dynamic optimization. Through A/B testing, the best-performing setup was identified: a Question Card combined with volume-based optimization, which became the core of the strategy. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+188%",
+        "label": "Volumen de Leads vs standard campaign"
+      },
+      {
+        "value": "-64%",
+        "label": "CPL vs standard campaign"
+      },
+      {
+        "value": "-15%",
+        "label": "CPC vs standard campaign"
+      }
+    ]
+  },
+  {
+    "id": "eu-p072",
+    "client": "Pepephone",
+    "year": 2025,
+    "services": [
+      "Video Ads",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "The Success",
+    "challenge": "UGC Authenticity Pepephone sought to and AI in Customer consolidate TikTok as a strategic channel to generate Acquisition high-quality leads and increase online sales. The challenge was to overcome the limitations of traditional corporate content to connect with a native audience, achieving scalable and efficient growth while staying true to the brand’s values of transparency.",
+    "approach": "The strategy centered on transitioning to a TikTok-first model, replacing rigid assets with authentic UGC (User-Generated Content). Lead generation efforts combined manual campaigns with AI-driven tools like Smart+, enabling dynamic testing of creatives, audiences, and copy to optimize spend in real time. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-87%",
+        "label": "CPL vs. campaigns prior to implementing UGC content"
+      },
+      {
+        "value": "+345%",
+        "label": "VTR (2s) vs. manual campaigns using corporate assets"
+      },
+      {
+        "value": "-43%",
+        "label": "CPA in conversion by utilizing Smart+ 2.0 campaigns"
+      }
+    ]
+  },
+  {
+    "id": "eu-p073",
+    "client": "Pepephone",
+    "year": 2024,
+    "services": [
+      "Programmatic"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Massive Reach with Innovative Formats",
+    "challenge": "We aimed for a distinctive format to maximize reach in a mobile environment aligned with telecommunications, showing ads prominently without being intrusive for users.",
+    "approach": "A Home Page Takeover on Spotify was implemented during two Brand Days, appearing the first time users accessed the app. This strategy allowed us to reach a large number of potential consumers thanks to the platform’s strategic selection. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+23%",
+        "label": "Impressions vs forecast"
+      },
+      {
+        "value": "+50%",
+        "label": "Reach vs benchmark"
+      },
+      {
+        "value": "+36%",
+        "label": "CTR vs benchmark"
+      }
+    ]
+  },
+  {
+    "id": "eu-p074",
+    "client": "Perfumes y Diseño (Pyd)",
+    "year": 2025,
+    "services": [
+      "Amazon"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": null,
+    "title": "From Brand Defense to Market Conquest in Amazon TOUS Perfumes increases sales by 13.7%",
+    "challenge": "The primary challenge was evolving PyD’s investment mix on Amazon. The goal was to pivot from a conservative approach (60% brand protection) to an expansive one (60% generic campaigns) to capture new audiences and maximize sales without compromising profitability or ROAS in a highly competitive environment.",
+    "approach": "Cosmo5 implemented a Sponsored Ads strategy focused on efficiency. Following strategic sessions, generic terms were prioritized to amplify TOUS Perfumes' visibility. A 40% allocation was maintained for brand protection to ensure customer loyalty, while high-quality incremental traffic drove product discovery. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+13,7%",
+        "label": "Sales with only a +4.8% increase in ad spend"
+      },
+      {
+        "value": "+8,5%",
+        "label": "ROAS vs. previous periods by optimizing generic keywords"
+      },
+      {
+        "value": "+7,6%",
+        "label": "Impressions demonstrating greater reach through generic campaigns"
+      }
+    ]
+  },
+  {
+    "id": "eu-p075",
+    "client": "Rastreator",
+    "year": 2025,
+    "services": [
+      "Programmatic",
+      "Video Ads"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Javier del Valle",
+    "title": "Rastreator Maximizes Digital Footprint Efficiency Through Incremental CTV Audiences",
+    "challenge": "The primary goal was to drive brand awareness and recognition during the peak seasonal window for auto insurance. Rastreator needed to overcome traditional audience fragmentation to reach drivers aged 35 to 55, achieving true incremental coverage over linear television during critical decision-making moments.",
+    "approach": "An innovative CTV strategy was implemented using Amazon DSP first-party data to segment profiles interested in savings. By combining Prime Video’s massive scale with local platforms like Atresmedia, the campaign successfully reached users not previously exposed to the brand, ensuring relevance and efficiency through premium digital environments. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+90,7%",
+        "label": "Incremental Reach vs. Linear TV"
+      },
+      {
+        "value": "-35%",
+        "label": "Average Frequency vs. Initial Estimates"
+      },
+      {
+        "value": "-5,3%",
+        "label": "Average CPM vs. Market Benchmark"
+      }
+    ]
+  },
+  {
+    "id": "eu-p076",
+    "client": "Sanitas",
+    "year": 2025,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "José Luis Culeras",
+    "title": "Sanitas Mayores turns leads into real business",
+    "challenge": "Sanitas Mayores needed to improve the viability of the leads generated through its SEM campaigns. A significant volume of conversions was translating into non-viable leads or users interested in employment, resulting in inefficiencies across campaigns and the call center.",
+    "approach": "To improve lead viability, we optimized on multiple fronts: excluded unsuitable placements, grouped campaigns under bidding strategies based on performance, capped CPCs to increase traffic without raising investment, and rewrote ad copies to better highlight competitive advantages. In addition, we restructured Google Ads and Microsoft Ads accounts to allow for more precise budget adjustments. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+22,57%",
+        "label": "Viability ratio vs previous year"
+      },
+      {
+        "value": "+39%",
+        "label": "Viability ratio first 6 months vs previous year"
+      },
+      {
+        "value": "+5%",
+        "label": "Investment vs previous year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p077",
+    "client": "Santalucía",
+    "year": 2024,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Marcos Gómez",
+    "title": "Santalucía: Value-driven growth in insurance",
+    "challenge": "Santalucía Seguros faced the challenge of prioritizing the value of leads over sheer volume in a highly competitive and fast-evolving market. With the insurance sector in Spain investing heavily in innovation, the company needed a strategy that would improve lead quality and align acquisition efforts with real business profitability.",
+    "approach": "Together with Cosmo5, the team redesigned the acquisition strategy in three phases: lead qualification, integration of offline data from the call center into digital campaigns, and optimization toward product-level conversions. Leveraging AI and Smart Bidding, the campaigns prioritized high-value leads, integrating real-time data to maximize sales efficiency and long-term profitability. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+64%",
+        "label": "ROI vs previous year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p078",
+    "client": "Santalucía",
+    "year": 2025,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Marcos Gómez",
+    "title": "Santalucía boosts ROI with Google AI Max",
+    "challenge": "In 2025, Santalucía set its main 2026 challenge: open new, efficient acquisition opportunities, optimize costs and increase LTV. They identified Google Search AI as a unique opportunity to grow and elevate their strategy in a rapidly transforming search landscape.",
+    "approach": "We activated the AI Max test on a generic Death Insurance campaign, building on the Data Innovation strategy (Customer Match + Enhanced Conversions). Rapid adaptation was possible thanks to years of collaborative work with Google and corporate agility in integrating betas. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-29,8%",
+        "label": "CPA qualified leads vs original campaign"
+      },
+      {
+        "value": "+74,5%",
+        "label": "ROAS vs original campaign"
+      }
+    ]
+  },
+  {
+    "id": "eu-p079",
+    "client": "Santalucía",
+    "year": 2025,
+    "services": [
+      "Search",
+      "Data"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Marcos Gómez",
+    "title": "Data-driven strategy elevates Santalucía in Google",
+    "challenge": "In 2024-2025, Santalucía Seguros, Spain’s leading Death Insurance provider, aimed to grow its portfolio, boost the LTV of its conversions and reduce acquisition costs—enhancing its 2022 Value Based bidding strategy with a more connected customer view.",
+    "approach": "Customer Match and Enhanced Conversions via API were integrated, combining a 1M client database, Google Ads data and the exclusion of low-value leads. A realistic lead scoring model enabled Google Ads to grasp each contact’s value and adjust bids to maximize profitability. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-41%",
+        "label": "CPA (January-June 2025) vs same period from previous year"
+      },
+      {
+        "value": "+131%",
+        "label": "ROAS (January-June 2025) vs same period from previous year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p080",
+    "client": "Santalucía",
+    "year": 2025,
+    "services": [
+      "Video Ads",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Santalucía’s winning bet on TikTok",
+    "challenge": "Santalucía Seguros, one of Spain’s leading insurance companies, turned to TikTok as a new lead generation channel. With a focus on key products like Home and Funeral insurance, the brand combined tailored creatives with multi-product formats to maximise reach and lead quality.",
+    "approach": "The strategy relied on Smart+ campaigns using Question Form formats and AI-powered targeting. It was reinforced with a retargeting layer and offline conversion API integration for more accurate tracking of closed sales. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-61,94%",
+        "label": "CPL vs same period from previous year"
+      },
+      {
+        "value": "+33%",
+        "label": "Conversion Rate vs same period from previous year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p081",
+    "client": "Santalucía",
+    "year": 2025,
+    "services": [
+      "Video Ads",
+      "Social Paid"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "Leading Lead Generation through AI",
+    "challenge": "Santalucía sought to rejuvenate its audience and capture high-quality leads in a highly competitive environment. The primary challenge was migrating from a traditional acquisition model to a more dynamic digital one, successfully scaling registration volume while improving investment efficiency on TikTok.",
+    "approach": "The strategy centered on the Smart+ tool, utilizing AI to optimize audiences in real time. A continuous creative rotation (minimum of six assets) and native forms were implemented to eliminate friction. This dynamic process allowed for data-driven message iteration, ensuring the algorithm always had fresh content to work with. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-22%",
+        "label": "CPL vs. traditional Lead Gen campaigns"
+      },
+      {
+        "value": "-26%",
+        "label": "CPA (Cost Per Acquisition) following Smart+ optimization"
+      }
+    ]
+  },
+  {
+    "id": "eu-p082",
+    "client": "Sector Beauty",
+    "year": 2025,
+    "services": [
+      "Video Ads",
+      "Marketplaces"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pablo García",
+    "title": "TikTok Shop & GMV Max: Powering E-commerce",
+    "challenge": "In a fragmented, fast-paced digital world, brands face a key challenge: how to connect authentically with audiences and turn that into real results. The traditional model falls short. Brands now need a strategy that grabs attention, sparks emotion, and drives purchase—only then can they stand out and convert in an overstimulated ecosystem.",
+    "approach": "TikTok Shop y GMV Max redefine e-commerce, by blending entertainment, conversion, and automated targeting into a seamless shopping experience. Unlike traditional models, this approach fuels discovery-based commerce. Powered by AI, GMV Max detects and activates high purchase intent in real time—bridging inspiration and action with unprecedented effectiveness. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-90,53%",
+        "label": "Cost per Sale vs start"
+      },
+      {
+        "value": "+411,67%",
+        "label": "Return On Investment vs start"
+      },
+      {
+        "value": "+2159,46%",
+        "label": "Sales Volume vs start"
+      }
+    ]
+  },
+  {
+    "id": "eu-p083",
+    "client": "Sephora",
+    "year": 2024,
+    "services": [
+      "Search"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Carolina Abellán Pilar Martínez",
+    "title": "Sephora boosts online sales and store visits",
+    "challenge": "Sephora, a global leader in luxury beauty, aimed to leverage its extensive store network across Spain to better connect online and offline customer journeys. The goal was to assess whether adding store visits as an objective in search campaigns would improve online sales by bridging these two touchpoints.",
+    "approach": "An omnichannel A/B experiment was launched in search campaigns, assigning a store visit value based on conversion rate and average basket value. The progressive impact on online sales was systematically monitored, focusing exclusively on real ecommerce sales data to measure effectiveness. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+37%",
+        "label": "Conversion value in test vs original campaign"
+      },
+      {
+        "value": "+74%",
+        "label": "Store visits in test vs original campaign"
+      },
+      {
+        "value": "+5%",
+        "label": "ROAS in test vs original campaign"
+      }
+    ]
+  },
+  {
+    "id": "eu-p084",
+    "client": "Tag Heuer",
+    "year": 2024,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Pilar Martínez",
+    "title": "Tag Heuer boosts performance with PMax campaigns",
+    "challenge": "Tag Heuer, the renowned luxury watch brand, aimed to boost digital campaign performance by promoting its full catalog. A Performance Max strategy was designed to focus on qualified traffic acquisition and conversion optimization, enhancing both discovery and final sales of their high-end watches.",
+    "approach": "PMax was implemented by selecting specific products per asset group to optimize creatives. Key audience signals were added, including custom segments, lookalikes, and purchase intent, while optimized targeting was activated to leverage Google’s AI and maximize impact. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+158%",
+        "label": "Conversions vs previous year"
+      },
+      {
+        "value": "-67%",
+        "label": "CPA vs previous year"
+      },
+      {
+        "value": "+152%",
+        "label": "Conversion value vs previous year"
+      }
+    ]
+  },
+  {
+    "id": "eu-p085",
+    "client": "Tendam",
+    "year": 2025,
+    "services": [
+      "Amazon",
+      "Programmatic"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": null,
+    "title": "Tendam optimizes investment on Amazon",
+    "challenge": "In Fall-Winter 2024, Grupo Tendam aimed to boost sales and strengthen its brand presence on Amazon, with a special focus on Springfield’s menswear line to gain visibility against established competitors.",
+    "approach": "An integrated always-on strategy was designed using all Sponsored Ads formats, complemented by Amazon DSP campaigns to increase reach and reinforce brand awareness, thereby improving overall performance. ooffffeerr..",
+    "metrics": []
+  },
+  {
+    "id": "eu-p086",
+    "client": "Tendam",
+    "year": 2024,
+    "services": [
+      "Amazon"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": null,
+    "title": "High performance efficiency at Tendam Group maximizing sales with 30% less investment",
+    "challenge": "The primary goal was to optimize summer season results for Springfield and Women’secret. The challenge involved increasing sales and maximizing Return on Investment (ROI) within a competitive landscape, while simultaneously navigating a strategic 30% reduction in the advertising budget compared to the previous year.",
+    "approach": "A dual strategy was implemented, integrating Sponsored Ads and DSP to cover the full sales funnel. Video and display formats were utilized to drive visibility and cross-selling, while DSP focused on contextual and remarketing audiences to target high-intent users. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "-30%",
+        "label": "Ad Spend vs. prior period"
+      },
+      {
+        "value": "+16%",
+        "label": "Sales Efficiency vs. prior period"
+      },
+      {
+        "value": "+33%",
+        "label": "Sales per Impression vs. prior period"
+      }
+    ]
+  },
+  {
+    "id": "eu-p087",
+    "client": "Yoigo",
+    "year": 2025,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Gabriel Batuecas Marcos Gómez",
+    "title": "How Yoigo Increased Its ROAS by Over 70% with an AI Max–Driven Acquisition Strategy",
+    "challenge": "Yoigo aimed to attract high-value customers in a saturated and highly competitive telecommunications market. The main challenge was evolving its digital strategy amid the consolidation of major competitors and the transformation of the search ecosystem, driven by the rise of AI and changing consumer behavior.",
+    "approach": "In partnership with Cosmo5 and Google, Yoigo implemented AI Max for Search through an A/B test. A standard keyword campaign was compared against an AI-powered campaign designed to identify emerging search patterns and conversational queries that traditional strategies were unable to detect or effectively capitalize on. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+73%",
+        "label": "ROI with AI Max vs. control campaign"
+      },
+      {
+        "value": "-43%",
+        "label": "CPA with AI Max vs. control campaign"
+      }
+    ]
+  },
+  {
+    "id": "eu-p088",
+    "client": "Yoigo Luz y Gas",
+    "year": 2024,
+    "services": [
+      "SEA"
+    ],
+    "countries": [
+      "Spain"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Gabriel Batuecas",
+    "title": "Dominating Search Engine Energy Efficiency with Smart Bidding",
+    "challenge": "The main challenge was breaking into a saturated market dominated by large, established companies. Yoigo needed to significantly increase customer acquisition without sacrificing efficiency, while facing high cost-per-click (CPC) rates in search engines and the need to generate high-quality leads.",
+    "approach": "A Smart Bidding strategy combined with intent-based search segmentation was implemented, prioritizing keywords related to energy savings. Through responsive search ads, CTR was optimized to 5.53%, balancing a high volume of impressions with precise technical management to maximize the relevance of each search. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "12,90%",
+        "label": "Conversion rate in the scaling campaign 19,05€ CPL achieved after bid optimization 1,85 Conversion value / cost ratio"
+      }
+    ]
+  },
+  {
+    "id": "eu-p090",
+    "client": "Blazé Milano",
+    "year": 2025,
+    "services": [
+      "Social Paid"
+    ],
+    "countries": [
+      "Germany",
+      "Italy",
+      "US"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Rudy Berton",
+    "title": "Increase Subscribers and Sales",
+    "challenge": "Blazé Milano wanted to scale its community ahead of an exclusive private sale. The primary goal was to maximize newsletter subscriptions, ensuring a robust audience for the event. Secondarily, the campaign aimed to indirectly drive immediate sales by building a warm/high-intent audience ready to convert during the short promotional window, effectively boosting overall revenue.",
+    "approach": "We implemented a Meta Lead Generation campaign with Instant Forms, for each country to collect key user data and market of origin. Launched a few days before the start of the sale as a teaser, to build anticipation and capture early interest. Once the sale had begun, we shifted the messaging and value proposition, offering users direct access to the exclusive sale upon subscription. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "10.850",
+        "label": "New leads"
+      },
+      {
+        "value": "-4,2%",
+        "label": "Cost per Lead vs previous activity"
+      },
+      {
+        "value": "+375%",
+        "label": "Sales vs previous activity"
+      }
+    ]
+  },
+  {
+    "id": "eu-p091",
+    "client": "Clarins",
+    "year": 2024,
+    "services": [
+      "Search"
+    ],
+    "countries": [
+      "Italy"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Rudy Berton",
+    "title": "Improve visibility and traffic for some product categories, reducing the costs",
+    "challenge": "Clarins aimed to increase visibility across product categories without relying on branded keywords. However, Generic Search campaigns were driving high costs due to strong competition in the beauty market. The objective was to boost visibility and traffic while reducing cost per click",
+    "approach": "We tested a new approach by consolidating all product categories from Generic Search into a single Demand Gen campaign. Each category featured tailored ads and audience targeting within the same campaign. Leveraging smart bidding and machine learning, the algorithm dynamically allocated budget based on user interest. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+542%",
+        "label": "Impressions"
+      },
+      {
+        "value": "+253%",
+        "label": "Clicks"
+      },
+      {
+        "value": "-70%",
+        "label": "Cost per click"
+      }
+    ]
+  },
+  {
+    "id": "eu-p092",
+    "client": "La Redoute",
+    "year": 2025,
+    "services": [
+      "Search"
+    ],
+    "countries": [
+      "Italy"
+    ],
+    "region": "Europe",
+    "permission": true,
+    "contributor_source": "",
+    "contributor_name": "Rudy Berton",
+    "title": "Increase Sales on Search Campaign with AI Max",
+    "challenge": "La Redoute sought to evaluate whether AI Max could outperform existing Search campaigns and support a full account-wide rollout.",
+    "approach": "To assess impact, we ran a 6-week custom experiment using an A/B test setup, comparing the existing Search campaign (control group) with an identical campaign enhanced by AI Max (experimental group). ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+86,1%",
+        "label": "Conversions with AI Max"
+      },
+      {
+        "value": "+46,8%",
+        "label": "Revenue with AI Max"
+      },
+      {
+        "value": "-36,4%",
+        "label": "Cost per click with AI Max"
+      }
+    ]
+  },
+  {
+    "id": "eu-p093",
+    "client": "Louis Vuitton",
+    "year": 2025,
+    "services": [
+      "Data Measurement"
+    ],
+    "countries": [
+      "Italy"
+    ],
+    "region": "Europe",
+    "permission": false,
+    "contributor_source": "",
+    "contributor_name": "Fabio Bizzozero",
+    "title": "Brand Lift Study impact on Demand Gen campaign",
+    "challenge": "The Italian luxury market’s density makes it difficult to isolate brand impact. While Demand Gen is a staple of our strategy, we lacked clear data to verify its influence on consumer choice. We needed to move beyond reach and quantify how these ads truly sway purchase intent for Louis Vuitton vs. rivals.",
+    "approach": "To quantify impact, we launched a Brand Lift Study during the Holiday Demand Gen campaign for almost 2 weeks. We deployed a \"Consideration\" survey asking users to choose which brands they would purchase between Louis Vuitton and rivals like Gucci, Prada and Chanel, isolating the campaign’s effect on festive purchase intent. ooffffeerr..",
+    "metrics": [
+      {
+        "value": "+3,33%",
+        "label": "Absolute lift"
+      },
+      {
+        "value": "94K",
+        "label": "Lifted users 0,17€ Cost per lifted users"
+      }
+    ]
+  }
+]
