@@ -21,6 +21,8 @@ const CC = {
   'France':      [2.3,  46.2],  'Netherlands': [5.3,  52.1],
   'Hong Kong':   [114.2,22.3],  'Switzerland': [8.2,  46.8],
   'Portugal':    [-8.0, 39.5],  'Austria':     [14.5, 47.5],
+  'Australia':   [133.8,-25.3], 'Japan':       [138.3, 36.2],
+  'Argentina':   [-63.6,-38.4],
 };
 
 /* ── Service colours ── */
