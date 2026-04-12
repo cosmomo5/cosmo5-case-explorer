@@ -10,7 +10,7 @@ A locked-stack TypeScript/Three.js codebase gets a six-transition dimensional co
 - Integer phases (0-7): Planned milestone work
 - Decimal phases: Urgent insertions only (created via `/gsd:insert-phase`)
 
-- [ ] **Phase 0: Pre-work** - Fix three existing bugs that compound under new transitions
+- [x] **Phase 0: Pre-work** - Fix three existing bugs that compound under new transitions
 - [ ] **Phase 1: Foundation** - State machine, ShortlistStore, derived data types
 - [ ] **Phase 2: Layout** - Split canvas, divider, LayoutController, ResizeObserver
 - [ ] **Phase 3: Camera Transitions** - T1/T5, camera-controls migration, TransitionChoreographer
@@ -40,7 +40,12 @@ A locked-stack TypeScript/Three.js codebase gets a six-transition dimensional co
   2. Adding a case to the shortlist from Constellation A, navigating away, entering Constellation B, and checking the shortlist still shows Constellation A's cases
   3. Every case in cases.json has a computed `proofType` and `impactScale` field accessible at runtime
   4. A star's rendered opacity is determined by a single precedence chain (reading > selected > ghost > filter-match > filter-dim > idle) with no contention between systems
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — ViewState machine + ShortlistStore (Wave 1)
+- [ ] 01-02-PLAN.md — ProofType + ImpactScale + StarState classifiers (Wave 1)
+- [ ] 01-03-PLAN.md — Enrichment and boot wiring (Wave 2)
 
 ### Phase 2: Layout
 **Goal**: The split canvas exists as a structural fact — constellation zone (top ~72%) and staging track zone (bottom ~28%) are rendered and responsive, with the divider line visible and the scene correctly resizing when the reading panel slot is occupied
@@ -119,8 +124,8 @@ Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 0. Pre-work | 0/TBD | Not started | - |
-| 1. Foundation | 0/TBD | Not started | - |
+| 0. Pre-work | 3/3 | Complete | 2026-04-13 |
+| 1. Foundation | 0/3 | Not started | - |
 | 2. Layout | 0/TBD | Not started | - |
 | 3. Camera Transitions | 0/TBD | Not started | - |
 | 4. Star Selection and Ghost System | 0/TBD | Not started | - |
