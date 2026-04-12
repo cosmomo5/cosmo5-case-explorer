@@ -42,6 +42,7 @@ No new dependencies. Everything in Phase 1 is vanilla TypeScript.
 | `proof-type.ts` | `src/data/` | ProofType enum + `classifyProofType()` |
 | `impact-scale.ts` | `src/data/` | ImpactScale derivation + `deriveImpactScale()` |
 | `enrich.ts` | `src/data/` | Combines ProofType + ImpactScale into `EnrichedCaseStudy` |
+| `star-state.ts` | `src/data/` | StarState enum + `resolveStarAppearance()` |
 
 ---
 
@@ -59,7 +60,8 @@ src/data/
 ├── shortlist-store.ts      # NEW: ShortlistStore factory + pub/sub
 ├── proof-type.ts           # NEW: ProofType enum + classifyProofType()
 ├── impact-scale.ts         # NEW: ImpactScale type + deriveImpactScale()
-└── enrich.ts               # NEW: EnrichedCaseStudy type + enrichCases()
+├── enrich.ts               # NEW: EnrichedCaseStudy type + enrichCases()
+└── star-state.ts           # NEW: StarState enum + resolveStarAppearance()
 ```
 
 ### Pattern 1: ViewState Discriminated Union (FND-01)
@@ -270,6 +272,8 @@ const cases: EnrichedCaseStudy[] = enrichCases(rawCases);
 ```
 
 `buildOrbitalScene` signature stays the same but its `cases` parameter type widens to `CaseStudy[]` (which `EnrichedCaseStudy[]` satisfies). No changes to scene-state internals.
+
+**userData type annotations:** `star.userData.caseStudy` casts in `scene-state.ts` and `main.ts` stay typed as `CaseStudy` — no changes needed. The enriched fields (`proofType`, `impactScale`) are accessed through the data layer (filter logic, reading panel), not through Three.js `userData`. TypeScript is satisfied because `EnrichedCaseStudy` extends `CaseStudy`.
 
 ### Pattern 6: StarState + Single Opacity Setter (FND-06)
 
