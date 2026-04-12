@@ -6,6 +6,7 @@ import { createRenderer } from './scene/renderer';
 import { buildOrbitalScene, tickOrbits, focusSphere, unfocusSphere } from './scene/scene-state';
 import type { CaseStudy } from './data/types';
 import { mountFilterPanel } from './ui/filter-panel';
+import { regroupScene } from './scene/regroup';
 import { Tooltip } from './ui/tooltip';
 import { DetailPanel } from './ui/detail-panel';
 
@@ -30,8 +31,7 @@ async function boot() {
 
   const filterPanelEl = document.getElementById('filters') as HTMLElement;
   mountFilterPanel(filterPanelEl, sceneObjects, (newMode) => {
-    // Stub — Task 14 will implement regroupScene
-    sceneObjects.groupMode = newMode;
+    regroupScene(sceneObjects, newMode, scene);
   });
 
   // Tick loop

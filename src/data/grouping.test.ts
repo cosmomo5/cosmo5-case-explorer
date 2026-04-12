@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { groupBy, SERVICE_TO_VERTICAL } from './grouping';
+import { groupBy, getKeyForCase, SERVICE_TO_VERTICAL } from './grouping';
 import type { CaseStudy } from './types';
 
 const cases: CaseStudy[] = [
@@ -25,6 +25,12 @@ describe('groupBy', () => {
     const groups = groupBy(cases, 'region');
     expect(groups['Europe']).toHaveLength(2);
     expect(groups['Americas']).toHaveLength(1);
+  });
+  it('getKeyForCase returns correct key per mode', () => {
+    const c = cases[0]; // services: ['Video Ads'], countries: ['Spain'], region: 'Europe'
+    expect(getKeyForCase(c, 'vertical')).toBe('Media');
+    expect(getKeyForCase(c, 'country')).toBe('Spain');
+    expect(getKeyForCase(c, 'region')).toBe('Europe');
   });
   it('SERVICE_TO_VERTICAL covers all known services', () => {
     const services = ['Video Ads','Social Paid','Programmatic','Media','SEA','Search','SEO','Amazon','Marketplaces','Feed','Commerce','Data','Data Measurement','Business strategy','Consulting','Organization','GEO','Creative','Influence'];

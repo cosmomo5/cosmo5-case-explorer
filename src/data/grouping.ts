@@ -22,6 +22,12 @@ export const SERVICE_TO_VERTICAL: Record<string, string> = {
   'Influence':         'Creative',
 };
 
+export function getKeyForCase(c: CaseStudy, mode: GroupMode): string {
+  if (mode === 'vertical') return SERVICE_TO_VERTICAL[c.services[0]] ?? 'Other';
+  if (mode === 'country') return c.countries[0] ?? 'Other';
+  return c.region ?? 'Other';
+}
+
 export function groupBy(cases: CaseStudy[], mode: GroupMode): Record<string, CaseStudy[]> {
   const result: Record<string, CaseStudy[]> = {};
   for (const c of cases) {
