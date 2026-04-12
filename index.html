@@ -9,21 +9,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Noto+Sans:wght@300;400;500;600;900&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
 
 <div id="nebula"></div>
 <div id="gatherVignette"></div>
 
-<canvas id="starfield"></canvas>
+<canvas id="starfield" style="position:fixed;inset:0;z-index:0;pointer-events:none"></canvas>
+<canvas id="main-canvas" style="position:fixed;inset:0;z-index:3"></canvas>
 
 <div id="globe-stage">
   <canvas id="globe-canvas"></canvas>
 </div>
 
 <canvas id="constellation-canvas"></canvas>
-<div id="star-labels"></div>
+<div id="star-labels" style="position:fixed;inset:0;z-index:4;pointer-events:none"></div>
 <div id="focus-hint" class="focus-hint">
   <span class="fh-dot"></span><span id="fh-text">Focused</span>
   <span class="fh-close">click empty space to exit</span>
@@ -211,9 +212,6 @@
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
-<script src="cosmos.js"></script>
+<script type="module" src="/src/main.ts"></script>
 </body>
 </html>
