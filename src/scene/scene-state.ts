@@ -206,3 +206,68 @@ export function clearFilter(objects: SceneObjects): void {
     star.userData.isStagingTarget = false;
   }
 }
+
+// Sphere Expands to Fill
+export function focusSphere(
+  objects: SceneObjects,
+  key: string,
+  camera: THREE.Camera,
+): void {
+  objects.mode = 'focused';
+  objects.focusedKey = key;
+  const nucleus = objects.nucleusMeshes.get(key)!;
+
+  // Animate camera toward nucleus
+  gsap.to(camera.position, {
+    x: nucleus.position.x * 0.5,
+    y: nucleus.position.y * 0.5,
+    z: nucleus.position.z * 0.5 + 300,
+    duration: 1.2, ease: 'power2.inOut',
+  });
+
+  // Dim + recede other nuclei
+  for (const [k, mesh] of objects.nucleusMeshes.entries()) {
+    if (k === key) continue;
+    gsap.to((mesh.material as THREE.MeshBasicMaterial), { opacity: 0.08, duration: 0.8 });
+    gsap.to(mesh.position, {
+      x: mesh.position.x * 1.3,
+      y: mesh.position.y * 1.3,
+      z: mesh.position.z * 1.3,
+      duration: 1.0, ease: 'power2.out',
+    });
+    if (mesh.userData.halo) {
+      gsap.to(((mesh.userData.halo as THREE.Mesh).material as THREE.MeshBasicMaterial), { opacity: 0.02, duration: 0.8 });
+    }
+  }
+
+  // Boost focused nucleus
+  gsap.to((nucleus.material as THREE.MeshBasicMaterial), { opacity: 1.0, duration: 0.6 });
+
+  // Dim stars from other nuclei
+  for (const star of objects.starMeshes) {
+    if (star.userData.starOrbit?.nucleusKey !== key) {
+      gsap.to((star.material as THREE.MeshBasicMaterial), { opacity: 0.05, duration: 0.8 });
+    } else {
+      gsap.to((star.material as THREE.MeshBasicMaterial), { opacity: 1.0, duration: 0.8 });
+    }
+  }
+}
+
+export function unfocusSphere(objects: SceneObjects, camera: THREE.Camera): void {
+  objects.mode = 'global';
+  objects.focusedKey = null;
+  clearFilter(objects);
+
+  gsap.to(camera.position, { x: 0, y: 0, z: 900, duration: 1.2, ease: 'power2.inOut' });
+
+  for (const mesh of objects.nucleusMeshes.values()) {
+    gsap.to((mesh.material as THREE.MeshBasicMaterial), { opacity: 0.9, duration: 0.8 });
+    if (mesh.userData.halo) {
+      gsap.to(((mesh.userData.halo as THREE.Mesh).material as THREE.MeshBasicMaterial), { opacity: 0.06, duration: 0.8 });
+    }
+  }
+
+  for (const star of objects.starMeshes) {
+    gsap.to((star.material as THREE.MeshBasicMaterial), { opacity: 0.85, duration: 0.8 });
+  }
+}

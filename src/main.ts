@@ -1,12 +1,17 @@
 import './style.css';
 import * as THREE from 'three';
+import { gsap } from 'gsap';
 import { createStarfield } from './scene/background/starfield';
 import { createRenderer } from './scene/renderer';
-import { buildOrbitalScene, tickOrbits } from './scene/scene-state';
+import { buildOrbitalScene, tickOrbits, focusSphere, unfocusSphere } from './scene/scene-state';
 import type { CaseStudy } from './data/types';
 import { mountFilterPanel } from './ui/filter-panel';
 import { Tooltip } from './ui/tooltip';
 import { DetailPanel } from './ui/detail-panel';
+
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  gsap.globalTimeline.timeScale(0);
+}
 
 async function boot() {
   const resp = await fetch('/cases.json');
@@ -66,9 +71,7 @@ async function boot() {
     const nucHits = raycaster.intersectObjects(nucleusMeshArr);
     if (nucHits.length > 0) {
       const key = (nucHits[0].object as THREE.Mesh).userData.key as string;
-      sceneObjects.mode = 'focused';
-      sceneObjects.focusedKey = key;
-      // TODO: Task 12 will add focusSphere animation
+      focusSphere(sceneObjects, key, camera);
       return;
     }
     // Star click
@@ -76,6 +79,12 @@ async function boot() {
     if (starHits.length > 0) {
       const c = (starHits[0].object as THREE.Mesh).userData.caseStudy as CaseStudy;
       detailPanel.open(c);
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sceneObjects.mode === 'focused') {
+      unfocusSphere(sceneObjects, camera);
     }
   });
 }
