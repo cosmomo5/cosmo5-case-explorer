@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { matchesFilter, getFilterableAttrs, createFilterState } from './filter';
 import type { CaseStudy } from './types';
 
-const c1: CaseStudy = { id: 'A', client: 'X', year: 2026, services: ['Video Ads', 'SEA'], countries: ['Spain', 'France'], region: 'Europe', permission: true, title: '', challenge: '', approach: '', metrics: '' };
-const c2: CaseStudy = { id: 'B', client: 'Y', year: 2025, services: ['Amazon'], countries: ['US'], region: 'Americas', permission: false, title: '', challenge: '', approach: '', metrics: '' };
+const c1: CaseStudy = { id: 'A', client: 'X', year: 2026, services: ['Video Ads', 'SEA'], countries: ['Spain', 'France'], region: 'Europe', permission: true, title: '', challenge: '', approach: '', metrics: [] };
+const c2: CaseStudy = { id: 'B', client: 'Y', year: 2025, services: ['Amazon'], countries: ['US'], region: 'Americas', permission: false, title: '', challenge: '', approach: '', metrics: [] };
 
 describe('matchesFilter', () => {
   it('matches all when filter is empty', () => {

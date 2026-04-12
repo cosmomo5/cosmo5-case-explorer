@@ -1,3 +1,8 @@
+export interface Metric {
+  value: string;
+  label: string;
+}
+
 export interface CaseStudy {
   id: string;
   client: string;
@@ -6,10 +11,12 @@ export interface CaseStudy {
   countries: string[];
   region: string;
   permission: boolean;
+  contributor_source?: string;
+  contributor_name?: string;
   title: string;
   challenge: string;
   approach: string;
-  metrics: string;
+  metrics: Metric[];
 }
 
 export type GroupMode = 'vertical' | 'country' | 'region';

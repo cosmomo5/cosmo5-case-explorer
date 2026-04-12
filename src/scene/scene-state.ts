@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
+import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import type { CaseStudy, GroupMode } from '../data/types';
 import type { NucleusOrbitData } from './orbitals/nucleus-orbit';
 import type { StarOrbit } from '../data/types';
@@ -11,6 +12,14 @@ import { createFilterState, matchesFilter } from '../data/filter';
 import type { FilterState } from '../data/filter';
 
 export type SceneMode = 'global' | 'focused';
+
+/** Convert a THREE hex color int to "r,g,b" string for CSS rgba() usage */
+function hexToRgb(hex: number): string {
+  const r = (hex >> 16) & 0xff;
+  const g = (hex >> 8)  & 0xff;
+  const b =  hex        & 0xff;
+  return `${r},${g},${b}`;
+}
 
 const NUCLEUS_COLORS: Record<string, number> = {
   'Media':               0x5ecfc0,
@@ -70,9 +79,13 @@ export function buildOrbitalScene(
     scene.add(halo);
     mesh.userData.halo = halo;
 
-    // Nucleus label
+    // Nucleus label — position is set in the tick loop via projectToScreen
+    const colorHex = `#${color.toString(16).padStart(6, '0')}`;
+    const glowRgb  = hexToRgb(color);
     const div = document.createElement('div');
     div.className = 'cl';
+    div.style.setProperty('--cl-accent', colorHex);
+    div.style.setProperty('--cl-glow', `rgba(${glowRgb},0.45)`);
     div.innerHTML = `<span class="cl-name">${key}</span><span class="cl-count">${nucOrbit.cases.length}</span>`;
     labelContainer.appendChild(div);
     nucleusLabels.set(key, div);
@@ -207,58 +220,87 @@ export function clearFilter(objects: SceneObjects): void {
   }
 }
 
-// Sphere Expands to Fill
+// ── Focus: zoom into a nucleus sphere ────────────────────────────────────
 export function focusSphere(
   objects: SceneObjects,
   key: string,
   camera: THREE.Camera,
+  orbitControls?: OrbitControls,
 ): void {
   objects.mode = 'focused';
   objects.focusedKey = key;
   const nucleus = objects.nucleusMeshes.get(key)!;
 
-  // Animate camera toward nucleus
-  gsap.to(camera.position, {
-    x: nucleus.position.x * 0.5,
-    y: nucleus.position.y * 0.5,
-    z: nucleus.position.z * 0.5 + 300,
-    duration: 1.2, ease: 'power2.inOut',
-  });
+  // Target position: offset slightly toward viewer from the nucleus
+  const targetPos = nucleus.position.clone();
+  const camPos = {
+    x: targetPos.x * 0.45,
+    y: targetPos.y * 0.45,
+    z: targetPos.z * 0.45 + 320,
+  };
+
+  if (orbitControls) {
+    // Move both camera AND the orbit target together so controls stay coherent
+    gsap.to(camera.position, { ...camPos, duration: 1.3, ease: 'power2.inOut' });
+    gsap.to(orbitControls.target, {
+      x: targetPos.x * 0.2,
+      y: targetPos.y * 0.2,
+      z: targetPos.z * 0.2,
+      duration: 1.3, ease: 'power2.inOut',
+      onUpdate() { orbitControls.update(); },
+    });
+  } else {
+    gsap.to(camera.position, { ...camPos, duration: 1.3, ease: 'power2.inOut' });
+  }
 
   // Dim + recede other nuclei
   for (const [k, mesh] of objects.nucleusMeshes.entries()) {
     if (k === key) continue;
-    gsap.to((mesh.material as THREE.MeshBasicMaterial), { opacity: 0.08, duration: 0.8 });
+    gsap.to((mesh.material as THREE.MeshBasicMaterial), { opacity: 0.07, duration: 0.8 });
     gsap.to(mesh.position, {
-      x: mesh.position.x * 1.3,
-      y: mesh.position.y * 1.3,
-      z: mesh.position.z * 1.3,
+      x: mesh.position.x * 1.35,
+      y: mesh.position.y * 1.35,
+      z: mesh.position.z * 1.35,
       duration: 1.0, ease: 'power2.out',
     });
     if (mesh.userData.halo) {
-      gsap.to(((mesh.userData.halo as THREE.Mesh).material as THREE.MeshBasicMaterial), { opacity: 0.02, duration: 0.8 });
+      gsap.to(((mesh.userData.halo as THREE.Mesh).material as THREE.MeshBasicMaterial), { opacity: 0.01, duration: 0.8 });
     }
   }
 
   // Boost focused nucleus
   gsap.to((nucleus.material as THREE.MeshBasicMaterial), { opacity: 1.0, duration: 0.6 });
 
-  // Dim stars from other nuclei
+  // Dim stars from other nuclei, boost own
   for (const star of objects.starMeshes) {
     if (star.userData.starOrbit?.nucleusKey !== key) {
-      gsap.to((star.material as THREE.MeshBasicMaterial), { opacity: 0.05, duration: 0.8 });
+      gsap.to((star.material as THREE.MeshBasicMaterial), { opacity: 0.04, duration: 0.8 });
     } else {
       gsap.to((star.material as THREE.MeshBasicMaterial), { opacity: 1.0, duration: 0.8 });
     }
   }
 }
 
-export function unfocusSphere(objects: SceneObjects, camera: THREE.Camera): void {
+// ── Unfocus: return to global view ────────────────────────────────────────
+export function unfocusSphere(
+  objects: SceneObjects,
+  camera: THREE.Camera,
+  orbitControls?: OrbitControls,
+): void {
   objects.mode = 'global';
   objects.focusedKey = null;
   clearFilter(objects);
 
-  gsap.to(camera.position, { x: 0, y: 0, z: 900, duration: 1.2, ease: 'power2.inOut' });
+  if (orbitControls) {
+    gsap.to(camera.position, { x: 0, y: 0, z: 900, duration: 1.3, ease: 'power2.inOut' });
+    gsap.to(orbitControls.target, {
+      x: 0, y: 0, z: 0,
+      duration: 1.3, ease: 'power2.inOut',
+      onUpdate() { orbitControls.update(); },
+    });
+  } else {
+    gsap.to(camera.position, { x: 0, y: 0, z: 900, duration: 1.3, ease: 'power2.inOut' });
+  }
 
   for (const mesh of objects.nucleusMeshes.values()) {
     gsap.to((mesh.material as THREE.MeshBasicMaterial), { opacity: 0.9, duration: 0.8 });

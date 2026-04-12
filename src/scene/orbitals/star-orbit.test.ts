@@ -3,7 +3,7 @@ import { hash } from './hash';
 import { computeStarOrbit } from './star-orbit';
 import type { CaseStudy } from '../../data/types';
 
-const c: CaseStudy = { id: 'CASE-001', client: 'X', year: 2026, services: ['SEA'], countries: ['Spain'], region: 'Europe', permission: true, title: '', challenge: '', approach: '', metrics: '' };
+const c: CaseStudy = { id: 'CASE-001', client: 'X', year: 2026, services: ['SEA'], countries: ['Spain'], region: 'Europe', permission: true, title: '', challenge: '', approach: '', metrics: [] };
 const center = { x: 100, y: 50, z: 30 };
 
 describe('hash', () => {

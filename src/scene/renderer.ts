@@ -1,9 +1,11 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export interface RendererContext {
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   renderer: THREE.WebGLRenderer;
+  controls: OrbitControls;
   dispose: () => void;
 }
 
@@ -16,6 +18,25 @@ export function createRenderer(canvas: HTMLCanvasElement): RendererContext {
   const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 3000);
   camera.position.set(0, 0, 900);
 
+  // Orbit controls — drag to rotate, scroll to zoom, right-click to pan
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping   = true;
+  controls.dampingFactor   = 0.06;
+  controls.rotateSpeed     = 0.55;
+  controls.zoomSpeed       = 0.9;
+  controls.panSpeed        = 0.6;
+  controls.minDistance     = 150;
+  controls.maxDistance     = 1800;
+  controls.enablePan       = true;
+  // Tilt limits — stop before flipping upside-down
+  controls.minPolarAngle   = Math.PI * 0.15;
+  controls.maxPolarAngle   = Math.PI * 0.85;
+  controls.mouseButtons    = {
+    LEFT:   THREE.MOUSE.ROTATE,
+    MIDDLE: THREE.MOUSE.DOLLY,
+    RIGHT:  THREE.MOUSE.PAN,
+  };
+
   const onResize = () => {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
@@ -27,8 +48,10 @@ export function createRenderer(canvas: HTMLCanvasElement): RendererContext {
     scene,
     camera,
     renderer,
+    controls,
     dispose: () => {
       removeEventListener('resize', onResize);
+      controls.dispose();
       renderer.dispose();
     },
   };

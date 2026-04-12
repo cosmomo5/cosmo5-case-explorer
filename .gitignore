@@ -1,2 +1,7 @@
 .vercel
 /Data/
+/dist/
+/node_modules/
+package-lock.json
+/.superpowers/
+

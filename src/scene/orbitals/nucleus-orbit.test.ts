@@ -3,8 +3,8 @@ import { computeNucleusOrbits, nucleusPositionAt } from './nucleus-orbit';
 import type { CaseStudy } from '../../data/types';
 
 const cases: CaseStudy[] = [
-  { id: 'A', client: 'X', year: 2026, services: ['Video Ads'], countries: ['Spain'], region: 'Europe', permission: true, title: '', challenge: '', approach: '', metrics: '' },
-  { id: 'B', client: 'Y', year: 2025, services: ['SEA'], countries: ['France'], region: 'Europe', permission: false, title: '', challenge: '', approach: '', metrics: '' },
+  { id: 'A', client: 'X', year: 2026, services: ['Video Ads'], countries: ['Spain'], region: 'Europe', permission: true, title: '', challenge: '', approach: '', metrics: [] },
+  { id: 'B', client: 'Y', year: 2025, services: ['SEA'], countries: ['France'], region: 'Europe', permission: false, title: '', challenge: '', approach: '', metrics: [] },
 ];
 const groups = { 'Media': [cases[0]], 'Performance': [cases[1]] };
 

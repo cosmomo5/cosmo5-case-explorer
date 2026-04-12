@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Noto+Sans:wght@300;400;500;600;900&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
 
@@ -212,6 +211,20 @@
   </div>
 </div>
 
-<script type="module" src="/src/main.ts"></script>
+<script>
+// Diagnostic: if boot doesn't dismiss the loader within 8s, show what went wrong
+window.__v3err = [];
+window.addEventListener('error', function(e) { window.__v3err.push(e.message + ' @ ' + e.filename + ':' + e.lineno); });
+window.addEventListener('unhandledrejection', function(e) { window.__v3err.push('Unhandled: ' + (e.reason?.message || e.reason)); });
+setTimeout(function() {
+  var ld = document.getElementById('loader');
+  if (ld && !ld.classList.contains('done')) {
+    var lk = ld.querySelector('.lk');
+    if (lk) lk.innerHTML = '<b style="color:#e8b15a">STUCK</b><br>' +
+      (window.__v3err.length ? window.__v3err.join('<br>') : 'No errors caught — module may not have loaded');
+  }
+}, 8000);
+</script>
+<script type="module" src="/src/main.ts" onerror="document.getElementById('loader').querySelector('.lk').innerHTML='<b style=color:#e8b15a>MODULE LOAD FAILED</b>'"></script>
 </body>
 </html>

@@ -53,16 +53,16 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);
 
 /* ── Layer canvases ── */
 #starfield{position:fixed;inset:0;z-index:0}
-#globe-stage{position:fixed;inset:0;z-index:2;display:grid;place-items:center;
-  transition:opacity 1.1s var(--ease),transform 1.1s var(--ease)}
-#globe-stage.exit{opacity:0;pointer-events:none;transform:scale(1.3)}
+/* v3: globe intro not implemented yet — hide immediately */
+#globe-stage{display:none}
 #globe-canvas{display:block;cursor:grab}
 #globe-canvas:active{cursor:grabbing}
 
-#constellation-canvas{position:fixed;inset:0;z-index:3;
-  display:none;opacity:0;transform:scale(.94);
-  transition:opacity 1.15s var(--ease),transform 1.4s var(--ease)}
-#constellation-canvas.active{display:block;opacity:1;transform:scale(1)}
+/* v3: #main-canvas is the primary 3D scene at z-index:3 */
+#main-canvas{position:fixed;inset:0;z-index:3}
+
+/* v1 constellation canvas hidden in v3 */
+#constellation-canvas{display:none}
 
 /* ── 3D star labels overlay ── */
 #star-labels{position:fixed;inset:0;z-index:4;pointer-events:none}
@@ -366,10 +366,7 @@ body.gather-on .cl{opacity:0 !important;pointer-events:none !important;
 /* ── Filter sidebar (constellation mode) ── */
 /* Wrapper holds both the collapsed tab + the panel */
 .filters-wrap{position:fixed;z-index:9;left:0;top:128px;bottom:110px;
-  display:none;align-items:flex-start;
-  opacity:0;transform:translateX(-12px);
-  transition:opacity .5s var(--ease),transform .5s var(--ease)}
-.filters-wrap.on{display:flex;opacity:1;transform:translateX(0)}
+  display:flex;align-items:flex-start;opacity:1;transform:translateX(0)}
 /* Vertical tab (always visible when wrap is .on) */
 .filters-tab{flex-shrink:0;
   writing-mode:vertical-rl;text-orientation:mixed;
@@ -619,14 +616,18 @@ body.gather-on .cl{opacity:0 !important;pointer-events:none !important;
 .panel .close:hover{color:var(--gold);background:rgba(255,255,255,.06)}
 
 .p-eye{font-family:'DM Mono',monospace;font-size:9px;color:var(--teal);
-  text-transform:uppercase;letter-spacing:.2em;margin-bottom:14px;
+  text-transform:uppercase;letter-spacing:.2em;margin-bottom:10px;
   display:flex;align-items:center;gap:8px;opacity:.8}
 .p-eye .dot{width:5px;height:5px;border-radius:50%;background:var(--teal);
   box-shadow:0 0 10px rgba(94,207,192,.5);flex-shrink:0}
-.p-client{font-family:'Noto Sans',sans-serif;font-weight:900;font-size:32px;
-  line-height:1.05;letter-spacing:-.01em;color:var(--text);margin-bottom:10px}
-.p-title{font-size:13px;line-height:1.55;color:var(--dim);
-  font-weight:400;margin-bottom:24px;font-style:italic}
+/* Client name: label above the title — smaller, uppercase, muted */
+.p-client{font-family:'DM Mono',monospace;font-size:11px;font-weight:400;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  opacity:.9;margin-bottom:10px}
+/* Title: the actual hero — large, readable, prominent */
+.p-title{font-family:'Noto Sans',sans-serif;font-weight:900;
+  font-size:clamp(20px,2.4vw,28px);line-height:1.15;letter-spacing:-.01em;
+  color:var(--text);margin-bottom:22px}
 .p-meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px;
   padding-bottom:22px;border-bottom:1px solid var(--line)}
 .p-meta .chip{font-family:'DM Mono',monospace;font-size:9px;
