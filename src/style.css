@@ -741,3 +741,12 @@ body.gather-on .cl{opacity:0 !important;pointer-events:none !important;
 /* ── Hover ring on star (CSS-only fallback) ── */
 .year-badge{display:inline-flex;align-items:center;gap:4px}
 .year-dot{width:6px;height:6px;border-radius:50%;background:var(--gold)}
+
+/* ── Accessibility: prefers-reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
