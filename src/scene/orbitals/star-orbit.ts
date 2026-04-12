@@ -8,43 +8,95 @@ function normalize(v: Vec3): Vec3 {
   return { x: v.x / len, y: v.y / len, z: v.z / len };
 }
 
-function cross(a: Vec3, b: Vec3): Vec3 {
-  return {
-    x: a.y * b.z - a.z * b.y,
-    y: a.z * b.x - a.x * b.z,
-    z: a.x * b.y - a.y * b.x,
-  };
-}
-
+/**
+ * Stars are placed on the SURFACE of a sphere around their nucleus.
+ * Golden-angle spiral distribution gives uniform coverage so the sphere
+ * is visually recognizable from any angle. Each star slowly drifts along
+ * a great circle (Rodrigues rotation) to give orbital motion.
+ */
 export function computeStarOrbit(
   c: CaseStudy,
   nucleusKey: string,
   nucleusCenter: Vec3,
   rMin: number,
   rMax: number,
+  indexInGroup: number = 0,
+  groupSize: number = 1,
 ): StarOrbit {
   const ah = 'orb' + c.id;
+
+  // Sphere radius — slight variation per star for visual texture
+  const r = rMin + hash(ah + 'r') * (rMax - rMin);
+
+  // Golden-angle spiral: uniform point distribution on sphere surface
+  const GOLDEN = Math.PI * (3 - Math.sqrt(5));
+  const safeSize = Math.max(groupSize, 1);
+  const t0 = indexInGroup / safeSize;
+  const phi0 = Math.acos(1 - 2 * t0);   // polar angle: 0 → π
+  const theta0 = GOLDEN * indexInGroup;  // azimuthal: golden spiral
+
+  // Base position on sphere surface (at t=0, before drift)
+  const sinPhi = Math.sin(phi0);
+  const basePos: Vec3 = {
+    x: r * sinPhi * Math.cos(theta0),
+    y: r * sinPhi * Math.sin(theta0),
+    z: r * Math.cos(phi0),
+  };
+
+  // Random rotation axis for the slow drift (Rodrigues)
   const ax = normalize({
     x: hash(ah + 'ax') - 0.5,
     y: hash(ah + 'ay') - 0.5,
     z: hash(ah + 'az') - 0.5,
   });
-  let up: Vec3 = { x: 0, y: 1, z: 0 };
-  if (Math.abs(ax.x * up.x + ax.y * up.y + ax.z * up.z) > 0.92) up = { x: 1, y: 0, z: 0 };
-  const u = normalize(cross(ax, up));
-  const v = normalize(cross(ax, u));
-  const r = rMin === rMax ? 0 : rMin + hash(ah + 'r') * (rMax - rMin);
-  const phase = hash(ah + 'p') * Math.PI * 2;
+
   const dir = hash(ah + 'd') > 0.5 ? 1 : -1;
-  const speed = (0.00008 + hash(ah + 's') * 0.00020) * dir;
-  return { caseStudy: c, nucleusKey, orbitCenter: nucleusCenter, u, v, r, phase, speed };
+  const speed = (0.00006 + hash(ah + 's') * 0.00012) * dir;
+  const phase = hash(ah + 'p') * Math.PI * 2;
+
+  // u = base position on sphere, v = placeholder (not used in Rodrigues path)
+  return {
+    caseStudy: c,
+    nucleusKey,
+    orbitCenter: nucleusCenter,
+    u: basePos,
+    v: ax,   // store ax in v for compatibility; real axis is in _ax
+    r,
+    phase,
+    speed,
+    _ax: ax,
+  };
 }
 
+/**
+ * Rodrigues' rotation formula: rotates basePos around _ax by angle `a`.
+ * This keeps the star on the sphere surface as it drifts.
+ */
 export function starPositionAt(orbit: StarOrbit, t: number): Vec3 {
   const a = orbit.phase + t * orbit.speed;
+  const base = orbit.u;
+  const ax = orbit._ax;
+
+  if (!ax) {
+    // Fallback for any orbit without _ax (e.g. old data)
+    return {
+      x: orbit.orbitCenter.x + base.x * Math.cos(a) + orbit.v.x * Math.sin(a),
+      y: orbit.orbitCenter.y + base.y * Math.cos(a) + orbit.v.y * Math.sin(a),
+      z: orbit.orbitCenter.z + base.z * Math.cos(a) + orbit.v.z * Math.sin(a),
+    };
+  }
+
+  // Rodrigues: base*cos(a) + (ax × base)*sin(a) + ax*(ax·base)*(1-cos(a))
+  const cosA = Math.cos(a);
+  const sinA = Math.sin(a);
+  const dot = ax.x * base.x + ax.y * base.y + ax.z * base.z;
+  const cx = ax.y * base.z - ax.z * base.y;
+  const cy = ax.z * base.x - ax.x * base.z;
+  const cz = ax.x * base.y - ax.y * base.x;
+
   return {
-    x: orbit.orbitCenter.x + orbit.r * (orbit.u.x * Math.cos(a) + orbit.v.x * Math.sin(a)),
-    y: orbit.orbitCenter.y + orbit.r * (orbit.u.y * Math.cos(a) + orbit.v.y * Math.sin(a)),
-    z: orbit.orbitCenter.z + orbit.r * (orbit.u.z * Math.cos(a) + orbit.v.z * Math.sin(a)),
+    x: orbit.orbitCenter.x + base.x * cosA + cx * sinA + ax.x * dot * (1 - cosA),
+    y: orbit.orbitCenter.y + base.y * cosA + cy * sinA + ax.y * dot * (1 - cosA),
+    z: orbit.orbitCenter.z + base.z * cosA + cz * sinA + ax.z * dot * (1 - cosA),
   };
 }

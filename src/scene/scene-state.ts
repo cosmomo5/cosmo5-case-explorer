@@ -62,17 +62,22 @@ export function buildOrbitalScene(
     const color = NUCLEUS_COLORS[key] ?? DEFAULT_COLOR;
     const nucPos = nucleusPositionAt(nucOrbit, 0);
 
+    // Compute star orbital radii first (needed for halo sizing)
+    const n = nucOrbit.cases.length;
+    const rMin = Math.max(30, 15 + Math.sqrt(n) * 8);
+    const rMax = Math.max(rMin + 20, rMin + Math.sqrt(n) * 12);
+
     // Nucleus glow mesh
     const geo = new THREE.SphereGeometry(6, 12, 12);
     const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.9 });
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.set(nucPos.x, nucPos.y, nucPos.z);
-    mesh.userData = { key, isNucleus: true, nucleusOrbit: nucOrbit };
+    mesh.userData = { key, isNucleus: true, nucleusOrbit: nucOrbit, starRMax: rMax };
     scene.add(mesh);
     nucleusMeshes.set(key, mesh);
 
-    // Nucleus halo
-    const haloGeo = new THREE.SphereGeometry(8, 12, 12);
+    // Nucleus halo — sized to contain the star orbital shell
+    const haloGeo = new THREE.SphereGeometry(rMax + 10, 16, 16);
     const haloMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.06, side: THREE.BackSide });
     const halo = new THREE.Mesh(haloGeo, haloMat);
     halo.position.copy(mesh.position);
@@ -91,12 +96,9 @@ export function buildOrbitalScene(
     nucleusLabels.set(key, div);
 
     // Stars for this nucleus
-    const n = nucOrbit.cases.length;
-    const rMin = Math.max(30, 15 + Math.sqrt(n) * 8);
-    const rMax = Math.max(rMin + 20, rMin + Math.sqrt(n) * 12);
-
-    for (const c of nucOrbit.cases) {
-      const starOrbit = computeStarOrbit(c, key, nucPos, rMin, rMax);
+    const groupSize = nucOrbit.cases.length;
+    for (const [idx, c] of nucOrbit.cases.entries()) {
+      const starOrbit = computeStarOrbit(c, key, nucPos, rMin, rMax, idx, groupSize);
       const initPos = starPositionAt(starOrbit, 0);
 
       const sGeo = new THREE.SphereGeometry(2.5, 8, 8);
@@ -134,6 +136,9 @@ function matchesReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+// Module-scope scratch vectors — reused every tick, no allocations in the hot loop
+const _tickScratch = new THREE.Vector3();
+
 export function tickOrbits(
   objects: SceneObjects,
   t: number,
@@ -144,14 +149,16 @@ export function tickOrbits(
 
   // Update nucleus positions (outer orbital)
   for (const [key, nucOrbit] of Object.entries(nucleusOrbits)) {
+    // Skip focused nucleus — let it stay where focusSphere positioned it
+    if (objects.mode === 'focused' && key === objects.focusedKey) continue;
     const mesh = nucleusMeshes.get(key)!;
     const pos = prefersReduced ? nucleusPositionAt(nucOrbit, 0) : nucleusPositionAt(nucOrbit, t);
     mesh.position.set(pos.x, pos.y, pos.z);
     if (mesh.userData.halo) (mesh.userData.halo as THREE.Mesh).position.copy(mesh.position);
-    // Update star orbit centers to follow nucleus
+    // Update star orbit centers to follow nucleus — mutate in place, no spread allocation
     for (const star of starMeshes) {
       if ((star.userData.starOrbit as StarOrbit).nucleusKey === key) {
-        star.userData.starOrbit = { ...star.userData.starOrbit, orbitCenter: pos };
+        (star.userData.starOrbit as StarOrbit).orbitCenter = pos;
       }
     }
   }
@@ -162,7 +169,8 @@ export function tickOrbits(
     if (star.userData.isStagingTarget) continue; // GSAP controls staging stars
     const orbit = star.userData.starOrbit as StarOrbit;
     const pos = prefersReduced ? starPositionAt(orbit, 0) : starPositionAt(orbit, t);
-    star.position.lerp(new THREE.Vector3(pos.x, pos.y, pos.z), 0.055);
+    _tickScratch.set(pos.x, pos.y, pos.z);
+    star.position.lerp(_tickScratch, 0.055);
     // Opacity: dim unmatched stars when filter is active
     const mat = star.material as THREE.MeshBasicMaterial;
     const isMatch = !anyFilter || matchesFilter(star.userData.caseStudy as CaseStudy, filterState);
@@ -194,7 +202,11 @@ export function applyFilter(
     });
   }
 
-  const stagingPositions = computeStagingPositions(matchedStars.length, 80);
+  // In focused mode, stage near the focused nucleus; in global, stage at origin
+  const stagingCenter = objects.mode === 'focused' && objects.focusedKey
+    ? (() => { const m = objects.nucleusMeshes.get(objects.focusedKey!); return m ? { x: m.position.x, y: m.position.y, z: m.position.z } : undefined; })()
+    : undefined;
+  const stagingPositions = computeStagingPositions(matchedStars.length, 80, stagingCenter);
 
   for (const [i, star] of matchedStars.entries()) {
     star.userData.isStagingTarget = true;
@@ -271,7 +283,11 @@ export function focusSphere(
   // Boost focused nucleus
   gsap.to((nucleus.material as THREE.MeshBasicMaterial), { opacity: 1.0, duration: 0.6 });
 
-  // Dim stars from other nuclei, boost own
+  // Dim stars from other nuclei, flatten own stars to readable disk
+  const ownStars = objects.starMeshes.filter(s => s.userData.starOrbit?.nucleusKey === key);
+  const flatPositions = computeStagingPositions(ownStars.length, nucleus.userData.starRMax ?? 60);
+  const nucPos = nucleus.position;
+
   for (const star of objects.starMeshes) {
     if (star.userData.starOrbit?.nucleusKey !== key) {
       gsap.to((star.material as THREE.MeshBasicMaterial), { opacity: 0.04, duration: 0.8 });
@@ -279,6 +295,18 @@ export function focusSphere(
       gsap.to((star.material as THREE.MeshBasicMaterial), { opacity: 1.0, duration: 0.8 });
     }
   }
+
+  // Animate own stars to flat XY disk around the nucleus
+  ownStars.forEach((star, i) => {
+    star.userData.isStagingTarget = true;
+    const fp = flatPositions[i];
+    gsap.to(star.position, {
+      x: nucPos.x + fp.x,
+      y: nucPos.y + fp.y,
+      z: nucPos.z,
+      duration: 1.1, ease: 'power2.inOut',
+    });
+  });
 }
 
 // ── Unfocus: return to global view ────────────────────────────────────────
@@ -292,14 +320,14 @@ export function unfocusSphere(
   clearFilter(objects);
 
   if (orbitControls) {
-    gsap.to(camera.position, { x: 0, y: 0, z: 900, duration: 1.3, ease: 'power2.inOut' });
+    gsap.to(camera.position, { x: 80, y: 880, z: 280, duration: 1.3, ease: 'power2.inOut' });
     gsap.to(orbitControls.target, {
       x: 0, y: 0, z: 0,
       duration: 1.3, ease: 'power2.inOut',
       onUpdate() { orbitControls.update(); },
     });
   } else {
-    gsap.to(camera.position, { x: 0, y: 0, z: 900, duration: 1.3, ease: 'power2.inOut' });
+    gsap.to(camera.position, { x: 80, y: 880, z: 280, duration: 1.3, ease: 'power2.inOut' });
   }
 
   for (const mesh of objects.nucleusMeshes.values()) {

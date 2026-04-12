@@ -82,6 +82,8 @@ async function boot() {
     const filterPanelEl = document.getElementById('filters') as HTMLElement;
     mountFilterPanel(filterPanelEl, sceneObjects, (newMode) => {
       regroupScene(sceneObjects, newMode, scene);
+    }, () => {
+      exitFocus();
     });
 
     // ── Label opacity control ────────────────────────────────────────────
@@ -176,6 +178,12 @@ async function boot() {
       if (starHits.length > 0) {
         const c = (starHits[0].object as THREE.Mesh).userData.caseStudy as CaseStudy;
         detailPanel.open(c);
+        return;
+      }
+
+      // Click empty space while focused → unfocus
+      if (sceneObjects.mode === 'focused') {
+        exitFocus();
       }
     });
 

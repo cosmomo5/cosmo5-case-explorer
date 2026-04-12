@@ -7,6 +7,7 @@ export function mountFilterPanel(
   container: HTMLElement,
   objects: SceneObjects,
   onGroupModeChange: (mode: GroupMode) => void,
+  onExitFocus?: () => void,
 ): void {
   render();
 
@@ -109,10 +110,17 @@ export function mountFilterPanel(
       render();
     });
     container.querySelector('#focusBack')?.addEventListener('click', () => {
-      objects.mode = 'global';
-      objects.focusedKey = null;
-      clearFilter(objects);
-      render();
+      if (onExitFocus) {
+        onExitFocus();
+        // Re-render after the callback so state changes (mode, focusedKey) are reflected
+        requestAnimationFrame(() => render());
+      } else {
+        // Fallback: direct state mutation (no camera animation)
+        objects.mode = 'global';
+        objects.focusedKey = null;
+        clearFilter(objects);
+        render();
+      }
     });
 
     // Mode chips
@@ -120,6 +128,7 @@ export function mountFilterPanel(
       btn.addEventListener('click', () => {
         const mode = (btn as HTMLElement).dataset.mode as GroupMode;
         onGroupModeChange(mode);
+        render();
       });
     });
 

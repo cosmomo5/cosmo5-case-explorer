@@ -31,14 +31,15 @@ describe('computeStarOrbit', () => {
     expect(orbit.r).toBeGreaterThanOrEqual(10);
     expect(orbit.r).toBeLessThanOrEqual(60);
   });
-  it('u and v vectors are orthogonal', () => {
-    const orbit = computeStarOrbit(c, 'Performance', center, 10, 60);
-    const dot = orbit.u.x * orbit.v.x + orbit.u.y * orbit.v.y + orbit.u.z * orbit.v.z;
-    expect(Math.abs(dot)).toBeLessThan(0.001);
-  });
-  it('u is a unit vector', () => {
+  it('u (base sphere position) has magnitude equal to r', () => {
     const orbit = computeStarOrbit(c, 'Performance', center, 10, 60);
     const len = Math.sqrt(orbit.u.x**2 + orbit.u.y**2 + orbit.u.z**2);
+    expect(len).toBeCloseTo(orbit.r, 3);
+  });
+  it('_ax rotation axis is a unit vector', () => {
+    const orbit = computeStarOrbit(c, 'Performance', center, 10, 60);
+    const ax = orbit._ax!;
+    const len = Math.sqrt(ax.x**2 + ax.y**2 + ax.z**2);
     expect(len).toBeCloseTo(1, 5);
   });
   it('is deterministic — same inputs same output', () => {

@@ -36,9 +36,10 @@ export interface StarOrbit {
   caseStudy: CaseStudy;
   nucleusKey: string;
   orbitCenter: { x: number; y: number; z: number }; // nucleus world position at t=0
-  u: { x: number; y: number; z: number };
-  v: { x: number; y: number; z: number };
+  u: { x: number; y: number; z: number };  // base position on sphere surface (magnitude = r)
+  v: { x: number; y: number; z: number };  // rotation u-axis
   r: number;
   phase: number;
   speed: number;         // rad/frame, signed (negative = retrograde)
+  _ax?: { x: number; y: number; z: number }; // rotation axis for Rodrigues drift
 }

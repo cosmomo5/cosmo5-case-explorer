@@ -21,29 +21,50 @@ export interface NucleusOrbitData {
   cases: CaseStudy[];
 }
 
-const NUCLEUS_ORBIT_RMIN = 200;
-const NUCLEUS_ORBIT_RMAX = 400;
+// Two-band spacing: inner and outer rings prevent orbital path crossings
+const INNER_RMIN = 200;
+const INNER_RMAX = 260;
+const OUTER_RMIN = 340;
+const OUTER_RMAX = 400;
 
 export function computeNucleusOrbits(
   groups: Record<string, CaseStudy[]>
 ): Record<string, NucleusOrbitData> {
   const result: Record<string, NucleusOrbitData> = {};
-  for (const key of Object.keys(groups)) {
+  const keys = Object.keys(groups);
+  const count = keys.length;
+
+  for (let i = 0; i < count; i++) {
+    const key = keys[i];
     const nh = 'nuc' + key;
+
+    // Evenly-spaced angular placement so nuclei don't cluster
+    const evenPhase = (i / count) * Math.PI * 2;
+
+    // Alternate inner/outer band by index to prevent path crossings
+    const isInner = i % 2 === 0;
+    const rMin = isInner ? INNER_RMIN : OUTER_RMIN;
+    const rMax = isInner ? INNER_RMAX : OUTER_RMAX;
+    const orbitR = rMin + hash(nh + 'r') * (rMax - rMin);
+
+    // Gently tilted orbital plane — constrained z so nuclei stay in a
+    // rough disk but constellations read as volumetric, not flat.
+    // ax.z is clamped to [-0.35, 0.35] so tilt never exceeds ~20°.
+    const rawAz = (hash(nh + 'az') - 0.5) * 0.7; // range [-0.35, 0.35]
     const ax = normalize({
       x: hash(nh + 'ax') - 0.5,
       y: hash(nh + 'ay') - 0.5,
-      z: hash(nh + 'az') - 0.5,
+      z: rawAz,
     });
     let up: Vec3 = { x: 0, y: 1, z: 0 };
     if (Math.abs(ax.x*up.x + ax.y*up.y + ax.z*up.z) > 0.92) up = { x: 1, y: 0, z: 0 };
-    const u = normalize(cross(ax, up));
-    const v = normalize(cross(ax, u));
-    const orbitR = NUCLEUS_ORBIT_RMIN + hash(nh + 'r') * (NUCLEUS_ORBIT_RMAX - NUCLEUS_ORBIT_RMIN);
-    const phase = hash(nh + 'p') * Math.PI * 2;
+    const orbitU = normalize(cross(ax, up));
+    const orbitV = normalize(cross(ax, orbitU));
+
     const dir = hash(nh + 'd') > 0.5 ? 1 : -1;
     const speed = (0.00002 + hash(nh + 's') * 0.00006) * dir;
-    result[key] = { key, orbitR, orbitU: u, orbitV: v, phase, speed, cases: groups[key] };
+
+    result[key] = { key, orbitR, orbitU, orbitV, phase: evenPhase, speed, cases: groups[key] };
   }
   return result;
 }

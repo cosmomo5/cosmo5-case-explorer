@@ -16,7 +16,9 @@ export function createRenderer(canvas: HTMLCanvasElement): RendererContext {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 3000);
-  camera.position.set(0, 0, 900);
+  // Looking from above: Y-dominant position so z-variation in star orbits
+  // projects as visible XZ positional spread (V1 used phi=0.15, ~top-down)
+  camera.position.set(80, 880, 280);
 
   // Orbit controls — drag to rotate, scroll to zoom, right-click to pan
   const controls = new OrbitControls(camera, canvas);
@@ -28,6 +30,7 @@ export function createRenderer(canvas: HTMLCanvasElement): RendererContext {
   controls.minDistance     = 150;
   controls.maxDistance     = 1800;
   controls.enablePan       = true;
+  controls.zoomToCursor    = true;
   // Tilt limits — stop before flipping upside-down
   controls.minPolarAngle   = Math.PI * 0.15;
   controls.maxPolarAngle   = Math.PI * 0.85;
