@@ -3,6 +3,7 @@ import { createStarfield } from './scene/background/starfield';
 import { createRenderer } from './scene/renderer';
 import { buildOrbitalScene, tickOrbits } from './scene/scene-state';
 import type { CaseStudy } from './data/types';
+import { mountFilterPanel } from './ui/filter-panel';
 
 async function boot() {
   const resp = await fetch('/cases.json');
@@ -18,6 +19,12 @@ async function boot() {
   const labelContainer = document.getElementById('star-labels') as HTMLElement;
 
   const sceneObjects = buildOrbitalScene(cases, 'vertical', scene, labelContainer);
+
+  const filterPanelEl = document.getElementById('filters') as HTMLElement;
+  mountFilterPanel(filterPanelEl, sceneObjects, (newMode) => {
+    // Stub — Task 14 will implement regroupScene
+    sceneObjects.groupMode = newMode;
+  });
 
   // Tick loop
   function tick(t: number) {
