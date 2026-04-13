@@ -813,6 +813,40 @@ body.gather-on .cl{opacity:0 !important;pointer-events:none !important;
   border-top: 1px solid rgba(255,255,255,0.06); margin-top: 4px;
 }
 
+/* ── Shortlist Track Zone ── */
+#track-zone {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  overflow-x: auto;
+  height: 100%;
+}
+
+.track-card {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border: 1px solid var(--teal);
+  border-radius: 4px;
+  background: rgba(14,16,32,0.8);
+  color: var(--teal);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.track-card:hover {
+  background: rgba(var(--teal-rgb, 0,200,180), 0.15);
+}
+
+.track-empty {
+  color: rgba(255,255,255,0.3);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+}
+
 /* ── Accessibility: prefers-reduced-motion ── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
