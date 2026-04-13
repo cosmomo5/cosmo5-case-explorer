@@ -178,9 +178,10 @@ export class ReadingPanel {
     const mesh = this._findStarMesh(caseId);
     if (!mesh) return;
     mesh.userData.starState = this.shortlistStore.has(caseId) ? 'selected' : 'idle';
-    const mat = mesh.material as THREE.MeshStandardMaterial;
-    if (mat && 'emissiveIntensity' in mat) {
-      mat.emissiveIntensity = 0;
+    const mat = mesh.material as THREE.MeshBasicMaterial;
+    const originalColor = mesh.userData.originalColor as number | undefined;
+    if (mat && originalColor !== undefined) {
+      mat.color.setHex(originalColor);
     }
   }
 }

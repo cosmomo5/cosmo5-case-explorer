@@ -65,6 +65,46 @@ export interface SceneObjects {
   controls?: CameraControls;
 }
 
+// ── Star glow texture cache ───────────────────────────────────────────────────
+const _glowCache: Map<number, THREE.CanvasTexture> = new Map();
+
+function createGlowTexture(colorHex: number): THREE.CanvasTexture {
+  if (_glowCache.has(colorHex)) return _glowCache.get(colorHex)!;
+  const sz = 128;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = sz;
+  const ctx = canvas.getContext('2d')!;
+  const h = sz / 2;
+  const r = (colorHex >> 16) & 0xff;
+  const g = (colorHex >> 8) & 0xff;
+  const b = colorHex & 0xff;
+  const grad = ctx.createRadialGradient(h, h, 0, h, h, h);
+  grad.addColorStop(0,    `rgba(${r},${g},${b},0.9)`);
+  grad.addColorStop(0.25, `rgba(${r},${g},${b},0.45)`);
+  grad.addColorStop(0.6,  `rgba(${r},${g},${b},0.1)`);
+  grad.addColorStop(1,    `rgba(${r},${g},${b},0)`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, sz, sz);
+  const tex = new THREE.CanvasTexture(canvas);
+  _glowCache.set(colorHex, tex);
+  return tex;
+}
+
+function createGlowSprite(colorHex: number, starRadius: number, hasPermission: boolean): THREE.Sprite {
+  const mat = new THREE.SpriteMaterial({
+    map: createGlowTexture(colorHex),
+    transparent: true,
+    opacity: hasPermission ? 0.65 : 0.2,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+  const sprite = new THREE.Sprite(mat);
+  sprite.scale.setScalar(starRadius * 7);
+  sprite.userData.phase = Math.random() * Math.PI * 2;
+  sprite.userData.baseOpacity = hasPermission ? 0.65 : 0.2;
+  return sprite;
+}
+
 export function buildOrbitalScene(
   cases: CaseStudy[],
   groupMode: GroupMode,
@@ -124,16 +164,20 @@ export function buildOrbitalScene(
       const initPos = starPositionAt(starOrbit, 0);
 
       const sGeo = new THREE.SphereGeometry(2.5, 12, 12);
-      const sMat = new THREE.MeshStandardMaterial({
-        color,
-        transparent: true,
-        opacity: 0.85,
-        roughness: 0.45,
-        metalness: 0.15,
-      });
+      const sMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.85 });
       const star = new THREE.Mesh(sGeo, sMat);
       star.position.set(initPos.x, initPos.y, initPos.z);
-      star.userData = { caseStudy: c, starOrbit, isFiltered: false, isStagingTarget: false };
+      const hasPermission = (c as any).permission !== false;
+      const glowSprite = createGlowSprite(color, 2.5, hasPermission);
+      star.add(glowSprite); // child at local (0,0,0) — follows star position automatically
+      star.userData = {
+        caseStudy: c,
+        starOrbit,
+        isFiltered: false,
+        isStagingTarget: false,
+        glowSprite,
+        originalColor: color,
+      };
       scene.add(star);
       starMeshes.push(star);
       starOrbits.push(starOrbit);
@@ -369,7 +413,7 @@ export function tickOrbits(
       star.position.lerp(_tickScratch, 0.055);
     }
     // Opacity: ring highlight takes precedence, then filter chain
-    const mat = star.material as THREE.MeshStandardMaterial;
+    const mat = star.material as THREE.MeshBasicMaterial;
     if (inFocused && hasHighlight && ringOrbit) {
       mat.opacity = ringOrbit.ringValue === objects.highlightedRingValue ? 1.0 : 0.2;
     } else if (inFocused) {
@@ -379,16 +423,12 @@ export function tickOrbits(
       // Higher-precedence states (reading/selected/ghost) are never touched here.
       const storedState = (star.userData.starState ?? 'idle') as StarState;
       mat.opacity = resolveStarAppearance(storedState).opacity;
-      // Apply emissive gold glow when star is in reading state
+      // Apply gold color when star is in reading state (MeshBasicMaterial has no emissive)
+      const originalColor = star.userData.originalColor as number;
       if (storedState === 'reading') {
-        const appearance = resolveStarAppearance('reading');
-        if (appearance.colorOverride !== undefined) {
-          mat.emissive.setHex(appearance.colorOverride);
-          mat.emissiveIntensity = 0.6;
-        }
+        mat.color.setHex(0xe8b15a); // gold — same as appearance.colorOverride
       } else {
-        // Clear emissive for all other states — ensure no stale gold from a previous read
-        mat.emissiveIntensity = 0;
+        mat.color.setHex(originalColor);
       }
     } else {
       const isMatch = !anyFilter || matchesFilter(star.userData.caseStudy as CaseStudy, filterState);
@@ -466,7 +506,7 @@ export function applyFilter(
       const caseStudy = mesh.userData.caseStudy as CaseStudy | undefined;
       if (!caseStudy) continue;
 
-      const mat = mesh.material as THREE.MeshStandardMaterial;
+      const mat = mesh.material as THREE.MeshBasicMaterial;
       const currentState: StarState = (mesh.userData.starState ?? 'idle') as StarState;
 
       // Precedence: only apply filterDim/idle when star is in a filter-managed state.
