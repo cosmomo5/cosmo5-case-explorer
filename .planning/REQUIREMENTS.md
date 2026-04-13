@@ -9,7 +9,7 @@ Requirements for the v3.1 Dimensional Explorer milestone. Each maps to roadmap p
 
 ### Pre-work — Bug Fixes
 
-- [x] **FIX-01**: Mesh disposal chain ��� `gsap.killTweensOf()` before `scene.remove()`, then `geometry.dispose()` + `material.dispose()` on regroup
+- [x] **FIX-01**: Mesh disposal chain — `gsap.killTweensOf()` before `scene.remove()`, then `geometry.dispose()` + `material.dispose()` on regroup
 - [x] **FIX-02**: Vec3 GC pressure — eliminate per-frame `new THREE.Vector3()` allocations in tick loop; reuse module-scope scratch vectors
 - [x] **FIX-03**: Staging world-origin bug — `computeStagingPositions()` uses focused nucleus position as center, not (0,0,0)
 
@@ -75,6 +75,14 @@ Requirements for the v3.1 Dimensional Explorer milestone. Each maps to roadmap p
 - [x] **READ-08**: Permission gating — locked state if `permission: false`
 - [x] **READ-09**: Esc or close button closes panel (triggers T4)
 - [x] **READ-10**: Shortlist track in bottom zone — cases can be added/removed; track persists across focus/unfocus
+
+### Visual Warmth (Phase 6.5)
+
+- [ ] **WARM-01**: Each star has a canvas-texture glow sprite child (SpriteMaterial + AdditiveBlending) extending ~7x star radius, colored by nucleus category
+- [ ] **WARM-02**: Stars twinkle — per-star opacity oscillates at different phases in the tick loop (`baseOpacity * (0.7 + 0.3 * Math.sin(t * 0.7 + phase))`); no unison flicker
+- [ ] **WARM-03**: Star material is MeshBasicMaterial (self-emissive, not lit by the 3-light rig); reading-state gold glow uses `mat.color.setHex` instead of emissive
+- [ ] **WARM-04**: Nebula atmospheric gradients are perceptually visible on #0B0C10 — deep blue-indigo at 14% and 9% opacity (replaces gold at 4-6%)
+- [ ] **WARM-05**: `prefers-reduced-motion` gates twinkle animation (sprite opacity static when reduced-motion is active)
 
 ### Polish and Accessibility
 
@@ -169,6 +177,11 @@ Deferred to future release. Tracked but not in current roadmap.
 | READ-08 | Phase 6 | Complete |
 | READ-09 | Phase 6 | Complete |
 | READ-10 | Phase 6 | Complete |
+| WARM-01 | Phase 6.5 | Pending |
+| WARM-02 | Phase 6.5 | Pending |
+| WARM-03 | Phase 6.5 | Pending |
+| WARM-04 | Phase 6.5 | Pending |
+| WARM-05 | Phase 6.5 | Pending |
 | POL-01 | Phase 7 | Pending |
 | POL-02 | Phase 7 | Pending |
 | POL-03 | Phase 7 | Pending |
@@ -179,10 +192,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | POL-08 | Phase 7 | Pending |
 
 **Coverage:**
-- v1 requirements: 52 total
-- Mapped to phases: 52
+- v1 requirements: 57 total (52 original + 5 WARM-*)
+- Mapped to phases: 57
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-13*
-*Last updated: 2026-04-13 after research synthesis*
+*Last updated: 2026-04-13 — added WARM-01 through WARM-05 for Phase 6.5*

@@ -17,6 +17,7 @@ A locked-stack TypeScript/Three.js codebase gets a six-transition dimensional co
 - [x] **Phase 4: Concentric Orbit Layout + Expansion** - Concentric rings, space expansion, ring switcher
 - [x] **Phase 5: Filter Panel + Staging Sphere** - ProofType/ImpactScale filters, staging sphere (completed 2026-04-13)
 - [x] **Phase 6: Reading Panel + Track Selection** - Reading panel, shortlist track (completed 2026-04-13)
+- [ ] **Phase 6.5: Visual Warmth** - Restore star glow sprites, twinkle animation, nebula atmospheric depth (inserted 2026-04-13)
 - [ ] **Phase 7: Polish and Accessibility** - Timing asymmetry, prefers-reduced-motion audit, build verification
 
 ## Phase Details
@@ -136,6 +137,21 @@ Plans:
 - [ ] 06-03-PLAN.md — ShortlistTrack + syncShortlistToStarState (Wave 2, parallel)
 - [ ] 06-04-PLAN.md — Integration: arrow-key nav + ShortlistTrack mount + visual checkpoint (Wave 3)
 
+### Phase 6.5: Visual Warmth
+**Goal**: The observatory feels alive — stars glow and twinkle, the nebula has atmospheric depth, the overall impression shifts from "technical demo" to "inhabited space"
+**Depends on**: Phase 6
+**Requirements**: WARM-01, WARM-02, WARM-03, WARM-04, WARM-05
+**Success Criteria** (what must be TRUE):
+  1. Each star has a visible soft glow halo (SpriteMaterial + AdditiveBlending) extending ~7x beyond the mesh
+  2. Stars twinkle — per-star opacity oscillation with random phase offset
+  3. Star material is MeshBasicMaterial (self-emissive), not MeshStandardMaterial (lit)
+  4. Nebula has visible atmospheric depth at perceptual level (not flat)
+  5. Mo's first impression is NOT "cold"
+**Plans**: 1 plan
+
+Plans:
+- [ ] 06.5-01-PLAN.md — Star glow sprites + material switch + twinkle + nebula warmth (Wave 1)
+
 ### Phase 7: Polish and Accessibility
 **Goal**: Timing audit (returns ~20% slower than entries), reduced-motion audit, token audit (no purple, single ease), clean build, and end-to-end verification of the full flow: filter → stage → focus → read → shortlist
 **Depends on**: Phase 6
@@ -150,7 +166,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 7
+Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 6.5 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -161,4 +177,5 @@ Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 7
 | 4. Concentric Orbit Layout + Expansion | 3/3 | Complete | 2026-04-13 |
 | 5. Filter Panel + Staging Sphere | 4/4 | Complete   | 2026-04-13 |
 | 6. Reading Panel + Track Selection | 4/4 | Complete   | 2026-04-13 |
+| 6.5. Visual Warmth | 0/1 | Not started | - |
 | 7. Polish and Accessibility | 0/TBD | Not started | - |
