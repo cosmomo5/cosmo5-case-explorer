@@ -113,7 +113,7 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — FilterState extension + cross-filter count algorithm (Wave 1, TDD)
+- [x] 05-01-PLAN.md — FilterState extension + cross-filter count algorithm (Wave 1, TDD)
 - [ ] 05-02-PLAN.md — Accordion filter panel rewrite: 5 dimensions, status bar, orbit-by switcher (Wave 2)
 - [ ] 05-03-PLAN.md — Staging sphere lifecycle: create/animate/push/dissolve (Wave 2)
 - [ ] 05-04-PLAN.md — Focused-view filter dimming + visual checkpoint (Wave 3)
@@ -160,6 +160,6 @@ Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 7
 | 2. Layout | 2/2 | Complete | 2026-04-13 |
 | 3. Camera Transitions | 2/2 | Complete | 2026-04-13 |
 | 4. Concentric Orbit Layout + Expansion | 3/3 | Complete | 2026-04-13 |
-| 5. Filter Panel + Staging Sphere | 0/TBD | Not started | - |
+| 5. Filter Panel + Staging Sphere | 1/4 | Executing | 2026-04-13 |
 | 6. Reading Panel + Track Selection | 0/TBD | Not started | - |
 | 7. Polish and Accessibility | 0/TBD | Not started | - |

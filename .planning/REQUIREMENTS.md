@@ -9,9 +9,9 @@ Requirements for the v3.1 Dimensional Explorer milestone. Each maps to roadmap p
 
 ### Pre-work — Bug Fixes
 
-- [ ] **FIX-01**: Mesh disposal chain ��� `gsap.killTweensOf()` before `scene.remove()`, then `geometry.dispose()` + `material.dispose()` on regroup
-- [ ] **FIX-02**: Vec3 GC pressure — eliminate per-frame `new THREE.Vector3()` allocations in tick loop; reuse module-scope scratch vectors
-- [ ] **FIX-03**: Staging world-origin bug — `computeStagingPositions()` uses focused nucleus position as center, not (0,0,0)
+- [x] **FIX-01**: Mesh disposal chain ��� `gsap.killTweensOf()` before `scene.remove()`, then `geometry.dispose()` + `material.dispose()` on regroup
+- [x] **FIX-02**: Vec3 GC pressure — eliminate per-frame `new THREE.Vector3()` allocations in tick loop; reuse module-scope scratch vectors
+- [x] **FIX-03**: Staging world-origin bug — `computeStagingPositions()` uses focused nucleus position as center, not (0,0,0)
 
 ### Foundation — State and Types
 
@@ -39,54 +39,53 @@ Requirements for the v3.1 Dimensional Explorer milestone. Each maps to roadmap p
 - [ ] **CAM-05**: camera-controls migration — replace OrbitControls with camera-controls v3.1.2 for `rotateTo()` API
 - [ ] **CAM-06**: TransitionChoreographer — one tracked GSAP timeline per transition, killed via `gsap.context().revert()` on new transition start
 
-### Star Selection and Ghost System — T2 and T6
+### Concentric Orbit Layout + Expansion
 
-- [ ] **SEL-01**: Click star in constellation to toggle selection — star state changes to `selected` (white, bright glow, ring)
-- [ ] **SEL-02**: Selected star leaves orbital position — orbit shows gap
-- [ ] **SEL-03**: Ghost star remains at orbital position (dimmed, faint) when original is on track
-- [ ] **SEL-04**: Click ghost to remove star from shortlist and return it to orbit
-- [ ] **SEL-05**: T2 Star→Track (~600ms) — star flies in arc across divider to track position
-- [ ] **SEL-06**: T6 Remove→Orbit (~400ms) — star returns from track to orbital position; ghost dissolves on arrival
-- [ ] **SEL-07**: Track line draws from center outward as first star arrives (doesn't pre-exist)
-- [ ] **SEL-08**: Connector lines between adjacent staged stars on track
-- [ ] **SEL-09**: Track extends/contracts as stars added/removed
-- [ ] **SEL-10**: Single `material.opacity` setter respecting star state precedence (no opacity contention)
+- [ ] **ORB-01**: `computeConcentricOrbits(cases, masterDimension)` — distributes cases across concentric rings, each ring = one value of the auto-selected subdivision dimension
+- [ ] **ORB-02**: Auto-dimension selection — picks the remaining dimension with most even distribution across ring values
+- [ ] **ORB-03**: Ring-dimension switcher — user can override the auto-selected subdivision dimension in focused view
+- [ ] **ORB-04**: Visible orbit lines — THREE.Line or similar for each concentric ring; clickable to highlight all cases on that ring
+- [ ] **ORB-05**: Smooth orbital rotation — cases rotate along their ring at slow constant speed
+- [ ] **ORB-06**: Space expansion on focus — other dimension-spheres scale outward (orbital radii multiply) during T1, exit viewport
+- [ ] **ORB-07**: Space contraction on unfocus — spheres contract back during T5 to original positions
+- [ ] **ORB-08**: Ring count adapts to case count — min 1 ring, max ~8 rings; single-value dimensions collapse to one ring
 
-### Reading Panel — T3 and T4
+### Filter Panel + Staging Sphere
 
-- [ ] **READ-01**: Reading panel (340px) slides in from right on track star activation
-- [ ] **READ-02**: T3 Panel open (~400ms) — CSS slide transition, scene compresses leftward
+- [ ] **FILT-01**: All-dimension filter panel — shows country, service, year, ProofType, ImpactScale chips in both global and focused view
+- [x] **FILT-02**: Filter logic — AND between dimensions, OR within each dimension
+- [x] **FILT-03**: Live chip counts per current filter combination; chips with 0 matches grey out
+- [ ] **FILT-04**: Global filter → staging sphere — selecting chips in global view creates a new sphere with distinct color; matched stars animate to it
+- [ ] **FILT-05**: Staging sphere behavior — clickable, focusable (same T1 + concentric orbit view as any dimension-sphere)
+- [ ] **FILT-06**: Other spheres push outward slightly when staging sphere appears; slight zoom toward staging
+- [ ] **FILT-07**: Focused filter — narrows within constellation (filters apply to ring contents, dimming non-matching cases)
+- [ ] **FILT-08**: Filter status display — `N / total visible` + `reset all`
+- [ ] **FILT-09**: Staging sphere dissolves when filter is cleared (stars return to their original spheres)
+- [ ] **FILT-10**: Orbit-by switcher (Vertical/Country/Region) — changes which dimension defines the spheres in global view
+
+### Reading Panel + Track Selection
+
+- [ ] **READ-01**: Click case star → 340px reading panel slides in from right; scene compresses leftward
+- [ ] **READ-02**: T3 Panel open (~400ms) — CSS slide transition
 - [ ] **READ-03**: T4 Panel close (~350ms) — CSS slide out, scene expands
 - [ ] **READ-04**: Instrument readout strip — region/vertical/year in DM Mono grid cells, teal values
-- [ ] **READ-05**: Case sections — services chips, challenge, approach, results with metric cards (Noto 900 numbers)
-- [ ] **READ-06**: ← → arrow navigation controls both track active star and panel content simultaneously
-- [ ] **READ-07**: Active star glows gold in constellation while being read (not white — gold signals "being read")
+- [ ] **READ-05**: Case sections — services chips, challenge, approach, results with metric cards (Noto 900)
+- [ ] **READ-06**: ← → arrow navigation between cases (same ring or shortlist)
+- [ ] **READ-07**: Active case glows gold in orbit while being read
 - [ ] **READ-08**: Permission gating — locked state if `permission: false`
 - [ ] **READ-09**: Esc or close button closes panel (triggers T4)
-- [ ] **READ-10**: Dot indicators in panel footer showing position in shortlist
-
-### Filter Enrichment
-
-- [ ] **FILT-01**: Global filter panel — minimal constellation picker + orbit-by switcher (Vertical/Country/Region)
-- [ ] **FILT-02**: Focused filter panel — country, service, year chips scoped to current constellation
-- [ ] **FILT-03**: Focused filter panel — Proof Type chips (Revenue/ROAS, Conversion, Awareness, Engagement, Cost efficiency)
-- [ ] **FILT-04**: Focused filter panel — Impact Scale range slider (incremental → transformative)
-- [ ] **FILT-05**: Filter logic — AND between dimensions, OR within each dimension
-- [ ] **FILT-06**: Live chip count updates based on current filter combination (chips with ×0 grey out)
-- [ ] **FILT-07**: Already-staged stars on track unaffected by filter changes
-- [ ] **FILT-08**: Filter status display — `N / total visible` + `reset all`
-- [ ] **FILT-09**: Shortlist counter in filter panel — `N on shortlist` + `clear ×`
+- [ ] **READ-10**: Shortlist track in bottom zone — cases can be added/removed; track persists across focus/unfocus
 
 ### Polish and Accessibility
 
 - [ ] **POL-01**: All transitions use single `--ease: cubic-bezier(0.16, 1, 0.3, 1)`
-- [ ] **POL-02**: Returns ~20% slower than entries (T5 > T1, T6 > T2, T4 ≈ T3)
-- [ ] **POL-03**: `prefers-reduced-motion` respected — CSS keyframes to 0.01ms, GSAP globalTimeline paused, orbital motion stops
+- [ ] **POL-02**: Returns ~20% slower than entries (T5 > T1)
+- [ ] **POL-03**: `prefers-reduced-motion` respected — CSS keyframes to 0.01ms, GSAP paused, orbital rotation stops
 - [ ] **POL-04**: No `maximum-scale=1` in viewport meta
 - [ ] **POL-05**: No purple tokens anywhere
 - [ ] **POL-06**: Single `cubic-bezier` in CSS
 - [ ] **POL-07**: `npm run build` zero errors
-- [ ] **POL-08**: Cross-constellation shortlist verified — enter Beauty, select 2, go back, enter Performance, select 3, shortlist has 5
+- [ ] **POL-08**: Full flow test: filter → stage → focus → read → shortlist across constellations
 
 ## v2 Requirements
 
@@ -122,9 +121,9 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FIX-01 | Phase 0 | Pending |
-| FIX-02 | Phase 0 | Pending |
-| FIX-03 | Phase 0 | Pending |
+| FIX-01 | Phase 0 | Done |
+| FIX-02 | Phase 0 | Done |
+| FIX-03 | Phase 0 | Done |
 | FND-01 | Phase 1 | Pending |
 | FND-02 | Phase 1 | Pending |
 | FND-03 | Phase 1 | Pending |
@@ -142,35 +141,34 @@ Deferred to future release. Tracked but not in current roadmap.
 | CAM-04 | Phase 3 | Pending |
 | CAM-05 | Phase 3 | Pending |
 | CAM-06 | Phase 3 | Pending |
-| SEL-01 | Phase 4 | Pending |
-| SEL-02 | Phase 4 | Pending |
-| SEL-03 | Phase 4 | Pending |
-| SEL-04 | Phase 4 | Pending |
-| SEL-05 | Phase 4 | Pending |
-| SEL-06 | Phase 4 | Pending |
-| SEL-07 | Phase 4 | Pending |
-| SEL-08 | Phase 4 | Pending |
-| SEL-09 | Phase 4 | Pending |
-| SEL-10 | Phase 4 | Pending |
-| READ-01 | Phase 5 | Pending |
-| READ-02 | Phase 5 | Pending |
-| READ-03 | Phase 5 | Pending |
-| READ-04 | Phase 5 | Pending |
-| READ-05 | Phase 5 | Pending |
-| READ-06 | Phase 5 | Pending |
-| READ-07 | Phase 5 | Pending |
-| READ-08 | Phase 5 | Pending |
-| READ-09 | Phase 5 | Pending |
-| READ-10 | Phase 5 | Pending |
-| FILT-01 | Phase 6 | Pending |
-| FILT-02 | Phase 6 | Pending |
-| FILT-03 | Phase 6 | Pending |
-| FILT-04 | Phase 6 | Pending |
-| FILT-05 | Phase 6 | Pending |
-| FILT-06 | Phase 6 | Pending |
-| FILT-07 | Phase 6 | Pending |
-| FILT-08 | Phase 6 | Pending |
-| FILT-09 | Phase 6 | Pending |
+| ORB-01 | Phase 4 | Pending |
+| ORB-02 | Phase 4 | Pending |
+| ORB-03 | Phase 4 | Pending |
+| ORB-04 | Phase 4 | Pending |
+| ORB-05 | Phase 4 | Pending |
+| ORB-06 | Phase 4 | Pending |
+| ORB-07 | Phase 4 | Pending |
+| ORB-08 | Phase 4 | Pending |
+| FILT-01 | Phase 5 | Pending |
+| FILT-02 | Phase 5 | Pending |
+| FILT-03 | Phase 5 | Pending |
+| FILT-04 | Phase 5 | Pending |
+| FILT-05 | Phase 5 | Pending |
+| FILT-06 | Phase 5 | Pending |
+| FILT-07 | Phase 5 | Pending |
+| FILT-08 | Phase 5 | Pending |
+| FILT-09 | Phase 5 | Pending |
+| FILT-10 | Phase 5 | Pending |
+| READ-01 | Phase 6 | Pending |
+| READ-02 | Phase 6 | Pending |
+| READ-03 | Phase 6 | Pending |
+| READ-04 | Phase 6 | Pending |
+| READ-05 | Phase 6 | Pending |
+| READ-06 | Phase 6 | Pending |
+| READ-07 | Phase 6 | Pending |
+| READ-08 | Phase 6 | Pending |
+| READ-09 | Phase 6 | Pending |
+| READ-10 | Phase 6 | Pending |
 | POL-01 | Phase 7 | Pending |
 | POL-02 | Phase 7 | Pending |
 | POL-03 | Phase 7 | Pending |

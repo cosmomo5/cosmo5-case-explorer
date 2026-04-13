@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-04-13)
 
 ## Current Position
 
-Phase: 5 planned (4 complete)
-Plan: 4 plans in 3 waves, all created and committed
-Status: Ready for `/gsd:execute-phase 5`
-Last activity: 2026-04-13 (session 3) — Phase 5 plan created (4 plans, FILT-01 through FILT-10)
+Phase: 5 executing (4 complete + plan 05-01 done)
+Plan: 05-01 complete; 05-02 and 05-03 next (parallel, wave 2)
+Status: Plan 05-01 done — execute 05-02 and 05-03 next (wave 2, parallel)
+Last activity: 2026-04-13 (session 4) — Plan 05-01 executed: FilterState extended + cross-filter counts (130 tests)
 
 Progress: [██████░░░░] 68% (Phase 5 planned, not yet executed)
 
@@ -86,9 +86,15 @@ None.
 
 ## What's Next
 
-### Immediate: Execute Phase 5
-Run `/gsd:execute-phase 5` — Filter Panel + Staging Sphere.
+### Immediate: Execute Plans 05-02 + 05-03 (wave 2, parallel)
+Run `/gsd:execute-phase 5` to execute plans 05-02 (filter panel UI) and 05-03 (staging sphere) in parallel.
 Plans at: `.planning/phases/05-filter-panel-staging-sphere/`
+
+### Plan 05-01 Complete (wave 1)
+- FilterState extended: proofTypes, impactBands, FilterDimension, without()
+- filter-counts.ts created: computeChipCounts cross-filter algorithm, FILTER_DIMENSIONS
+- 130 tests pass (117 original + 13 new)
+- Commits: 0ce0b77 (RED), 0cdc306 (GREEN)
 
 ### Phase 6: Reading Panel + Track Selection
 - Click case → reading panel slides in from right; Shortlist track in bottom zone
