@@ -13,10 +13,10 @@ A locked-stack TypeScript/Three.js codebase gets a six-transition dimensional co
 - [x] **Phase 0: Pre-work** - Fix three existing bugs that compound under new transitions
 - [x] **Phase 1: Foundation** - State machine, ShortlistStore, derived data types
 - [x] **Phase 2: Layout** - Split canvas, divider, LayoutController, ResizeObserver
-- [ ] **Phase 3: Camera Transitions** - T1/T5, camera-controls migration, TransitionChoreographer
-- [ ] **Phase 4: Star Selection and Ghost System** - T2/T6, GhostManager, StagingTrack
-- [ ] **Phase 5: Reading Panel** - T3/T4, instrument readout, keyboard navigation
-- [ ] **Phase 6: Filter Enrichment** - ProofType + ImpactScale chips, live counts, AND/OR logic
+- [x] **Phase 3: Camera Transitions** - T1/T5, camera-controls migration, TransitionChoreographer
+- [ ] **Phase 4: Concentric Orbit Layout + Expansion** - Concentric rings, space expansion, ring switcher
+- [ ] **Phase 5: Filter Panel + Staging Sphere** - ProofType/ImpactScale filters, staging sphere
+- [ ] **Phase 6: Reading Panel + Track Selection** - Reading panel, shortlist track
 - [ ] **Phase 7: Polish and Accessibility** - Timing asymmetry, prefers-reduced-motion audit, build verification
 
 ## Phase Details
@@ -76,54 +76,59 @@ Plans:
 - [ ] 03-01-PLAN.md — camera-controls migration + TransitionChoreographer (Wave 1)
 - [ ] 03-02-PLAN.md — T1/T5 wiring + nuclei dissolve + visual verify (Wave 2)
 
-### Phase 4: Star Selection and Ghost System
-**Goal**: Clicking a star in the constellation sends it to the staging track — a ghost remains at its orbital position, the track draws and extends as stars accumulate, and clicking the ghost returns the star to orbit
+### Phase 4: Concentric Orbit Layout + Expansion
+**Goal**: Focused view shows cases on concentric orbital rings (each ring = a dimension value), with visible orbit lines, smooth rotation, and a ring-dimension switcher. Entering focus expands other spheres outward off-screen (space expansion metaphor). Exiting contracts them back.
 **Depends on**: Phase 3
-**Requirements**: SEL-01, SEL-02, SEL-03, SEL-04, SEL-05, SEL-06, SEL-07, SEL-08, SEL-09, SEL-10
+**Requirements**: ORB-01, ORB-02, ORB-03, ORB-04, ORB-05, ORB-06, ORB-07, ORB-08
 **Success Criteria** (what must be TRUE):
-  1. Clicking a star toggles its selection state (white glow + ring) and the star leaves its orbital position, leaving a visible gap
-  2. A dimmed ghost star appears at the orbital position; clicking the ghost removes the star from the shortlist and returns it to orbit via T6 arc
-  3. The staging track line draws from center outward as the first star arrives; subsequent stars extend it with connector lines between adjacent entries
-  4. The track contracts correctly when a star is returned — positions reflow, connectors update
-  5. Filter changes do not affect already-staged stars on the track
+  1. In focused view, cases are arranged on concentric circles — each ring corresponds to a value of one dimension (e.g., service types), outer ring has the most cases
+  2. The ring dimension is auto-selected (best subdivision of master dimension) but the user can override via a switcher
+  3. Visible orbit lines are drawn for each ring; clicking a ring highlights all cases on it
+  4. Cases rotate slowly along their ring orbit
+  5. Entering focus: other dimension-spheres expand outward and leave the screen; exiting: they contract back
+**Plans**: 3 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Ring math core (TDD): computeConcentricOrbits, ringPositionAt, autoSelectRingDimension (Wave 1)
+- [ ] 04-02-PLAN.md — Scene integration: expansion/contraction, ring lines, tick branch, ring click (Wave 2)
+- [ ] 04-03-PLAN.md — Ring switcher + visual verify (Wave 3)
+
+### Phase 5: Filter Panel + Staging Sphere
+**Goal**: The filter panel shows all dimensions in both global and focused view. Selecting filter chips in global view creates a staging sphere from matched cases. The staging sphere behaves like any other dimension-sphere (clickable, focusable). Filter panel in focused view narrows within the constellation.
+**Depends on**: Phase 4
+**Requirements**: FILT-01, FILT-02, FILT-03, FILT-04, FILT-05, FILT-06, FILT-07, FILT-08, FILT-09, FILT-10
+**Success Criteria** (what must be TRUE):
+  1. Filter panel shows all dimensions (country, service, year, ProofType, ImpactScale) in both views
+  2. In global view, selecting chips creates a staging sphere with a distinct color; matched stars animate to it
+  3. The staging sphere is clickable — entering it triggers the same T1 focus + concentric orbit view as any dimension-sphere
+  4. Other spheres push outward slightly when staging sphere appears; slight zoom toward staging
+  5. In focused view, filter panel narrows within the constellation (filters apply to ring contents)
+  6. AND between dimensions, OR within each dimension; live chip counts; chips with 0 matches grey out
 **Plans**: TBD
 
-### Phase 5: Reading Panel
-**Goal**: Activating a staged star opens the command bridge reading panel — instrument readout, case content, and ← → navigation all work, the scene stays visible and compressed, and closing the panel returns it to full width
-**Depends on**: Phase 4
-**Can parallelize with**: Phase 6
+### Phase 6: Reading Panel + Track Selection
+**Goal**: Clicking a case in focused view opens the reading panel. Cases can be selected to a shortlist track. Reading panel shows case details with navigation. Track persists across constellation visits.
+**Depends on**: Phase 5
 **Requirements**: READ-01, READ-02, READ-03, READ-04, READ-05, READ-06, READ-07, READ-08, READ-09, READ-10
 **Success Criteria** (what must be TRUE):
-  1. Clicking a staged star opens the 340px reading panel from the right (T3 ~400ms); the constellation and track compress leftward to fill the remaining canvas
-  2. The panel shows an instrument readout strip (region/vertical/year in DM Mono grid cells, teal values) and case sections (services chips, challenge, approach, results with Noto 900 metric cards)
-  3. Pressing ← or → navigates both the panel content and the active star on the track simultaneously
-  4. The star being read glows gold in the constellation (not white) while the panel is open
-  5. Pressing Esc or the close button triggers T4 (~350ms) and restores the full canvas width
-**Plans**: TBD
-
-### Phase 6: Filter Enrichment
-**Goal**: The focused filter panel (inside a constellation) gains ProofType and ImpactScale dimensions — chip counts update live per combination, AND/OR logic is correct, and the shortlist counter is visible
-**Depends on**: Phase 4
-**Can parallelize with**: Phase 5
-**Requirements**: FILT-01, FILT-02, FILT-03, FILT-04, FILT-05, FILT-06, FILT-07, FILT-08, FILT-09
-**Success Criteria** (what must be TRUE):
-  1. In global view, the filter panel shows only constellation picker and orbit-by switcher; inside a constellation it gains country/service/year + ProofType + ImpactScale dimensions
-  2. Selecting multiple chips within one dimension (e.g., two service types) includes stars matching either; combining dimensions (e.g., service + year) requires both
-  3. Chip labels show live counts for the current filter combination; chips with ×0 matches grey out
-  4. Stars already on the staging track are unaffected by filter changes — they remain visible and selectable regardless of active filters
-  5. The filter panel shows `N on shortlist` with a `clear ×` button and a `N / total visible` + `reset all` status line
+  1. Clicking a case star opens the 340px reading panel from the right; scene compresses leftward
+  2. Panel shows instrument readout + case sections (services, challenge, approach, results with metric cards)
+  3. ← → navigates between cases on the same ring or in the shortlist
+  4. Active case glows gold in the orbit while being read
+  5. Cases can be added to the shortlist track (bottom zone); track persists across focus/unfocus
+  6. Esc or close button collapses panel and restores canvas width
 **Plans**: TBD
 
 ### Phase 7: Polish and Accessibility
-**Goal**: The complete system passes a timing audit (returns ~20% slower than entries), a prefers-reduced-motion audit (three gates verified), a token audit (no purple, single ease), and a clean production build — the cross-constellation shortlist scenario is verified end-to-end
-**Depends on**: Phase 5, Phase 6
+**Goal**: Timing audit (returns ~20% slower than entries), reduced-motion audit, token audit (no purple, single ease), clean build, and end-to-end verification of the full flow: filter → stage → focus → read → shortlist
+**Depends on**: Phase 6
 **Requirements**: POL-01, POL-02, POL-03, POL-04, POL-05, POL-06, POL-07, POL-08
 **Success Criteria** (what must be TRUE):
-  1. All return transitions are ~20% slower than their corresponding entry transitions (T5 > T1, T6 > T2, T4 ≈ T3 within 10%)
-  2. With `prefers-reduced-motion: reduce` active: CSS keyframes run at 0.01ms, GSAP global timeline is paused, orbital motion stops
-  3. No purple color tokens exist anywhere in the rendered output; all ease values in CSS resolve to the single `cubic-bezier(0.16, 1, 0.3, 1)`
-  4. `npm run build` completes with zero TypeScript errors and zero Vite warnings
-  5. Manual test: enter Beauty constellation, select 2 stars, return to global, enter Performance constellation, select 3 stars — shortlist shows 5 entries
+  1. All return transitions are ~20% slower than corresponding entries
+  2. `prefers-reduced-motion: reduce` respected — CSS keyframes to 0.01ms, GSAP paused, orbital rotation stops
+  3. No purple tokens; single `cubic-bezier` in CSS
+  4. `npm run build` zero errors
+  5. Full flow test: enter Media sphere, select 2 cases to track, return, enter Performance, select 3 → track shows 5
 
 ## Progress
 
@@ -135,8 +140,8 @@ Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 7
 | 0. Pre-work | 3/3 | Complete | 2026-04-13 |
 | 1. Foundation | 3/3 | Complete | 2026-04-13 |
 | 2. Layout | 2/2 | Complete | 2026-04-13 |
-| 3. Camera Transitions | 0/2 | Not started | - |
-| 4. Star Selection and Ghost System | 0/TBD | Not started | - |
-| 5. Reading Panel | 0/TBD | Not started | - |
-| 6. Filter Enrichment | 0/TBD | Not started | - |
+| 3. Camera Transitions | 2/2 | Complete | 2026-04-13 |
+| 4. Concentric Orbit Layout + Expansion | 0/3 | Not started | - |
+| 5. Filter Panel + Staging Sphere | 0/TBD | Not started | - |
+| 6. Reading Panel + Track Selection | 0/TBD | Not started | - |
 | 7. Polish and Accessibility | 0/TBD | Not started | - |
