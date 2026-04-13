@@ -43,7 +43,7 @@ Progress: [███░░░░░░░] 29%
 
 Wave 1 → Wave 2 (02 and 03 parallel) → Wave 3
 
-## What Was Built (through Phase 4)
+## What Was Built (through Phase 5)
 
 | Phase | Tests After | Key Deliverables |
 |-------|-------------|-----------------|
@@ -52,6 +52,7 @@ Wave 1 → Wave 2 (02 and 03 parallel) → Wave 3
 | 2 Layout | 95 | Split canvas (#app-shell flex), ResizeObserver, LayoutController, coordinate fixes, Shift+P test shortcut |
 | 3 Camera Transitions | 101 | camera-controls v3.1.2, TransitionChoreographer (GSAP proxy pattern), T1/T5, transition lock on 6 input paths |
 | 4 Concentric Orbits | 117 | Ring math (concentric.ts), expansion/contraction, ring lines (THREE.LineLoop), ring click highlight, ring labels, ring dimension switcher, ordinal sorting |
+| 5 Filter Panel + Staging Sphere | 153 | Accordion filter panel (5 dims), cross-filter counts, staging sphere (global filter), T1 via staging click, focused filter dimming, orbit-by switcher, status bar |
 
 ## Accumulated Context
 
