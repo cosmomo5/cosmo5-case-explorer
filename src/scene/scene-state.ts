@@ -368,7 +368,7 @@ export function tickOrbits(
       star.position.lerp(_tickScratch, 0.055);
     }
     // Opacity: ring highlight takes precedence, then filter chain
-    const mat = star.material as THREE.MeshBasicMaterial;
+    const mat = star.material as THREE.MeshStandardMaterial;
     if (inFocused && hasHighlight && ringOrbit) {
       mat.opacity = ringOrbit.ringValue === objects.highlightedRingValue ? 1.0 : 0.2;
     } else if (inFocused) {
@@ -378,6 +378,17 @@ export function tickOrbits(
       // Higher-precedence states (reading/selected/ghost) are never touched here.
       const storedState = (star.userData.starState ?? 'idle') as StarState;
       mat.opacity = resolveStarAppearance(storedState).opacity;
+      // Apply emissive gold glow when star is in reading state
+      if (storedState === 'reading') {
+        const appearance = resolveStarAppearance('reading');
+        if (appearance.colorOverride !== undefined) {
+          mat.emissive.setHex(appearance.colorOverride);
+          mat.emissiveIntensity = 0.6;
+        }
+      } else {
+        // Clear emissive for all other states — ensure no stale gold from a previous read
+        mat.emissiveIntensity = 0;
+      }
     } else {
       const isMatch = !anyFilter || matchesFilter(star.userData.caseStudy as CaseStudy, filterState);
       const starState: StarState = isMatch ? 'filterMatch' : 'filterDim';
