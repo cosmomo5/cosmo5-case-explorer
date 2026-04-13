@@ -7,7 +7,6 @@ import type { StarOrbit } from '../data/types';
 import { groupBy } from '../data/grouping';
 import { computeNucleusOrbits, nucleusPositionAt } from './orbitals/nucleus-orbit';
 import { computeStarOrbit, starPositionAt } from './orbitals/star-orbit';
-import { computeStagingPositions } from './orbitals/staging';
 import { createFilterState, matchesFilter } from '../data/filter';
 import type { FilterState } from '../data/filter';
 import { resolveStarAppearance } from '../data/star-state';

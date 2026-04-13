@@ -14,17 +14,17 @@ vi.mock('gsap', () => ({
 
 import { computeStagingPositions } from './staging';
 import {
-  buildOrbitalScene,
   applyFilter,
   type SceneObjects,
 } from '../scene-state';
 import type { EnrichedCaseStudy } from '../../data/enrich';
+import { ProofType } from '../../data/proof-type';
 import { createFilterState } from '../../data/filter';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 /** Minimal EnrichedCaseStudy factory */
-function makeCase(id: string, proofType = 'awareness'): EnrichedCaseStudy {
+function makeCase(id: string, proofType: ProofType = ProofType.Awareness): EnrichedCaseStudy {
   return {
     id,
     title: `Case ${id}`,
@@ -37,8 +37,8 @@ function makeCase(id: string, proofType = 'awareness'): EnrichedCaseStudy {
     challenge: '',
     approach: '',
     metrics: [],
-    proofType: proofType as EnrichedCaseStudy['proofType'],
-    impactScale: { band: 'notable', score: 2 },
+    proofType,
+    impactScale: { value: 0.4, band: 'notable', maxPct: 50 },
   };
 }
 
@@ -82,6 +82,7 @@ function makeSceneObjects(cases: EnrichedCaseStudy[]): SceneObjects {
   });
 
   return {
+    scene,
     nucleusMeshes,
     nucleusLabels: new Map(),
     starMeshes,
@@ -157,14 +158,14 @@ describe('staging sphere lifecycle', () => {
 
   it('FILT-04: applyFilter() in global mode with active filter — nucleusMeshes has STAGING_KEY after call', () => {
     const filter = createFilterState();
-    filter.proofTypes.add('awareness');
+    filter.proofTypes.add(ProofType.Awareness);
     applyFilter(objects, filter);
     expect(objects.nucleusMeshes.has('__staging__')).toBe(true);
   });
 
   it('FILT-04: applyFilter() in global mode with active filter — nucleusOrbits has STAGING_KEY after call', () => {
     const filter = createFilterState();
-    filter.proofTypes.add('awareness');
+    filter.proofTypes.add(ProofType.Awareness);
     applyFilter(objects, filter);
     expect('__staging__' in objects.nucleusOrbits).toBe(true);
   });
@@ -172,7 +173,7 @@ describe('staging sphere lifecycle', () => {
   it('FILT-09: applyFilter() then clear filter — nucleusMeshes does NOT have STAGING_KEY', () => {
     vi.useFakeTimers();
     const filter = createFilterState();
-    filter.proofTypes.add('awareness');
+    filter.proofTypes.add(ProofType.Awareness);
     applyFilter(objects, filter);
     expect(objects.nucleusMeshes.has('__staging__')).toBe(true);
 
@@ -186,7 +187,7 @@ describe('staging sphere lifecycle', () => {
   it('FILT-09: clearing filter calls geometry.dispose() on the staging mesh', () => {
     vi.useFakeTimers();
     const filter = createFilterState();
-    filter.proofTypes.add('awareness');
+    filter.proofTypes.add(ProofType.Awareness);
     applyFilter(objects, filter);
     const stagingMesh = objects.nucleusMeshes.get('__staging__')!;
     const disposeSpy = vi.spyOn(stagingMesh.geometry, 'dispose');
@@ -200,7 +201,7 @@ describe('staging sphere lifecycle', () => {
 
   it('FILT-04: applying filter twice (filter changes) creates only one staging sphere', () => {
     const filter = createFilterState();
-    filter.proofTypes.add('awareness');
+    filter.proofTypes.add(ProofType.Awareness);
     applyFilter(objects, filter);
     expect(objects.nucleusMeshes.size).toBe(2); // 'Media' + '__staging__'
 
