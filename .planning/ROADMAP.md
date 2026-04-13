@@ -14,7 +14,7 @@ A locked-stack TypeScript/Three.js codebase gets a six-transition dimensional co
 - [x] **Phase 1: Foundation** - State machine, ShortlistStore, derived data types
 - [x] **Phase 2: Layout** - Split canvas, divider, LayoutController, ResizeObserver
 - [x] **Phase 3: Camera Transitions** - T1/T5, camera-controls migration, TransitionChoreographer
-- [ ] **Phase 4: Concentric Orbit Layout + Expansion** - Concentric rings, space expansion, ring switcher
+- [x] **Phase 4: Concentric Orbit Layout + Expansion** - Concentric rings, space expansion, ring switcher
 - [ ] **Phase 5: Filter Panel + Staging Sphere** - ProofType/ImpactScale filters, staging sphere
 - [ ] **Phase 6: Reading Panel + Track Selection** - Reading panel, shortlist track
 - [ ] **Phase 7: Polish and Accessibility** - Timing asymmetry, prefers-reduced-motion audit, build verification
@@ -29,7 +29,13 @@ A locked-stack TypeScript/Three.js codebase gets a six-transition dimensional co
   1. Regrouping (vertical/country/region switch) produces no GPU memory leak — mesh disposal disposes geometry and material after killing tweens
   2. The tick loop allocates no new `THREE.Vector3` objects per frame — scratch vectors are module-scope
   3. Staging positions center on the focused nucleus, not world origin — existing staging behavior is visually correct
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — FilterState extension + cross-filter count algorithm (Wave 1, TDD)
+- [ ] 05-02-PLAN.md — Accordion filter panel rewrite: 5 dimensions, status bar, orbit-by switcher (Wave 2)
+- [ ] 05-03-PLAN.md — Staging sphere lifecycle: create/animate/push/dissolve (Wave 2)
+- [ ] 05-04-PLAN.md — Focused-view filter dimming + visual checkpoint (Wave 3)
 
 ### Phase 1: Foundation
 **Goal**: The data and state layer exists — ViewState machine, ShortlistStore with pub/sub, and ProofType/ImpactScale derivation are all independently testable before any UI touches them
@@ -104,7 +110,13 @@ Plans:
   4. Other spheres push outward slightly when staging sphere appears; slight zoom toward staging
   5. In focused view, filter panel narrows within the constellation (filters apply to ring contents)
   6. AND between dimensions, OR within each dimension; live chip counts; chips with 0 matches grey out
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — FilterState extension + cross-filter count algorithm (Wave 1, TDD)
+- [ ] 05-02-PLAN.md — Accordion filter panel rewrite: 5 dimensions, status bar, orbit-by switcher (Wave 2)
+- [ ] 05-03-PLAN.md — Staging sphere lifecycle: create/animate/push/dissolve (Wave 2)
+- [ ] 05-04-PLAN.md — Focused-view filter dimming + visual checkpoint (Wave 3)
 
 ### Phase 6: Reading Panel + Track Selection
 **Goal**: Clicking a case in focused view opens the reading panel. Cases can be selected to a shortlist track. Reading panel shows case details with navigation. Track persists across constellation visits.
@@ -117,7 +129,13 @@ Plans:
   4. Active case glows gold in the orbit while being read
   5. Cases can be added to the shortlist track (bottom zone); track persists across focus/unfocus
   6. Esc or close button collapses panel and restores canvas width
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — FilterState extension + cross-filter count algorithm (Wave 1, TDD)
+- [ ] 05-02-PLAN.md — Accordion filter panel rewrite: 5 dimensions, status bar, orbit-by switcher (Wave 2)
+- [ ] 05-03-PLAN.md — Staging sphere lifecycle: create/animate/push/dissolve (Wave 2)
+- [ ] 05-04-PLAN.md — Focused-view filter dimming + visual checkpoint (Wave 3)
 
 ### Phase 7: Polish and Accessibility
 **Goal**: Timing audit (returns ~20% slower than entries), reduced-motion audit, token audit (no purple, single ease), clean build, and end-to-end verification of the full flow: filter → stage → focus → read → shortlist
@@ -141,7 +159,7 @@ Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 7
 | 1. Foundation | 3/3 | Complete | 2026-04-13 |
 | 2. Layout | 2/2 | Complete | 2026-04-13 |
 | 3. Camera Transitions | 2/2 | Complete | 2026-04-13 |
-| 4. Concentric Orbit Layout + Expansion | 0/3 | Not started | - |
+| 4. Concentric Orbit Layout + Expansion | 3/3 | Complete | 2026-04-13 |
 | 5. Filter Panel + Staging Sphere | 0/TBD | Not started | - |
 | 6. Reading Panel + Track Selection | 0/TBD | Not started | - |
 | 7. Polish and Accessibility | 0/TBD | Not started | - |
