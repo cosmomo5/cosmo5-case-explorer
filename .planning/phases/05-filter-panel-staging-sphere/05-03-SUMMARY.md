@@ -109,6 +109,13 @@ Note: 11 additional tests (filter-panel accordion) came from parallel plan 05-02
 - **Fix:** Added explicit `if (key === STAGING_KEY)` guard in focusSphere that kills all star tweens and clears isStagingTarget before T1 expansion runs.
 - **Files modified:** src/scene/scene-state.ts
 
+**6. [Rule 3 - Blocking] TypeScript build errors in staging.test.ts + scene-state.ts**
+- **Found during:** Post-completion build verification (`npm run build`)
+- **Issue:** 9 TypeScript errors: unused `buildOrbitalScene` import, `'awareness'` string not assignable to `ProofType` enum (5 call sites), `score` not a field on `ImpactScale` (should be `value + band + maxPct`), unused `computeStagingPositions` import in scene-state.ts
+- **Fix:** Removed unused imports; replaced all `'awareness'` string literals with `ProofType.Awareness` enum value; fixed `ImpactScale` object to use `{ value: 0.4, band: 'notable', maxPct: 50 }` shape
+- **Files modified:** src/scene/orbitals/staging.test.ts, src/scene/scene-state.ts
+- **Commit:** fdb511d
+
 ## Commits
 
 | Hash | Message |
@@ -116,6 +123,7 @@ Note: 11 additional tests (filter-panel accordion) came from parallel plan 05-02
 | ebcba53 | test(05-03): add failing tests for staging sphere lifecycle (RED) |
 | f2ddefd | feat(05-03): implement staging sphere lifecycle (GREEN) |
 | 05fb77e | feat(05-03): implement staging push, camera lean, T1 staging focus cleanup |
+| fdb511d | fix(05-03): resolve TypeScript build errors in staging tests and scene-state |
 
 ## Self-Check: PASSED
 
@@ -125,5 +133,7 @@ Note: 11 additional tests (filter-panel accordion) came from parallel plan 05-02
 - FOUND: commit ebcba53 (RED tests)
 - FOUND: commit f2ddefd (GREEN lifecycle)
 - FOUND: commit 05fb77e (push+zoom+T1)
+- FOUND: commit fdb511d (TS build fixes)
 - FOUND: STAGING_KEY, _stagingDisposalTimeout, createStagingNucleus, disposeStagingNucleus, applyStagingPush
 - Tests: 146 passed (16 files)
+- Build: tsc + vite pass clean
