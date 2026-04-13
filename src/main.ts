@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { createStarfield } from './scene/background/starfield';
 import { createRenderer } from './scene/renderer';
-import { buildOrbitalScene, tickOrbits, focusSphere, unfocusSphere, switchRingDimension } from './scene/scene-state';
+import { buildOrbitalScene, tickOrbits, focusSphere, unfocusSphere, switchRingDimension, syncShortlistToStarState } from './scene/scene-state';
 import type { RingDimension } from './scene/orbitals/concentric';
 import type { CaseStudy } from './data/types';
 import { enrichCases } from './data/enrich';
@@ -18,6 +18,7 @@ import { regroupScene } from './scene/regroup';
 import { Tooltip, projectToScreen } from './ui/tooltip';
 import { DetailPanel } from './ui/detail-panel';
 import { ReadingPanel } from './ui/reading-panel';
+import { ShortlistTrack } from './ui/shortlist-track';
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.globalTimeline.timeScale(0);
@@ -69,6 +70,7 @@ async function boot() {
     if (!resp.ok) throw new Error(`cases.json ${resp.status}`);
     const rawCases: CaseStudy[] = await resp.json();
     const cases = enrichCases(rawCases);
+    const caseById = new Map<string, CaseStudy>(cases.map(c => [c.id, c]));
 
     // ── State primitives (boot-level, never inside SceneObjects) ────────
     const viewState = createViewStateMachine();
@@ -107,6 +109,24 @@ async function boot() {
 
     // ── ReadingPanel (wired to layoutController, viewState, shortlistStore) ──
     const readingPanel = new ReadingPanel(layoutController, viewState, shortlistStore, sceneObjects);
+
+    // ── ShortlistTrack: mount into bottom track zone ─────────────────────
+    const trackContainer = document.getElementById('track-zone')!;
+    const shortlistTrack = new ShortlistTrack(
+      trackContainer,
+      shortlistStore,
+      (caseId) => {
+        const c = caseById.get(caseId);
+        if (c && sceneObjects.focusedKey) readingPanel.open(c, sceneObjects.focusedKey);
+      },
+      (caseId) => caseById.get(caseId)?.client ?? caseId,
+    );
+    void shortlistTrack; // consumed by ShortlistStore subscription internally
+
+    // ── Subscribe ShortlistStore → syncShortlistToStarState ──────────────
+    shortlistStore.subscribe((entries) => {
+      syncShortlistToStarState(sceneObjects, entries);
+    });
 
     // ── Sync ViewState → SceneObjects.mode for backward compatibility ───
     viewState.subscribe((next) => {
@@ -435,9 +455,27 @@ async function boot() {
         }
       }
 
-      // Arrow keys: cycle through nucleus groups
-      // Guard: if reading panel is open, arrow navigation is handled in 06-04-PLAN.md
-      if (readingPanel.isOpen()) { return; }
+      // Arrow keys: if reading panel is open, cycle cases on the current ring
+      if (readingPanel.isOpen() && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+        // Extract cases on the current ring, sorted by ringIndex then angleOffset
+        const ringCases = sceneObjects.starMeshes
+          .filter(s => s.userData.ringOrbit != null)
+          .map(s => s.userData.caseStudy as CaseStudy)
+          .sort((a, b) => {
+            const ra = sceneObjects.starMeshes.find(s => (s.userData.caseStudy as CaseStudy)?.id === a.id)?.userData.ringOrbit;
+            const rb = sceneObjects.starMeshes.find(s => (s.userData.caseStudy as CaseStudy)?.id === b.id)?.userData.ringOrbit;
+            if (!ra || !rb) return 0;
+            if (ra.ringIndex !== rb.ringIndex) return ra.ringIndex - rb.ringIndex;
+            return ra.angleOffset - rb.angleOffset;
+          });
+        if (ringCases.length > 0) {
+          readingPanel.navigate(e.key === 'ArrowRight' ? 'next' : 'prev', ringCases);
+        }
+        e.preventDefault();
+        return;
+      }
+
+      // Arrow keys: cycle through nucleus groups (panel closed)
       if (sceneObjects.mode === 'focused' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
         const keys = Object.keys(sceneObjects.nucleusOrbits);
         const idx  = keys.indexOf(sceneObjects.focusedKey ?? '');
