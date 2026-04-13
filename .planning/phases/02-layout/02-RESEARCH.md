@@ -26,7 +26,7 @@ Phase 2 establishes the layout that all subsequent phases depend on. The core ar
 
 The reading panel compression (LAY-05) works by a flex row model: `#app-shell` is a `flex-row`, `#scene-container` gets `flex: 1` (shrinks when `#reading-panel-slot` expands), and a `ResizeObserver` on `#scene-container` fires whenever the container changes size — whether from window resize or panel slot expansion. This single observer replaces the existing `window.resize` handler in `renderer.ts` and handles both LAY-04 and LAY-05 in one mechanism.
 
-Two load-bearing changes to existing code: (1) `renderer.ts` must swap `window.resize` + `innerWidth/innerHeight` for a `ResizeObserver` on the container element, accepting the container in its signature; (2) mouse coordinate computation in `main.ts` (lines 159, 179) must switch from `innerWidth/innerHeight` to `canvas.getBoundingClientRect()` — the current approach gives silently wrong raycasting results when the canvas is no longer full-viewport.
+Three load-bearing changes to existing code: (1) `renderer.ts` must swap `window.resize` + `innerWidth/innerHeight` for a `ResizeObserver` on the container element, accepting the container in its signature, using `renderer.setSize(w, h, false)` so Three.js does not override the CSS sizing; (2) mouse coordinate computation in `main.ts` (lines 159, 179) must switch from `innerWidth/innerHeight` to `canvas.getBoundingClientRect()`; (3) `projectToScreen` in `src/ui/tooltip.ts` (lines 45-46) uses `innerWidth/innerHeight` for label positioning — same class of bug as (2), same fix required. All three sites must be updated together or label and raycasting coordinates will be inconsistent when the panel compresses the scene.
 
 **Primary recommendation:** Four deliverables — `src/layout/layout-controller.ts`, HTML/CSS changes for `#app-shell` / `#scene-container` / `#reading-panel-slot` / `#divider-line`, updated `renderer.ts` with ResizeObserver, and patched mouse coordinate code in `main.ts`.
 
@@ -294,12 +294,17 @@ This lets QA verify the Three.js canvas resizes correctly when the slot expands,
 
 ## Common Pitfalls
 
-### Pitfall 1: Raycasting Breaks Silently When Canvas Leaves Full-Viewport
+### Pitfall 1: Three `innerWidth/innerHeight` Sites All Break When Canvas Leaves Full-Viewport
 
-**What goes wrong:** Stars can't be clicked, or clicks register on the wrong star. No console errors.
-**Why it happens:** `(e.clientX / innerWidth) * 2 - 1` gives a value outside [-1, 1] when `clientX > canvas.width`. Three.js raycasting silently produces wrong rays.
-**How to avoid:** Switch to `canvas.getBoundingClientRect()` in BOTH `pointermove` and `pointerup` handlers before merging LAY-05 work. This is in `main.ts` lines 159 and 179.
-**Warning signs:** Hover tooltip appears on wrong star, or no clicks register in constellation mode.
+**What goes wrong:** Stars can't be clicked (or register on the wrong star), AND nucleus labels appear at wrong positions — sometimes over the reading panel. No console errors in either case.
+**Why it happens:** Three places use `innerWidth/innerHeight` assuming the canvas covers the viewport:
+  - `main.ts` line 159 (`pointermove` raycasting mouse normalization)
+  - `main.ts` line 179 (`pointerup` raycasting mouse normalization)
+  - `src/ui/tooltip.ts` lines 45-46 (`projectToScreen` — normalizes 3D→2D for label positioning)
+
+All three produce coordinates outside their expected range as soon as `#scene-container` is narrower than `window.innerWidth`.
+**How to avoid:** Patch all three sites together. For raycasting: `canvas.getBoundingClientRect()`. For `projectToScreen`: accept a `containerWidth`/`containerHeight` argument (or a rect) instead of reading `innerWidth/innerHeight`.
+**Warning signs:** Hover tooltip on wrong star; nucleus labels drifting into the reading panel area; no click response in constellation mode.
 
 ### Pitfall 2: Canvas Renders at 300×150 on First Load
 
@@ -315,13 +320,21 @@ This lets QA verify the Three.js canvas resizes correctly when the slot expands,
 **How to avoid:** Change `#star-labels` from `position: fixed` to `position: absolute` inside `#scene-container`. Verify existing label offset math in `main.ts` tick loop still works correctly.
 **Warning signs:** Labels appear over reading panel instead of canvas.
 
-### Pitfall 4: Stale `innerWidth/innerHeight` in canvas.style
+### Pitfall 4: Three.js `setSize` Overwrites Canvas CSS Dimensions
 
-**What goes wrong:** The canvas DOM element keeps its original `style.width/height` set by `renderer.setSize(innerWidth, innerHeight)`, which overrides the CSS `width: 100%; height: 100%` on `#main-canvas`.
-**Why it happens:** Three.js `renderer.setSize()` by default sets `style.width` and `style.height` on the canvas element.
-**How to avoid:** Either call `renderer.setSize(w, h, false)` (third arg `false` = don't update CSS) and rely purely on CSS `width: 100%; height: 100%`, or call it with the container's dimensions. Confirm via DevTools that `#main-canvas` style doesn't have hardcoded pixel dimensions overriding the flex layout.
+**What goes wrong:** `#main-canvas` has `style.width: 1280px; style.height: 720px` (or whatever the initial viewport was), which overrides the CSS `width: 100%; height: 100%`. After the flex layout shrinks `#scene-container`, the canvas stays at its original size and overflows.
+**Why it happens:** `renderer.setSize(w, h)` by default writes `style.width` and `style.height` to the canvas DOM element. These inline styles beat the stylesheet.
+**How to avoid:** Always call `renderer.setSize(w, h, false)` — the third argument `false` prevents Three.js from touching the canvas's CSS. The CSS rule `#main-canvas { width: 100%; height: 100%; }` then controls visual sizing. The internal buffer dimensions (pixel-perfect rendering) are still set correctly by the `w, h` arguments.
+**Warning signs:** Canvas visible size doesn't change when reading panel opens; overflow scroll appears inside `#scene-container`.
 
-### Pitfall 5: Wrong Stylesheet (styles.css vs. src/style.css)
+### Pitfall 5: Inline `style=` Attributes in `index.html` Override All CSS Rules
+
+**What goes wrong:** CSS changes in `src/style.css` have no effect on `#main-canvas` or `#star-labels`. The elements stay `position: fixed; inset: 0` no matter what stylesheet rule is written.
+**Why it happens:** `index.html` line 19 has `<canvas id="main-canvas" style="position:fixed;inset:0;z-index:3">` and line 26 has `<div id="star-labels" style="position:fixed;inset:0;z-index:4;pointer-events:none">`. Inline `style=` attributes have higher specificity than any stylesheet rule — they cannot be overridden by a CSS class or ID selector.
+**How to avoid:** Remove the inline `style=` attributes from both elements in `index.html` as part of Phase 2's HTML restructuring task. Move their values (z-index, pointer-events) to `src/style.css` rules. Position changes (`fixed` → `absolute`) then apply correctly.
+**Warning signs:** `#main-canvas` doesn't fill `#scene-container`; DevTools shows `position: fixed` even after adding CSS `position: absolute` rule.
+
+### Pitfall 6: Wrong Stylesheet (styles.css vs. src/style.css)
 
 **What goes wrong:** Changes to `styles.css` (root-level) have no effect; changes appear in the wrong file.
 **Why it happens:** Two stylesheets exist. `styles.css` at root is the legacy stylesheet (has purple tokens, different ease curve, not imported by the v3 module entry). `src/style.css` is the active stylesheet imported in `src/main.ts` line 3.
