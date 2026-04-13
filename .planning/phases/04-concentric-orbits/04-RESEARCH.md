@@ -13,11 +13,11 @@
 |----|-------------|-----------------|
 | ORB-01 | `computeConcentricOrbits(cases, masterDimension)` — distributes cases across concentric rings, each ring = one value of the auto-selected subdivision dimension | Ring layout math section; entropy-based selection algorithm |
 | ORB-02 | Auto-dimension selection — picks the remaining dimension with most even distribution across ring values | Empirical entropy scores from real data; recommended algorithm |
-| ORB-03 | Ring-dimension switcher — user can override the auto-selected subdivision dimension in focused view | UI component pattern section; switcher integration points |
+| ORB-03 | Ring-dimension switcher — user can override the auto-selected subdivision dimension in focused view | Pattern 7: Ring-Dimension Switcher (ORB-03) |
 | ORB-04 | Visible orbit lines — THREE.Line or similar for each concentric ring; clickable to highlight all cases | THREE.LineLoop API; raycaster threshold for lines |
 | ORB-05 | Smooth orbital rotation — cases rotate along their ring at slow constant speed | New focused-mode tick model; decoupled from existing Rodrigues drift |
 | ORB-06 | Space expansion on focus — other dimension-spheres scale outward (orbital radii multiply) during T1 | Expansion scope decision; GSAP integration with T1 choreographer |
-| ORB-07 | Space contraction on unfocus — spheres contract back during T5 to original positions | Contraction mirrors expansion; original position storage |
+| ORB-07 | Space contraction on unfocus — spheres contract back during T5 to original positions | Contraction mirrors expansion; homePos stored at build time |
 | ORB-08 | Ring count adapts to case count — min 1 ring, max ~8 rings; single-value dimensions collapse to one ring | Clamping algorithm; degenerate cases |
 </phase_requirements>
 
@@ -43,7 +43,7 @@ The currently-implemented `focusSphere` (lines 258-270 of `scene-state.ts`) diss
 
 **Scope of expansion:** Expand nucleus mesh + halo + that nucleus's stars together. Stars of non-focused nuclei should move with their nucleus (offset preserved), not scatter independently. This keeps the "sphere moving away" metaphor coherent. Total GSAP tweens per nucleus: 1 (nucleus position) + 1 (halo position) + N (stars), where N = number of stars. For 6 nuclei with ~15 stars each, that is 6 × (2 + 15) = 102 tweens launched at once — well within GSAP's capacity.
 
-**Store original positions before expanding:** Each nucleus's pre-expansion position must be saved so contraction can reverse exactly. Store as `mesh.userData.preExpansionPos` at the moment `focusSphere` is called.
+**Store original positions at build time:** Each nucleus's canonical global-mode position must be stored once, when the scene is built, as `mesh.userData.homePos`. Contraction always targets `homePos`. Do NOT store `preExpansionPos` at focus time — if focus is triggered before a prior contraction completes, `preExpansionPos` would capture a mid-animation position and drift would accumulate across cycles.
 
 ---
 
@@ -90,8 +90,12 @@ export interface RingOrbit {
   angleOffset: number;      // starting angle on the ring (radians), deterministic from hash
   angularSpeed: number;     // radians per millisecond tick, slow constant (e.g. 0.00004)
   orbitCenter: Vec3;        // nucleus world position (updated each tick)
+  orbitU: Vec3;             // orbital plane basis vector U (from NucleusOrbitData)
+  orbitV: Vec3;             // orbital plane basis vector V (from NucleusOrbitData)
 }
 ```
+
+`RingOrbit` carries `orbitU` and `orbitV` from the parent `NucleusOrbitData` so that `ringPositionAt` can compute positions on the correct tilted orbital plane. Orbital planes are tilted up to ~20 degrees (z component ±0.35); using hardcoded XY would place ring stars on the wrong plane while ring lines (which use a quaternion from `orbitU × orbitV`) are on the correct plane.
 
 `RingOrbit` is stored in `star.userData.ringOrbit` during focused mode. The existing `star.userData.starOrbit` (Rodrigues) remains untouched — the tick loop branches on `objects.mode`.
 
@@ -109,7 +113,7 @@ export interface ConcentricOrbitResult {
 export function computeConcentricOrbits(
   cases: EnrichedCaseStudy[],
   dimension: RingDimension,
-  nucleusCenter: Vec3,
+  nucleusOrbit: NucleusOrbitData,  // carries orbitU, orbitV for plane orientation
   baseRadius: number,   // inner ring radius
   ringSpacing: number,  // gap between consecutive rings
 ): ConcentricOrbitResult {
@@ -118,9 +122,12 @@ export function computeConcentricOrbits(
   // 3. Assign ring index 0..k-1 (inner to outer)
   // 4. Assign ring radius = baseRadius + ringIndex * ringSpacing
   // 5. Evenly distribute cases on each ring with angle offset from hash(case.id)
-  // 6. Return RingOrbit[] for each case
+  // 6. Populate RingOrbit.orbitU and .orbitV from nucleusOrbit
+  // 7. Return RingOrbit[] for each case
 }
 ```
+
+**Note:** The signature takes `NucleusOrbitData` (not just `nucleusCenter: Vec3`) so that `orbitU` and `orbitV` are available for populating `RingOrbit`. This is the only source of those vectors.
 
 **Radius sizing guidance from real data:**
 - Largest nucleus (Media) has 50 cases. At 8 rings max, ring spacing of ~25 world units, base radius ~50 → outermost ring at ~225. Camera is at VIEW_DISTANCE=200 from nucleus, so rings fill most of the visible cone. Tune empirically.
@@ -136,15 +143,21 @@ export function ringPositionAt(
   out?: Vec3,
 ): Vec3 {
   const angle = ring.angleOffset + t * ring.angularSpeed;
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  const r = ring.ringRadius;
   const o = out ?? { x: 0, y: 0, z: 0 };
-  o.x = ring.orbitCenter.x + ring.ringRadius * Math.cos(angle);
-  o.y = ring.orbitCenter.y + ring.ringRadius * Math.sin(angle);
-  o.z = ring.orbitCenter.z; // flat on the orbital plane in focused mode
+  // Same formula as nucleusPositionAt — orbit on the tilted orbital plane
+  o.x = ring.orbitCenter.x + r * (ring.orbitU.x * cos + ring.orbitV.x * sin);
+  o.y = ring.orbitCenter.y + r * (ring.orbitU.y * cos + ring.orbitV.y * sin);
+  o.z = ring.orbitCenter.z + r * (ring.orbitU.z * cos + ring.orbitV.z * sin);
   return o;
 }
 ```
 
-This runs in the tick loop when `objects.mode === 'focused'`. It is simpler than Rodrigues because focused-view rings are flat (2D circles in the orbital plane seen face-on by the camera).
+This mirrors `nucleusPositionAt` exactly (see `src/scene/orbitals/nucleus-orbit.ts` line 76-81), but at the star level. The camera faces the orbital plane at T1 (oriented to `orbitU × orbitV`), so ring positions computed in the orbital plane will appear as circles from the camera's perspective.
+
+**Why not hardcode XY:** Nucleus orbital planes are tilted up to ~20 degrees. If `ringPositionAt` computes in XY but `buildRingLine` uses `Quaternion.setFromUnitVectors(Z, planeNormal)` (correct), ring stars appear on the wrong plane — they will not lie on the visible ring lines.
 
 ### Pattern 3: Tick Loop Branch
 
@@ -156,7 +169,7 @@ for (const star of starMeshes) {
   if (star.userData.isStagingTarget) continue;
   const ringOrbit = star.userData.ringOrbit as RingOrbit | undefined;
   if (objects.mode === 'focused' && ringOrbit) {
-    // Ring rotation: flat circular orbit
+    // Ring rotation: flat circular orbit on the nucleus orbital plane
     const pos = ringPositionAt(ringOrbit, prefersReduced ? 0 : t, _starPosScratch);
     _tickScratch.set(pos.x, pos.y, pos.z);
     star.position.lerp(_tickScratch, 0.08); // slightly snappier lerp for ring coherence
@@ -170,33 +183,42 @@ for (const star of starMeshes) {
 }
 ```
 
-**The `isStagingTarget` flag does not need to be set for ring-orbiting stars** because ring motion is tick-driven (not GSAP). It is only set for filter-staging (applyFilter). This is a clean separation.
+**The `isStagingTarget` flag does not need to be set for ring-orbiting stars** because ring motion is tick-driven (not GSAP). It is only set for filter-staging (applyFilter) and during expansion of non-focused nuclei. This is a clean separation.
 
 ### Pattern 4: THREE.LineLoop for Visible Ring Lines (ORB-04)
 
 ```typescript
 // Creating a visible ring line in Three.js r170
-function createRingLine(radius: number, center: Vec3, color: number): THREE.LineLoop {
-  const segments = 128; // enough for smooth circle
-  const points: THREE.Vector3[] = [];
-  for (let i = 0; i <= segments; i++) {
-    const angle = (i / segments) * Math.PI * 2;
-    points.push(new THREE.Vector3(
-      center.x + radius * Math.cos(angle),
-      center.y + radius * Math.sin(angle),
-      center.z
-    ));
+function buildRingLine(
+  radius: number,
+  center: THREE.Vector3,
+  planeNormal: THREE.Vector3,  // face-on direction = orbitU × orbitV
+  color: number,
+): THREE.LineLoop {
+  const segments = 128;
+  const pts: THREE.Vector3[] = [];
+  // Build in local XY frame, rotate to match the orbital plane
+  const q = new THREE.Quaternion().setFromUnitVectors(
+    new THREE.Vector3(0, 0, 1),
+    planeNormal.clone().normalize()
+  );
+  for (let i = 0; i < segments; i++) {
+    const a = (i / segments) * Math.PI * 2;
+    const local = new THREE.Vector3(radius * Math.cos(a), radius * Math.sin(a), 0);
+    pts.push(local.applyQuaternion(q).add(center));
   }
-  const geometry = new THREE.BufferGeometry().setFromPoints(points);
-  const material = new THREE.LineBasicMaterial({
+  const geo = new THREE.BufferGeometry().setFromPoints(pts);
+  const mat = new THREE.LineBasicMaterial({
     color,
     transparent: true,
-    opacity: 0.3, // subtle ambient presence
+    opacity: 0.35,
     depthWrite: false,
   });
-  return new THREE.LineLoop(geometry, material);
+  return new THREE.LineLoop(geo, mat);
 }
 ```
+
+`planeNormal` is computed as `new THREE.Vector3(orbitU.x, orbitU.y, orbitU.z).cross(new THREE.Vector3(orbitV.x, orbitV.y, orbitV.z))` — same vectors already in `NucleusOrbitData`. This ensures ring lines lie exactly on the orbital plane that the camera faces during T1.
 
 Ring lines are created when entering focused mode and disposed when exiting. Store them in `SceneObjects` as `ringLineMeshes: THREE.LineLoop[]` (new field, cleared on unfocus).
 
@@ -211,7 +233,12 @@ Ring click stores the highlighted `ringValue` in `SceneObjects` (new field `high
 
 ### Pattern 5: Expansion / Contraction (ORB-06/07)
 
+**Key invariant:** Each nucleus mesh has `mesh.userData.homePos: THREE.Vector3` stored at **scene build time** (in `buildOrbitalScene`), before any transitions. Contraction always targets `homePos`, never a position captured at focus time.
+
 ```typescript
+// At scene build time in buildOrbitalScene — add alongside mesh creation:
+nucleusMesh.userData.homePos = nucleusMesh.position.clone();
+
 // Expansion during T1 — replaces the opacity-dissolve in focusSphere
 const EXPANSION_MULTIPLIER = 4.5; // tune so nuclei leave the viewport
 
@@ -219,10 +246,9 @@ function expandNonFocusedNuclei(objects: SceneObjects, focusedKey: string): void
   for (const [k, mesh] of objects.nucleusMeshes.entries()) {
     if (k === focusedKey) continue;
 
-    // Save pre-expansion position on the mesh for contraction reversal
-    mesh.userData.preExpansionPos = mesh.position.clone();
-
-    const expandedPos = mesh.position.clone().multiplyScalar(EXPANSION_MULTIPLIER);
+    // homePos is the canonical build-time position — always use this as the expansion origin
+    const home = mesh.userData.homePos as THREE.Vector3;
+    const expandedPos = home.clone().multiplyScalar(EXPANSION_MULTIPLIER);
 
     // Move nucleus
     gsap.to(mesh.position, { x: expandedPos.x, y: expandedPos.y, z: expandedPos.z,
@@ -234,10 +260,11 @@ function expandNonFocusedNuclei(objects: SceneObjects, focusedKey: string): void
         { x: expandedPos.x, y: expandedPos.y, z: expandedPos.z, duration: 1.0, ease: 'power2.inOut' });
     }
 
-    // Move stars: preserve offset from nucleus
+    // Move stars: preserve offset from nucleus home position
     for (const star of objects.starMeshes) {
       if ((star.userData.starOrbit as StarOrbit)?.nucleusKey !== k) continue;
-      const offset = star.position.clone().sub(mesh.userData.preExpansionPos as THREE.Vector3);
+      star.userData.isStagingTarget = true; // prevent tick loop from fighting GSAP
+      const offset = star.position.clone().sub(home);
       const newStarPos = expandedPos.clone().add(offset);
       gsap.to(star.position, { x: newStarPos.x, y: newStarPos.y, z: newStarPos.z,
         duration: 1.0, ease: 'power2.inOut' });
@@ -247,26 +274,28 @@ function expandNonFocusedNuclei(objects: SceneObjects, focusedKey: string): void
 
 function contractNonFocusedNuclei(objects: SceneObjects): void {
   for (const [k, mesh] of objects.nucleusMeshes.entries()) {
-    if (k === objects.focusedKey || !mesh.userData.preExpansionPos) continue;
-    const orig = mesh.userData.preExpansionPos as THREE.Vector3;
+    if (k === objects.focusedKey) continue;
+    const home = mesh.userData.homePos as THREE.Vector3;
+    if (!home) continue;
 
-    gsap.to(mesh.position, { x: orig.x, y: orig.y, z: orig.z,
+    gsap.to(mesh.position, { x: home.x, y: home.y, z: home.z,
       duration: 1.4, ease: 'power2.inOut' });
     if (mesh.userData.halo) {
       gsap.to((mesh.userData.halo as THREE.Mesh).position,
-        { x: orig.x, y: orig.y, z: orig.z, duration: 1.4, ease: 'power2.inOut' });
+        { x: home.x, y: home.y, z: home.z, duration: 1.4, ease: 'power2.inOut' });
     }
     // Stars of contracted nuclei return to Rodrigues-driven positions via the tick loop
-    // — just remove isStagingTarget flag and let orbit math take over
+    // — just clear isStagingTarget and let orbit math take over
     for (const star of objects.starMeshes) {
       if ((star.userData.starOrbit as StarOrbit)?.nucleusKey !== k) continue;
       star.userData.isStagingTarget = false;
       star.userData.ringOrbit = undefined;
     }
-    delete mesh.userData.preExpansionPos;
   }
 }
 ```
+
+**Why `homePos` over `preExpansionPos`:** Storing at focus time means a rapid focus→unfocus→focus cycle (or arrow-key constellation cycling) would capture a mid-animation position. `homePos` is set once at build time and never changes. Contraction is idempotent regardless of how many focus/unfocus cycles have occurred.
 
 **T5 timing:** Contraction runs at 1.4s (matching T5's camera duration per CAM-02 / POL-02's 20% slower return rule). Expansion runs at 1.0s (T1 is 1.2s — start slightly earlier so spheres clear the frame as the camera arrives).
 
@@ -331,13 +360,46 @@ function scoreAndSelect(cases: EnrichedCaseStudy[], candidates: RingDimension[])
 
 **Degenerate case handling (ORB-08):** If all candidates produce k=1 (every case has the same value), use `proofType` as fallback and collapse all into one ring. If k > 8, skip that dimension.
 
+### Pattern 7: Ring-Dimension Switcher (ORB-03)
+
+**What it is:** A set of `<button>` chips rendered inside `elControls` (the `.cosmo-controls` panel that becomes visible in constellation mode). Each button represents one `RingDimension`. The currently active dimension is highlighted. Clicking a different dimension triggers a full ring recompute and a smooth transition of stars to their new ring positions.
+
+**DOM location:** Inside `#cosmoControls`, which already has `classList.add('on')` during `enterFocus`. Add a `<div id="ring-switcher">` with one button per dimension.
+
+**Switch sequence (four steps):**
+1. **Dispose old ring lines:** Call `disposeRingLines(objects, scene)` — remove `THREE.LineLoop` objects from scene, call `geometry.dispose()` + `material.dispose()` on each, clear `objects.ringLineMeshes = []`.
+2. **Recompute orbits:** Call `computeConcentricOrbits(focusedCases, newDimension, nucleusOrbit, config)` to get new `RingOrbit[]`. Update `star.userData.ringOrbit` for each star in the focused nucleus.
+3. **Create new ring lines:** Call `buildRingLine(...)` for each new ring value; add to scene; populate `objects.ringLineMeshes`.
+4. **GSAP transition:** Stars are currently at their old ring positions. The tick loop will lerp them to new ring positions automatically (lerp factor 0.08 ≈ 8% per frame ≈ smooth ~50-frame glide). No explicit GSAP tweens needed for the star repositioning — the tick loop's existing lerp handles it.
+
+**State to persist during switch:** `objects.currentRingDimension` (updated to `newDimension`). The switcher button states read from this field on render.
+
+**Integration point in main.ts:**
+```typescript
+// In enterFocus — after ring orbits are computed, wire up switcher
+const switcherEl = document.getElementById('ring-switcher');
+if (switcherEl) {
+  switcherEl.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('[data-dim]');
+    if (!btn) return;
+    const newDim = btn.getAttribute('data-dim') as RingDimension;
+    if (newDim === objects.currentRingDimension) return; // no-op
+    switchRingDimension(objects, scene, newDim, nucleusOrbit);
+    // Update button active state
+    switcherEl.querySelectorAll('[data-dim]').forEach(b => b.classList.toggle('active', b === btn));
+  });
+}
+```
+
+**Cleanup:** On `unfocusSphere`, remove the switcher event listeners (use `AbortController` or replace the node) and reset `objects.currentRingDimension = null`.
+
 ### Anti-Patterns to Avoid
 
 - **Reusing `computeStagingPositions` for ring layout.** The golden-spiral disk is center-packed with no ring identity. Concentric rings need cases sorted by their ring assignment, with ring radius driving position — fundamentally different math.
 - **Applying Rodrigues drift to ring-orbiting stars.** In focused mode, ring coherence requires all stars on a ring to stay at the same radius. Rodrigues would drift them off-ring.
 - **Creating LineLoop geometry in the tick loop.** Ring lines are static geometry (the ring doesn't move as stars rotate along it). Create once on `focusSphere`, dispose on `unfocusSphere`.
-- **Setting `isStagingTarget = true` on ring-orbiting stars.** The flag means GSAP controls the position. Ring stars are tick-controlled. Mixing them breaks the tick branch.
-- **Storing expansion state anywhere except `mesh.userData.preExpansionPos`.** The SceneObjects struct should not grow a parallel position-history map — keep pre-expansion state on the mesh directly.
+- **Hardcoding XY in `ringPositionAt`.** Orbital planes are tilted up to ~20 degrees. Stars computed in XY will visually float off the ring lines (which are correctly plane-oriented via quaternion). Always use `orbitU`/`orbitV` from the nucleus orbit data.
+- **Storing expansion origin at focus time (`preExpansionPos`).** Rapid cycling causes drift. Store `homePos` once at build time.
 
 ---
 
@@ -349,6 +411,7 @@ function scoreAndSelect(cases: EnrichedCaseStudy[], candidates: RingDimension[])
 | Circle geometry for ring lines | Custom vertex math | `THREE.BufferGeometry().setFromPoints(points)` | Standard Three.js pattern; no custom geometry needed |
 | Raycasting for ring clicks | Custom distance-to-circle math | `raycaster.intersectObjects(ringLineMeshes)` with `params.Line.threshold` | Raycaster handles this natively |
 | Entropy calculation for auto-selection | External statistics library | Pure JS `Math.log2` | Two-line function, no dependency justified |
+| Star animation to new ring on switcher | Explicit GSAP tweens | Existing tick loop lerp (0.08 factor) | Stars smoothly glide to new ring positions automatically |
 
 ---
 
@@ -375,18 +438,25 @@ function scoreAndSelect(cases: EnrichedCaseStudy[], candidates: RingDimension[])
 **How to avoid:** `unfocusSphere` must dispose and clear `objects.ringLineMeshes` and clear `ringOrbit` from all star userData before `focusSphere` assigns new ring orbits.
 **Warning signs:** Ring lines accumulate — after cycling through 3 constellations, you see 3 overlapping sets of rings.
 
-### Pitfall 4: `preExpansionPos` Stale on Repeated Focus
+### Pitfall 4: `homePos` Not Stored at Build Time
 
-**What goes wrong:** User focuses A (others expand), unfocuses (others contract), focuses B (others expand again). If A's nuclei never fully returned before B is clicked (transition still in progress), `preExpansionPos` is set to the partially-contracted position, not the true home position.
-**Why it happens:** `mesh.userData.preExpansionPos` is set at focus time, not at idle time.
-**How to avoid:** Store the canonical global-mode position once, at scene build time, as `mesh.userData.homePos`. Use `homePos` for contraction target. `preExpansionPos` is then unnecessary — always contract to `homePos`.
-**Warning signs:** After multiple focus/unfocus cycles, non-focused nuclei end up slightly closer or farther from their true orbital positions.
+**What goes wrong:** Storing the expansion origin at focus time (e.g., `preExpansionPos = mesh.position.clone()`) means rapid focus→unfocus→focus cycles capture a mid-animation position. After N cycles, nuclei end up slightly displaced from their true orbital positions.
+**Why it happens:** GSAP tween to `homePos` may not have fully completed when the next focus is triggered. Position captured is partially-contracted, not the true home.
+**How to avoid:** Store `mesh.userData.homePos = mesh.position.clone()` exactly once in `buildOrbitalScene`, right after the mesh is positioned. Contraction always targets `homePos`. Expansion origin is `homePos`. The expansion multiplier is always applied to `homePos`, not current position.
+**Warning signs:** After multiple focus/unfocus cycles, non-focused nuclei end up slightly closer or farther from their true orbital positions; the error is cumulative.
 
 ### Pitfall 5: Ring Raycasting Misses Near-Miss Clicks
 
 **What goes wrong:** User clicks near a ring line but the click doesn't register.
 **Why it happens:** Default `raycaster.params.Line.threshold` is 1 (world units), which at typical ring radii of 40-200 translates to very small hit areas.
 **How to avoid:** Set `raycaster.params.Line = { threshold: 3 }` immediately after raycaster creation. This is a one-line change in main.ts.
+
+### Pitfall 6: `ringPositionAt` Star Plane Diverges from Ring Line Plane
+
+**What goes wrong:** Stars appear to orbit correctly but float visibly off the ring line circles. Clicking a ring doesn't feel like clicking the star track.
+**Why it happens:** `ringPositionAt` was implemented with hardcoded XY (`o.z = ring.orbitCenter.z`), while `buildRingLine` correctly uses `Quaternion.setFromUnitVectors(Z, orbitU × orbitV)`. The two geometries live on different planes.
+**How to avoid:** `ringPositionAt` must use the same formula as `nucleusPositionAt`: `center + r*(cos(a)*orbitU + sin(a)*orbitV)`. The `RingOrbit` type carries `orbitU` and `orbitV` for exactly this purpose.
+**Warning signs:** Stars orbit on slightly tilted circles relative to the ring line circles; the visual mismatch grows with the nucleus's orbital tilt angle.
 
 ---
 
@@ -406,6 +476,8 @@ export interface RingOrbit {
   angleOffset: number;    // starting angle (radians)
   angularSpeed: number;   // rad/ms, constant per ring (all cases on a ring rotate together)
   orbitCenter: Vec3;      // updated each tick to follow the nucleus
+  orbitU: Vec3;           // orbital plane basis vector (from NucleusOrbitData)
+  orbitV: Vec3;           // orbital plane basis vector (from NucleusOrbitData)
 }
 
 export interface ConcentricConfig {
@@ -417,31 +489,30 @@ export interface ConcentricConfig {
 export function computeConcentricOrbits(
   cases: EnrichedCaseStudy[],
   dimension: RingDimension,
-  nucleusCenter: Vec3,
+  nucleusOrbit: NucleusOrbitData,  // source of orbitU, orbitV, and center
   config: ConcentricConfig,
 ): RingOrbit[] {
   // group by dimension value
   // sort groups by count desc (outer = most)
   // assign ring radii, evenly space angles within each ring
+  // populate orbitU/orbitV from nucleusOrbit on each RingOrbit
   // return flat array of RingOrbit (one per case)
 }
 ```
 
-### THREE.LineLoop Creation Pattern
+### THREE.LineLoop Creation Pattern (verified Three.js r170)
 
 ```typescript
-// For Three.js r170 — no import beyond 'three' needed
 import * as THREE from 'three';
 
 function buildRingLine(
   radius: number,
   center: THREE.Vector3,
-  planeNormal: THREE.Vector3,  // face-on direction = orbitU × orbitV
+  planeNormal: THREE.Vector3,  // = new THREE.Vector3(orbitU.x, orbitU.y, orbitU.z).cross(...)
   color: number,
 ): THREE.LineLoop {
   const segments = 128;
   const pts: THREE.Vector3[] = [];
-  // Build in local frame, orient to plane
   const q = new THREE.Quaternion().setFromUnitVectors(
     new THREE.Vector3(0, 0, 1),
     planeNormal.clone().normalize()
@@ -469,6 +540,14 @@ export interface SceneObjects {
 }
 ```
 
+### `homePos` Storage at Build Time
+
+```typescript
+// In buildOrbitalScene, right after nucleus mesh is positioned:
+nucleusMesh.userData.homePos = nucleusMesh.position.clone();
+// Never overwrite homePos after this point.
+```
+
 ---
 
 ## State of the Art
@@ -476,7 +555,7 @@ export interface SceneObjects {
 | Old Approach | Current Approach | Impact for Phase 4 |
 |--------------|-----------------|-------------------|
 | `computeStagingPositions` (golden spiral flat disk) | `computeConcentricOrbits` (concentric rings) | Full replacement in focused mode |
-| Rodrigues drift on sphere surface | Flat ring rotation (constant angular speed) | New motion model; Rodrigues still used in global view |
+| Rodrigues drift on sphere surface | Flat ring rotation (constant angular speed on orbital plane) | New motion model; Rodrigues still used in global view |
 | Opacity dissolve for non-focused nuclei (CAM-03) | Position expansion outward past viewport | More dramatic transition; changes what focusSphere does |
 | `THREE.LineSegments` (legacy) | `THREE.LineLoop` + `BufferGeometry.setFromPoints()` | Cleaner ring primitive; standard Three.js r140+ pattern |
 
@@ -545,14 +624,18 @@ For the three major verticals (vertical master grouping):
 | ORB-01 | `computeConcentricOrbits` assigns each case to exactly one ring | unit | `npm test -- --reporter=verbose src/scene/orbitals/concentric.test.ts` | ❌ Wave 0 |
 | ORB-01 | Outer ring has most cases | unit | same | ❌ Wave 0 |
 | ORB-01 | Ring radii increase with index | unit | same | ❌ Wave 0 |
+| ORB-01 | `RingOrbit` carries `orbitU`/`orbitV` matching source `NucleusOrbitData` | unit | same | ❌ Wave 0 |
 | ORB-02 | `autoSelectRingDimension` returns highest-scoring dimension | unit | `npm test -- --reporter=verbose src/scene/orbitals/concentric.test.ts` | ❌ Wave 0 |
 | ORB-02 | Score is entropy-normalized; picks proofType for Media data | unit | same | ❌ Wave 0 |
 | ORB-03 | Switcher changes active dimension and re-computes rings | integration | manual visual verify | manual-only — requires DOM |
+| ORB-03 | Old ring lines disposed before new ones created (no accumulation) | integration | manual visual verify | manual-only — requires Three.js scene |
 | ORB-04 | Ring lines created in `focusSphere`, disposed in `unfocusSphere` | integration | manual visual verify | manual-only — requires Three.js scene |
 | ORB-05 | `ringPositionAt` returns positions on a circle of the correct radius | unit | `npm test -- --reporter=verbose src/scene/orbitals/concentric.test.ts` | ❌ Wave 0 |
+| ORB-05 | `ringPositionAt` uses `orbitU`/`orbitV` (not hardcoded XY) — verify Z component varies with tilt | unit | same | ❌ Wave 0 |
 | ORB-05 | Angle increments by `angularSpeed * dt` each tick | unit | same | ❌ Wave 0 |
-| ORB-06 | Expansion moves non-focused nuclei to `EXPANSION_MULTIPLIER × original` | integration | manual visual verify | manual-only — requires GSAP + Three.js |
+| ORB-06 | Expansion moves non-focused nuclei to `EXPANSION_MULTIPLIER × homePos` | integration | manual visual verify | manual-only — requires GSAP + Three.js |
 | ORB-07 | Contraction returns nuclei to `homePos` | integration | manual visual verify | manual-only |
+| ORB-07 | `homePos` matches mesh position set in `buildOrbitalScene` (not mid-animation) | unit | `npm test -- --reporter=verbose` | ❌ Wave 0 (test build-time storage) |
 | ORB-08 | Ring count clamped to [1, 8] | unit | `npm test -- --reporter=verbose src/scene/orbitals/concentric.test.ts` | ❌ Wave 0 |
 | ORB-08 | Single-value dimension collapses to 1 ring | unit | same | ❌ Wave 0 |
 
@@ -560,12 +643,12 @@ For the three major verticals (vertical master grouping):
 
 - **Per task commit:** `npm test`
 - **Per wave merge:** `npm test`
-- **Phase gate:** Full suite green + manual visual verify of rings/expansion/contraction before `/gsd:verify-work`
+- **Phase gate:** Full suite green + manual visual verify of rings/expansion/contraction/switcher before `/gsd:verify-work`
 
 ### Wave 0 Gaps
 
-- [ ] `src/scene/orbitals/concentric.test.ts` — covers ORB-01, ORB-02, ORB-05, ORB-08
 - [ ] `src/scene/orbitals/concentric.ts` — the module under test (must exist before tests run)
+- [ ] `src/scene/orbitals/concentric.test.ts` — covers ORB-01, ORB-02, ORB-05, ORB-07 (homePos), ORB-08; includes plane-orientation test for `ringPositionAt`
 
 ---
 
@@ -573,6 +656,7 @@ For the three major verticals (vertical master grouping):
 
 ### Primary (HIGH confidence)
 - Codebase direct read: `src/scene/scene-state.ts`, `src/scene/orbitals/staging.ts`, `src/scene/orbitals/star-orbit.ts`, `src/animation/transition-choreographer.ts`, `src/data/proof-type.ts`, `src/data/impact-scale.ts`, `src/data/enrich.ts`, `src/data/grouping.ts`, `src/data/types.ts`
+- `src/scene/orbitals/nucleus-orbit.ts` — `nucleusPositionAt` formula confirmed at lines 76-81; `orbitU`/`orbitV` construction confirmed at lines 54-63; tilt angle confirmed (z clamped to ±0.35 = up to ~20°)
 - Empirical data analysis: `cases.json` (116 cases, computed distribution entropy across all dimensions per vertical)
 - Three.js r170 `BufferGeometry.setFromPoints()` and `LineLoop` — standard API, unchanged since r125; confirmed by codebase's existing use of Three.js geometry patterns
 - `Raycaster.params.Line.threshold` — confirmed present in Three.js docs and unchanged in r170
@@ -593,7 +677,8 @@ For the three major verticals (vertical master grouping):
 - Ring layout algorithm: HIGH — pure math, derived from data analysis
 - Auto-selection algorithm: HIGH — entropy formula + empirical validation against real data
 - THREE.js ring line API: HIGH — `LineLoop` + `setFromPoints` is stable Three.js r125+ API
-- Expansion/contraction pattern: HIGH — follows established GSAP tween patterns in codebase
+- Expansion/contraction pattern: HIGH — follows established GSAP tween patterns in codebase; `homePos` pattern resolves drift accumulation
+- `ringPositionAt` plane orientation: HIGH — formula verified against `nucleusPositionAt` in nucleus-orbit.ts lines 76-81
 - Numeric constants (expansion multiplier, angular speed): LOW — need empirical tuning
 
 **Research date:** 2026-04-13
