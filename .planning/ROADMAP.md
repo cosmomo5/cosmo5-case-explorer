@@ -12,7 +12,7 @@ A locked-stack TypeScript/Three.js codebase gets a six-transition dimensional co
 
 - [x] **Phase 0: Pre-work** - Fix three existing bugs that compound under new transitions
 - [x] **Phase 1: Foundation** - State machine, ShortlistStore, derived data types
-- [ ] **Phase 2: Layout** - Split canvas, divider, LayoutController, ResizeObserver
+- [x] **Phase 2: Layout** - Split canvas, divider, LayoutController, ResizeObserver
 - [ ] **Phase 3: Camera Transitions** - T1/T5, camera-controls migration, TransitionChoreographer
 - [ ] **Phase 4: Star Selection and Ghost System** - T2/T6, GhostManager, StagingTrack
 - [ ] **Phase 5: Reading Panel** - T3/T4, instrument readout, keyboard navigation
@@ -70,7 +70,11 @@ Plans:
   2. Pressing back triggers T5: camera pulls back and rotates away (~1400ms, ~20% slower than T1), nuclei fade back in
   3. Clicking anything during an active T1 or T5 has no effect — input is locked until the transition completes
   4. OrbitControls is replaced by camera-controls v3.1.2 with no observable regression in normal orbit/zoom behavior
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — camera-controls migration + TransitionChoreographer (Wave 1)
+- [ ] 03-02-PLAN.md — T1/T5 wiring + nuclei dissolve + visual verify (Wave 2)
 
 ### Phase 4: Star Selection and Ghost System
 **Goal**: Clicking a star in the constellation sends it to the staging track — a ghost remains at its orbital position, the track draws and extends as stars accumulate, and clicking the ghost returns the star to orbit
@@ -130,8 +134,8 @@ Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 7
 |-------|----------------|--------|-----------|
 | 0. Pre-work | 3/3 | Complete | 2026-04-13 |
 | 1. Foundation | 3/3 | Complete | 2026-04-13 |
-| 2. Layout | 0/2 | Not started | - |
-| 3. Camera Transitions | 0/TBD | Not started | - |
+| 2. Layout | 2/2 | Complete | 2026-04-13 |
+| 3. Camera Transitions | 0/2 | Not started | - |
 | 4. Star Selection and Ghost System | 0/TBD | Not started | - |
 | 5. Reading Panel | 0/TBD | Not started | - |
 | 6. Filter Enrichment | 0/TBD | Not started | - |
