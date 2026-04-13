@@ -65,15 +65,15 @@ Requirements for the v3.1 Dimensional Explorer milestone. Each maps to roadmap p
 
 ### Reading Panel + Track Selection
 
-- [ ] **READ-01**: Click case star → 340px reading panel slides in from right; scene compresses leftward
-- [ ] **READ-02**: T3 Panel open (~400ms) — CSS slide transition
-- [ ] **READ-03**: T4 Panel close (~350ms) — CSS slide out, scene expands
-- [ ] **READ-04**: Instrument readout strip — region/vertical/year in DM Mono grid cells, teal values
-- [ ] **READ-05**: Case sections — services chips, challenge, approach, results with metric cards (Noto 900)
+- [x] **READ-01**: Click case star → 340px reading panel slides in from right; scene compresses leftward
+- [x] **READ-02**: T3 Panel open (~400ms) — CSS slide transition
+- [x] **READ-03**: T4 Panel close (~350ms) — CSS slide out, scene expands
+- [x] **READ-04**: Instrument readout strip — region/vertical/year in DM Mono grid cells, teal values
+- [x] **READ-05**: Case sections — services chips, challenge, approach, results with metric cards (Noto 900)
 - [ ] **READ-06**: ← → arrow navigation between cases (same ring or shortlist)
 - [x] **READ-07**: Active case glows gold in orbit while being read
-- [ ] **READ-08**: Permission gating — locked state if `permission: false`
-- [ ] **READ-09**: Esc or close button closes panel (triggers T4)
+- [x] **READ-08**: Permission gating — locked state if `permission: false`
+- [x] **READ-09**: Esc or close button closes panel (triggers T4)
 - [x] **READ-10**: Shortlist track in bottom zone — cases can be added/removed; track persists across focus/unfocus
 
 ### Polish and Accessibility
@@ -159,15 +159,15 @@ Deferred to future release. Tracked but not in current roadmap.
 | FILT-08 | Phase 5 | Complete |
 | FILT-09 | Phase 5 | Complete |
 | FILT-10 | Phase 5 | Complete |
-| READ-01 | Phase 6 | Pending |
-| READ-02 | Phase 6 | Pending |
-| READ-03 | Phase 6 | Pending |
-| READ-04 | Phase 6 | Pending |
-| READ-05 | Phase 6 | Pending |
+| READ-01 | Phase 6 | Complete |
+| READ-02 | Phase 6 | Complete |
+| READ-03 | Phase 6 | Complete |
+| READ-04 | Phase 6 | Complete |
+| READ-05 | Phase 6 | Complete |
 | READ-06 | Phase 6 | Pending |
 | READ-07 | Phase 6 | Complete |
-| READ-08 | Phase 6 | Pending |
-| READ-09 | Phase 6 | Pending |
+| READ-08 | Phase 6 | Complete |
+| READ-09 | Phase 6 | Complete |
 | READ-10 | Phase 6 | Complete |
 | POL-01 | Phase 7 | Pending |
 | POL-02 | Phase 7 | Pending |

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: milestone
-status: Execute Phase 6 plan 06-02 next (ReadingPanel component)
-stopped_at: Completed 06-03-PLAN.md (ShortlistTrack + syncShortlistToStarState)
-last_updated: "2026-04-13T19:30:39.688Z"
-last_activity: "2026-04-13 (session 6) — Plan 06-01 executed: ViewStateMachine reading transitions + emissive gold tick loop fix (159 tests)"
+status: in-progress
+stopped_at: Completed 06-02-PLAN.md (ReadingPanel component)
+last_updated: "2026-04-13T19:31:22.109Z"
+last_activity: "2026-04-13 (session 6) — Plan 06-02 executed: ReadingPanel class + main.ts wiring (190 tests)"
 progress:
   total_phases: 8
   completed_phases: 1
   total_plans: 18
-  completed_plans: 6
-  percent: 28
+  completed_plans: 7
+  percent: 39
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-13)
 
 **Core value:** A prospect-facing discovery tool that lets you build a pitch deck's worth of proof in 60 seconds.
-**Current focus:** Phase 6 in progress — 06-01 done (reading state foundation)
+**Current focus:** Phase 6 in progress — 06-02 done (ReadingPanel component)
 
 ## Current Position
 
-Phase: 6 in progress (1 of 4 plans done)
-Plan: 06-01 complete — ViewStateMachine reading transitions + emissive gold tick loop fix
-Status: Execute Phase 6 plan 06-02 next (ReadingPanel component)
-Last activity: 2026-04-13 (session 6) — Plan 06-01 executed: ViewStateMachine reading transitions + emissive gold tick loop fix (159 tests)
+Phase: 6 in progress (2 of 4 plans done)
+Plan: 06-02 complete — ReadingPanel class + main.ts wiring (star click, Esc, arrow guard)
+Status: Execute Phase 6 plan 06-03 next (Track Selection / Shortlist)
+Last activity: 2026-04-13 (session 6) — Plan 06-02 executed: ReadingPanel class + main.ts wiring (190 tests)
 
-Progress: [███░░░░░░░] 28%
+Progress: [████░░░░░░] 39%
 
 ## Phase 5 Plan Structure
 
@@ -74,6 +74,9 @@ Wave 1 → Wave 2 (02 and 03 parallel) → Wave 3
 - [Phase 06-reading-panel-track-selection]: OPEN_READING/CLOSE_READING placed above ENTER/EXIT in dispatch chain; emissive gold written per-frame in tick loop (consistent with opacity-per-frame pattern); Phase 5 stub tests replaced alongside the stubs
 - [Phase 06]: ShortlistTrack optional getCaseLabel keeps component testable without CaseStudy objects
 - [Phase 06]: syncShortlistToStarState only resets 'selected'→'idle'; filterDim/filterMatch owned by applyFilter
+- [Phase 06]: ReadingPanel targets #reading-panel-slot (flex child) not #panel (old overlay) — causes scene compression
+- [Phase 06]: Star clicks in global mode fall through; only focused mode opens reading panel
+- [Phase 06]: Arrow key guard is a stub in main.ts; full case cycling via arrow keys is Wave 3 (06-04)
 
 ### Decisions (added session 2, 2026-04-13)
 
@@ -126,6 +129,6 @@ Run `/gsd:execute-phase 6` to begin Phase 6.
 
 ## Session Continuity
 
-Last session: 2026-04-13T19:30:35.674Z
-Stopped at: Completed 06-03-PLAN.md (ShortlistTrack + syncShortlistToStarState)
+Last session: 2026-04-13T19:31:22.090Z
+Stopped at: Completed 06-02-PLAN.md (ReadingPanel component)
 Resume with: `/gsd:execute-phase 6`
