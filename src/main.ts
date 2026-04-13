@@ -17,6 +17,7 @@ import { mountFilterPanel } from './ui/filter-panel';
 import { regroupScene } from './scene/regroup';
 import { Tooltip, projectToScreen } from './ui/tooltip';
 import { DetailPanel } from './ui/detail-panel';
+import { ReadingPanel } from './ui/reading-panel';
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.globalTimeline.timeScale(0);
@@ -72,7 +73,6 @@ async function boot() {
     // ── State primitives (boot-level, never inside SceneObjects) ────────
     const viewState = createViewStateMachine();
     const shortlistStore = createShortlistStore();
-    void shortlistStore; // Phase 4 will wire UI to this store
 
     // ── Populate stats strip ─────────────────────────────────────────────
     const territories = new Set(cases.flatMap(c => c.countries));
@@ -104,6 +104,9 @@ async function boot() {
 
     const sceneObjects = buildOrbitalScene(cases, 'vertical', scene, labelContainer);
     sceneObjects.controls = controls;
+
+    // ── ReadingPanel (wired to layoutController, viewState, shortlistStore) ──
+    const readingPanel = new ReadingPanel(layoutController, viewState, shortlistStore, sceneObjects);
 
     // ── Sync ViewState → SceneObjects.mode for backward compatibility ───
     viewState.subscribe((next) => {
@@ -248,12 +251,17 @@ async function boot() {
       );
       raycaster.setFromCamera(mouse, camera);
 
-      // Star click → open detail panel (check BEFORE ring lines — stars sit on rings)
+      // Star click → open reading panel (check BEFORE ring lines — stars sit on rings)
       const starHits = raycaster.intersectObjects(sceneObjects.starMeshes);
       if (starHits.length > 0) {
         if (choreographer.state.inProgress) return; // CAM-04
-        const c = (starHits[0].object as THREE.Mesh).userData.caseStudy as CaseStudy;
-        detailPanel.open(c);
+        const hitMesh = starHits[0].object as THREE.Mesh;
+        if (hitMesh.userData.caseStudy && sceneObjects.mode === 'focused') {
+          const c = hitMesh.userData.caseStudy as CaseStudy;
+          readingPanel.open(c, sceneObjects.focusedKey!);
+          return;
+        }
+        // Global mode clicks fall through (no panel open — they trigger nucleus focus)
         return;
       }
 
@@ -408,6 +416,7 @@ async function boot() {
       if (e.key === 'Escape') {
         if (choreographer.state.inProgress) return; // CAM-04
         // Step-back: unwind one layer at a time
+        if (readingPanel.isOpen()) { readingPanel.close(); return; }
         if (detailPanel.isOpen()) { detailPanel.close(); return; }
         if (sceneObjects.highlightedRingValue !== null) {
           sceneObjects.highlightedRingValue = null;
@@ -427,6 +436,8 @@ async function boot() {
       }
 
       // Arrow keys: cycle through nucleus groups
+      // Guard: if reading panel is open, arrow navigation is handled in 06-04-PLAN.md
+      if (readingPanel.isOpen()) { return; }
       if (sceneObjects.mode === 'focused' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
         const keys = Object.keys(sceneObjects.nucleusOrbits);
         const idx  = keys.indexOf(sceneObjects.focusedKey ?? '');
