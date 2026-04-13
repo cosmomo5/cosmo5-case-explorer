@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: milestone
 status: completed
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-04-13T17:45:35.717Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-04-13T17:46:52.108Z"
 last_activity: "2026-04-13 (session 4) — Plan 05-01 executed: FilterState extended + cross-filter counts (130 tests)"
 progress:
   total_phases: 8
   completed_phases: 0
   total_plans: 14
-  completed_plans: 2
+  completed_plans: 3
   percent: 14
 ---
 
@@ -66,6 +66,8 @@ Wave 1 → Wave 2 (02 and 03 parallel) → Wave 3
 - Escape/Back = step-back (clear highlight → close panel → exit focus)
 - Staging center glow mesh removed (was v1 artifact at origin)
 - [Phase 05-filter-panel-staging-sphere]: Filter panel signature kept unchanged; allCases from nucleusOrbits.flatMap; per-file jsdom directive
+- [Phase 05-03]: scene field added to SceneObjects to enable applyFilter to add/remove staging sphere mesh without a scene parameter
+- [Phase 05-03]: Staging NucleusOrbitData uses speed=0 orbitR=0 for static sphere positioned by mesh.position
 
 ### Decisions (added session 2, 2026-04-13)
 
@@ -120,6 +122,6 @@ Plans at: `.planning/phases/05-filter-panel-staging-sphere/`
 
 ## Session Continuity
 
-Last session: 2026-04-13T17:45:35.686Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-04-13T17:46:52.076Z
+Stopped at: Completed 05-03-PLAN.md
 Resume with: `/gsd:execute-phase 5`
