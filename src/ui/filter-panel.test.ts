@@ -2,7 +2,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mountFilterPanel } from './filter-panel';
 import { createFilterState } from '../data/filter';
-import type { FilterState } from '../data/filter';
 import type { SceneObjects } from '../scene/scene-state';
 import type { GroupMode } from '../data/types';
 import { ProofType } from '../data/proof-type';
@@ -217,7 +216,7 @@ describe('mountFilterPanel — orbit-by switcher', () => {
     document.body.innerHTML = '';
     const container = makeContainer();
     const objects = makeObjects();
-    const onGroupModeChange = vi.fn<[GroupMode], void>();
+    const onGroupModeChange = vi.fn() as (mode: GroupMode) => void;
     mountFilterPanel(container, objects, onGroupModeChange);
 
     const modeRow = container.querySelector('.mode-row')!;
