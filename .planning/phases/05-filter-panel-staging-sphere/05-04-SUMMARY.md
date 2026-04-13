@@ -48,16 +48,12 @@ completed: 2026-04-13
 
 **applyFilter() focused branch dims non-matching stars to opacity 0.12 via GSAP, respects StarState precedence chain, with tick-loop fix to prevent per-frame opacity overwrite**
 
-## Status: CHECKPOINT — Awaiting Human Visual Verification
-
-Task 1 complete and committed. Task 2 is a human-verify checkpoint — awaiting Mo's visual confirmation of the full Phase 5 filter flow.
-
 ## Performance
 
-- **Duration:** ~10 min (Task 1 only)
+- **Duration:** ~15 min
 - **Started:** 2026-04-13T17:52:00Z
-- **Completed (partial):** 2026-04-13T17:59:18Z
-- **Tasks:** 1/2 complete (Task 2 is checkpoint)
+- **Completed:** 2026-04-13T18:02:00Z
+- **Tasks:** 2/2 complete
 - **Files modified:** 2
 
 ## Accomplishments
@@ -65,10 +61,12 @@ Task 1 complete and committed. Task 2 is a human-verify checkpoint — awaiting 
 - Completed the focused branch of `applyFilter()` in `scene-state.ts` (FILT-07)
 - Fixed tick loop opacity assignment in focused mode to defer to `userData.starState` (without this, GSAP tweens were overwritten every frame ~16ms)
 - Added 7 focused-filter tests in `scene-state.test.ts`; full suite 153 tests green
+- Visual checkpoint approved: all five test flows (accordion, global filter + staging sphere, staging sphere → T1 focus, focused dimming, orbit-by switcher) confirmed working
 
 ## Task Commits
 
 1. **Task 1: Focused-view filter dimming (FILT-07)** - `e31c14d` (feat)
+2. **Task 2: Visual verify — full Phase 5 filter flow** - approved by Mo (all flows pass)
 
 ## Files Created/Modified
 
@@ -108,10 +106,17 @@ None — no external service configuration required.
 
 ## Next Phase Readiness
 
-- After visual checkpoint approval: plan 05-04 complete, Phase 5 complete
-- Phase 6 (Reading Panel + Track Selection) can begin
+- Phase 5 complete (all 4 plans done, all flows visually verified)
+- Phase 6 (Reading Panel + Track Selection) can begin: click case → reading panel slides in from right; Shortlist track in bottom zone
 - Tick loop now has three opacity paths in focused mode: ring highlight > stored starState > (global path unreachable in focused)
+
+## Self-Check: PASSED
+
+- `src/scene/scene-state.test.ts` — FOUND
+- `.planning/phases/05-filter-panel-staging-sphere/05-04-SUMMARY.md` — FOUND
+- Commit `e31c14d` — FOUND
+- 153 tests passing — VERIFIED
 
 ---
 *Phase: 05-filter-panel-staging-sphere*
-*Completed: 2026-04-13 (partial — checkpoint pending)*
+*Completed: 2026-04-13*

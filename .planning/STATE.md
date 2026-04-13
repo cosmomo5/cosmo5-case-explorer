@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: milestone
 status: completed
-stopped_at: Completed Task 1 of 05-04-PLAN.md; at checkpoint Task 2 (human-verify)
-last_updated: "2026-04-13T18:00:03.751Z"
-last_activity: "2026-04-13 (session 4) — Plan 05-01 executed: FilterState extended + cross-filter counts (130 tests)"
+stopped_at: Completed 05-04-PLAN.md (visual checkpoint approved — Phase 5 complete)
+last_updated: "2026-04-13T18:05:10.832Z"
+last_activity: "2026-04-13 (session 5) — Phase 5 complete: filter panel + staging sphere + focused dimming (153 tests, visual checkpoint approved)"
 progress:
   total_phases: 8
   completed_phases: 1
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-13)
 
 **Core value:** A prospect-facing discovery tool that lets you build a pitch deck's worth of proof in 60 seconds.
-**Current focus:** Phase 5 planned — ready to execute
+**Current focus:** Phase 5 complete — Phase 6 (Reading Panel) next
 
 ## Current Position
 
-Phase: 5 executing (4 complete + plan 05-01 done)
-Plan: 05-01 complete; 05-02 and 05-03 next (parallel, wave 2)
-Status: Plan 05-01 done — execute 05-02 and 05-03 next (wave 2, parallel)
-Last activity: 2026-04-13 (session 4) — Plan 05-01 executed: FilterState extended + cross-filter counts (130 tests)
+Phase: 5 complete (all 4 plans done, visual checkpoint approved)
+Plan: 05-04 complete — all Phase 5 filter flows verified
+Status: Phase 5 done — execute Phase 6 next (Reading Panel + Track Selection)
+Last activity: 2026-04-13 (session 5) — Plan 05-04 executed: focused filter dimming + visual checkpoint approved (153 tests)
 
-Progress: [█░░░░░░░░░] 14%
+Progress: [███░░░░░░░] 29%
 
 ## Phase 5 Plan Structure
 
@@ -107,23 +107,21 @@ None.
 
 ## What's Next
 
-### Immediate: Execute Plans 05-02 + 05-03 (wave 2, parallel)
-Run `/gsd:execute-phase 5` to execute plans 05-02 (filter panel UI) and 05-03 (staging sphere) in parallel.
-Plans at: `.planning/phases/05-filter-panel-staging-sphere/`
-
-### Plan 05-01 Complete (wave 1)
-- FilterState extended: proofTypes, impactBands, FilterDimension, without()
-- filter-counts.ts created: computeChipCounts cross-filter algorithm, FILTER_DIMENSIONS
-- 130 tests pass (117 original + 13 new)
-- Commits: 0ce0b77 (RED), 0cdc306 (GREEN)
-
-### Phase 6: Reading Panel + Track Selection
+### Immediate: Execute Phase 6 (Reading Panel + Track Selection)
+Run `/gsd:execute-phase 6` to begin Phase 6.
 - Click case → reading panel slides in from right; Shortlist track in bottom zone
+
+### Phase 5 Complete
+- 05-01: FilterState extended + cross-filter counts (130→153 tests), commits: 0ce0b77, 0cdc306
+- 05-02: Accordion filter panel UI + chip counts in both views
+- 05-03: Staging sphere lifecycle (global filter → coral sphere → T1 focus)
+- 05-04: Focused filter dimming + tick loop fix (FILT-07), commit: e31c14d
+- Visual checkpoint approved: all five flows confirmed working
 
 ### Phase 7: Polish + Accessibility
 
 ## Session Continuity
 
-Last session: 2026-04-13T17:59:57.077Z
-Stopped at: Completed Task 1 of 05-04-PLAN.md; at checkpoint Task 2 (human-verify)
-Resume with: `/gsd:execute-phase 5`
+Last session: 2026-04-13T18:05:10.792Z
+Stopped at: Completed 05-04-PLAN.md (visual checkpoint approved — Phase 5 complete)
+Resume with: `/gsd:execute-phase 6`
