@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: milestone
-status: completed
-stopped_at: Completed 05-04-PLAN.md (visual checkpoint approved — Phase 5 complete)
-last_updated: "2026-04-13T18:13:34.473Z"
-last_activity: "2026-04-13 (session 5) — Plan 05-04 executed: focused filter dimming + visual checkpoint approved (153 tests)"
+status: in-progress
+stopped_at: Completed 06-01-PLAN.md (reading state foundation)
+last_updated: "2026-04-13T19:23:29.168Z"
+last_activity: "2026-04-13 (session 6) — Plan 06-01 executed: ViewStateMachine reading transitions + emissive gold tick loop fix (159 tests)"
 progress:
   total_phases: 8
   completed_phases: 1
-  total_plans: 14
-  completed_plans: 4
+  total_plans: 18
+  completed_plans: 5
   percent: 29
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-13)
 
 **Core value:** A prospect-facing discovery tool that lets you build a pitch deck's worth of proof in 60 seconds.
-**Current focus:** Phase 5 complete — Phase 6 (Reading Panel) next
+**Current focus:** Phase 6 in progress — 06-01 done (reading state foundation)
 
 ## Current Position
 
-Phase: 5 complete (all 4 plans done, visual checkpoint approved)
-Plan: 05-04 complete — all Phase 5 filter flows verified
-Status: Phase 5 done — execute Phase 6 next (Reading Panel + Track Selection)
-Last activity: 2026-04-13 (session 5) — Plan 05-04 executed: focused filter dimming + visual checkpoint approved (153 tests)
+Phase: 6 in progress (1 of 4 plans done)
+Plan: 06-01 complete — ViewStateMachine reading transitions + emissive gold tick loop fix
+Status: Execute Phase 6 plan 06-02 next (ReadingPanel component)
+Last activity: 2026-04-13 (session 6) — Plan 06-01 executed: ViewStateMachine reading transitions + emissive gold tick loop fix (159 tests)
 
-Progress: [███░░░░░░░] 29%
+Progress: [███░░░░░░░] 28%
 
 ## Phase 5 Plan Structure
 
@@ -71,6 +71,7 @@ Wave 1 → Wave 2 (02 and 03 parallel) → Wave 3
 - [Phase 05-03]: Staging NucleusOrbitData uses speed=0 orbitR=0 for static sphere positioned by mesh.position
 - [Phase 05-filter-panel-staging-sphere]: Tick loop focused opacity defers to userData.starState — recomputing every frame defeated GSAP material tweens
 - [Phase 05-filter-panel-staging-sphere]: StarState precedence gate in applyFilter focused branch: only idle/filterDim/filterMatch overwritten; reading/selected/ghost untouched
+- [Phase 06-reading-panel-track-selection]: OPEN_READING/CLOSE_READING placed above ENTER/EXIT in dispatch chain; emissive gold written per-frame in tick loop (consistent with opacity-per-frame pattern); Phase 5 stub tests replaced alongside the stubs
 
 ### Decisions (added session 2, 2026-04-13)
 
@@ -123,6 +124,6 @@ Run `/gsd:execute-phase 6` to begin Phase 6.
 
 ## Session Continuity
 
-Last session: 2026-04-13T18:05:10.792Z
-Stopped at: Completed 05-04-PLAN.md (visual checkpoint approved — Phase 5 complete)
+Last session: 2026-04-13T19:23:24.874Z
+Stopped at: Completed 06-01-PLAN.md (reading state foundation)
 Resume with: `/gsd:execute-phase 6`

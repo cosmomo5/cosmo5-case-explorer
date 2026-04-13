@@ -160,5 +160,5 @@ Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 7
 | 3. Camera Transitions | 2/2 | Complete | 2026-04-13 |
 | 4. Concentric Orbit Layout + Expansion | 3/3 | Complete | 2026-04-13 |
 | 5. Filter Panel + Staging Sphere | 4/4 | Complete   | 2026-04-13 |
-| 6. Reading Panel + Track Selection | 0/4 | Not started | - |
+| 6. Reading Panel + Track Selection | 1/4 | In Progress|  |
 | 7. Polish and Accessibility | 0/TBD | Not started | - |

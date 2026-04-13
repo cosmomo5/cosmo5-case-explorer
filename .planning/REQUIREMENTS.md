@@ -71,7 +71,7 @@ Requirements for the v3.1 Dimensional Explorer milestone. Each maps to roadmap p
 - [ ] **READ-04**: Instrument readout strip — region/vertical/year in DM Mono grid cells, teal values
 - [ ] **READ-05**: Case sections — services chips, challenge, approach, results with metric cards (Noto 900)
 - [ ] **READ-06**: ← → arrow navigation between cases (same ring or shortlist)
-- [ ] **READ-07**: Active case glows gold in orbit while being read
+- [x] **READ-07**: Active case glows gold in orbit while being read
 - [ ] **READ-08**: Permission gating — locked state if `permission: false`
 - [ ] **READ-09**: Esc or close button closes panel (triggers T4)
 - [ ] **READ-10**: Shortlist track in bottom zone — cases can be added/removed; track persists across focus/unfocus
@@ -165,7 +165,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | READ-04 | Phase 6 | Pending |
 | READ-05 | Phase 6 | Pending |
 | READ-06 | Phase 6 | Pending |
-| READ-07 | Phase 6 | Pending |
+| READ-07 | Phase 6 | Complete |
 | READ-08 | Phase 6 | Pending |
 | READ-09 | Phase 6 | Pending |
 | READ-10 | Phase 6 | Pending |
