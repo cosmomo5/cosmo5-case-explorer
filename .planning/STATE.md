@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: milestone
-status: in-progress
-stopped_at: Completed 06-01-PLAN.md (reading state foundation)
-last_updated: "2026-04-13T19:23:29.168Z"
+status: Execute Phase 6 plan 06-02 next (ReadingPanel component)
+stopped_at: Completed 06-03-PLAN.md (ShortlistTrack + syncShortlistToStarState)
+last_updated: "2026-04-13T19:30:39.688Z"
 last_activity: "2026-04-13 (session 6) — Plan 06-01 executed: ViewStateMachine reading transitions + emissive gold tick loop fix (159 tests)"
 progress:
   total_phases: 8
   completed_phases: 1
   total_plans: 18
-  completed_plans: 5
-  percent: 29
+  completed_plans: 6
+  percent: 28
 ---
 
 # Project State
@@ -72,6 +72,8 @@ Wave 1 → Wave 2 (02 and 03 parallel) → Wave 3
 - [Phase 05-filter-panel-staging-sphere]: Tick loop focused opacity defers to userData.starState — recomputing every frame defeated GSAP material tweens
 - [Phase 05-filter-panel-staging-sphere]: StarState precedence gate in applyFilter focused branch: only idle/filterDim/filterMatch overwritten; reading/selected/ghost untouched
 - [Phase 06-reading-panel-track-selection]: OPEN_READING/CLOSE_READING placed above ENTER/EXIT in dispatch chain; emissive gold written per-frame in tick loop (consistent with opacity-per-frame pattern); Phase 5 stub tests replaced alongside the stubs
+- [Phase 06]: ShortlistTrack optional getCaseLabel keeps component testable without CaseStudy objects
+- [Phase 06]: syncShortlistToStarState only resets 'selected'→'idle'; filterDim/filterMatch owned by applyFilter
 
 ### Decisions (added session 2, 2026-04-13)
 
@@ -124,6 +126,6 @@ Run `/gsd:execute-phase 6` to begin Phase 6.
 
 ## Session Continuity
 
-Last session: 2026-04-13T19:23:24.874Z
-Stopped at: Completed 06-01-PLAN.md (reading state foundation)
+Last session: 2026-04-13T19:30:35.674Z
+Stopped at: Completed 06-03-PLAN.md (ShortlistTrack + syncShortlistToStarState)
 Resume with: `/gsd:execute-phase 6`
