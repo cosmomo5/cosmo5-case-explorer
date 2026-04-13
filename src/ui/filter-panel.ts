@@ -1,7 +1,169 @@
 import type { SceneObjects } from '../scene/scene-state';
 import type { GroupMode } from '../data/types';
-import { createFilterState, getFilterableAttrs } from '../data/filter';
+import type { FilterDimension } from '../data/filter';
+import { createFilterState } from '../data/filter';
+import { computeChipCounts, FILTER_DIMENSIONS } from '../data/filter-counts';
 import { applyFilter, clearFilter } from '../scene/scene-state';
+import { matchesFilter } from '../data/filter';
+import type { EnrichedCaseStudy } from '../data/enrich';
+
+// Human-readable labels per dimension
+const DIM_LABELS: Record<FilterDimension, string> = {
+  countries:   'Country',
+  services:    'Service',
+  years:       'Year',
+  proofTypes:  'Proof Type',
+  impactBands: 'Impact',
+  nucleusKeys: 'Vertical',
+};
+
+/** Collect all enriched cases from nucleusOrbits (covers both global and focused modes). */
+function getAllCases(obj: SceneObjects): EnrichedCaseStudy[] {
+  return Object.values(obj.nucleusOrbits).flatMap(n => n.cases) as EnrichedCaseStudy[];
+}
+
+/** Collect the values for a given dimension from all cases. */
+function getValuesForDim(cases: EnrichedCaseStudy[], dim: FilterDimension): string[] {
+  const seen = new Set<string>();
+  for (const c of cases) {
+    switch (dim) {
+      case 'countries':
+        for (const v of c.countries) seen.add(v);
+        break;
+      case 'services':
+        for (const v of c.services) seen.add(v);
+        break;
+      case 'years':
+        seen.add(String(c.year));
+        break;
+      case 'proofTypes':
+        seen.add(c.proofType);
+        break;
+      case 'impactBands':
+        seen.add(c.impactScale?.band ?? 'unknown');
+        break;
+    }
+  }
+  return [...seen].sort();
+}
+
+/** Check if a string value is currently active in the filter for a given dimension. */
+function isValueActive(obj: SceneObjects, dim: FilterDimension, value: string): boolean {
+  switch (dim) {
+    case 'countries':   return obj.filterState.countries.has(value);
+    case 'services':    return obj.filterState.services.has(value);
+    case 'years':       return obj.filterState.years.has(Number(value));
+    case 'proofTypes':  return (obj.filterState.proofTypes as Set<string>).has(value);
+    case 'impactBands': return (obj.filterState.impactBands as Set<string>).has(value);
+    default:            return false;
+  }
+}
+
+/** Count how many cases match the current filter. */
+function countMatches(obj: SceneObjects, allCases: EnrichedCaseStudy[]): number {
+  return allCases.filter(c => matchesFilter(c, obj.filterState)).length;
+}
+
+/** Build accordion HTML for all 5 filter dimensions. */
+function buildAccordionSections(
+  obj: SceneObjects,
+  allCases: EnrichedCaseStudy[],
+  chipCounts: Map<FilterDimension, Map<string, number>>,
+): string {
+  return FILTER_DIMENSIONS.map(dim => {
+    const values = getValuesForDim(allCases, dim);
+    const counts = chipCounts.get(dim) ?? new Map<string, number>();
+    const selectedCount = (() => {
+      switch (dim) {
+        case 'countries':   return obj.filterState.countries.size;
+        case 'services':    return obj.filterState.services.size;
+        case 'years':       return obj.filterState.years.size;
+        case 'proofTypes':  return obj.filterState.proofTypes.size;
+        case 'impactBands': return obj.filterState.impactBands.size;
+        default:            return 0;
+      }
+    })();
+    const badge = selectedCount > 0 ? `<span class="fgroup-badge">${selectedCount} selected</span>` : '';
+
+    const chips = values.map(v => {
+      const count = counts.get(v) ?? 0;
+      const isOn = isValueActive(obj, dim, v) ? ' on' : '';
+      const isDim = count === 0 ? ' dim' : '';
+      return `<div class="fchip${isOn}${isDim}" data-dim="${dim}" data-value="${v}">${v} <span class="fchip-count">${count}</span></div>`;
+    }).join('');
+
+    return `
+      <div class="fgroup" data-dim="${dim}">
+        <button class="fgroup-header" aria-expanded="false">
+          <span class="fgroup-label">${DIM_LABELS[dim]}</span>
+          ${badge}
+          <span class="fgroup-arrow">▾</span>
+        </button>
+        <div class="fgroup-body">${chips}</div>
+      </div>`;
+  }).join('');
+}
+
+/** Build the global mode HTML. */
+function buildGlobalHTML(obj: SceneObjects): string {
+  const allCases = getAllCases(obj);
+  const chipCounts = computeChipCounts(allCases, obj.filterState);
+  const accordionSections = buildAccordionSections(obj, allCases, chipCounts);
+
+  const isActive = obj.filterState.isActive();
+  const matched = isActive ? countMatches(obj, allCases) : 0;
+  const total = allCases.length;
+
+  const statusBar = isActive ? `
+    <div class="filter-status">
+      <span>${matched} / ${total}</span>
+      <button class="clr" id="filterClear">Reset all</button>
+    </div>` : '';
+
+  const modeChips = (['vertical', 'country', 'region'] as GroupMode[]).map(m => {
+    const active = obj.groupMode === m ? ' active' : '';
+    return `<div class="mode-chip${active}" data-mode="${m}">${m.charAt(0).toUpperCase() + m.slice(1)}</div>`;
+  }).join('');
+
+  return `
+    <div class="filters-head">
+      <h3>Filter</h3>
+    </div>
+    <div class="mode-row">${modeChips}</div>
+    <div class="filters-body">
+      ${accordionSections}
+    </div>
+    ${statusBar}
+  `;
+}
+
+/** Build the focused mode HTML. */
+function buildFocusedHTML(obj: SceneObjects): string {
+  const allCases = getAllCases(obj);
+  const chipCounts = computeChipCounts(allCases, obj.filterState);
+  const accordionSections = buildAccordionSections(obj, allCases, chipCounts);
+
+  const isActive = obj.filterState.isActive();
+  const matched = isActive ? countMatches(obj, allCases) : 0;
+  const total = allCases.length;
+
+  const statusBar = isActive ? `
+    <div class="filter-status">
+      <span>${matched} / ${total}</span>
+      <button class="clr" id="filterClear">Reset all</button>
+    </div>` : '';
+
+  return `
+    <div class="filters-head">
+      <button class="clr" id="focusBack">← ${obj.focusedKey}</button>
+      ${isActive ? '<button class="clr" id="filterClearHead">Reset</button>' : ''}
+    </div>
+    <div class="filters-body">
+      ${accordionSections}
+    </div>
+    ${statusBar}
+  `;
+}
 
 export function mountFilterPanel(
   container: HTMLElement,
@@ -12,110 +174,96 @@ export function mountFilterPanel(
   render();
 
   function render() {
-    container.innerHTML = buildHTML(objects);
+    container.innerHTML = objects.mode === 'global'
+      ? buildGlobalHTML(objects)
+      : buildFocusedHTML(objects);
     bindEvents();
   }
 
-  function buildHTML(obj: SceneObjects): string {
-    const isGlobal = obj.mode === 'global';
-    const isActive = obj.filterState.isActive();
-    const staged = isActive
-      ? obj.starMeshes.filter(s => s.userData.isStagingTarget).length
-      : 0;
-
-    if (isGlobal) {
-      const keys = Object.keys(obj.nucleusOrbits).sort();
-      const chips = keys.map(k => {
-        const count = obj.nucleusOrbits[k].cases.length;
-        const on = obj.filterState.nucleusKeys.has(k) ? ' on' : '';
-        return `<button class="fchip${on}" data-key="${k}">${k} <span class="dot"></span>×${count}</button>`;
-      }).join('');
-
-      const modeChips = (['vertical', 'country', 'region'] as GroupMode[]).map(m => {
-        const active = obj.groupMode === m ? ' active' : '';
-        return `<button class="mode-chip${active}" data-mode="${m}">${m}</button>`;
-      }).join('');
-
-      return `
-        <div class="filters-head">
-          <h3>Filter</h3>
-          ${isActive ? '<button class="clr" id="filterClear">Reset</button>' : ''}
-        </div>
-        <div class="mode-row">${modeChips}</div>
-        <div class="filters-body">
-          <div class="fgroup"><div class="fg-label">Pull to staging</div>
-          <div class="fchips" id="fc-nuclei">${chips}</div></div>
-        </div>
-        ${staged > 0 ? `
-        <div class="filters-staging">
-          <div class="fs-label">Staging</div>
-          <div class="fs-count">${staged}</div>
-          <div class="fs-status">${staged} stars en route</div>
-          <button class="fs-clear" id="stagingClear">clear → fly home</button>
-        </div>` : ''}
-      `;
+  function toggleGroup(group: HTMLElement) {
+    const isOpen = group.hasAttribute('data-open');
+    const header = group.querySelector('.fgroup-header') as HTMLButtonElement | null;
+    if (isOpen) {
+      group.removeAttribute('data-open');
+      header?.setAttribute('aria-expanded', 'false');
     } else {
-      // Focused view — case attribute filters
-      const focusedCases = obj.starMeshes
-        .filter(s => s.userData.starOrbit?.nucleusKey === obj.focusedKey)
-        .map(s => s.userData.caseStudy);
-      const attrs = getFilterableAttrs(focusedCases);
-      const countriesHTML = attrs.countries.map(c => {
-        const on = obj.filterState.countries.has(c) ? ' on' : '';
-        const cnt = focusedCases.filter(cs => cs.countries.includes(c)).length;
-        return `<button class="fchip${on}" data-country="${c}">${c} ×${cnt}</button>`;
-      }).join('');
-      const servicesHTML = attrs.services.map(s => {
-        const on = obj.filterState.services.has(s) ? ' on' : '';
-        const cnt = focusedCases.filter(cs => cs.services.includes(s)).length;
-        return `<button class="fchip${on}" data-service="${s}">${s} ×${cnt}</button>`;
-      }).join('');
-      const yearsHTML = attrs.years.map(y => {
-        const on = obj.filterState.years.has(y) ? ' on' : '';
-        const cnt = focusedCases.filter(cs => cs.year === y).length;
-        return `<button class="fchip${on}" data-year="${y}">${y} ×${cnt}</button>`;
-      }).join('');
-
-      return `
-        <div class="filters-head">
-          <button class="clr" id="focusBack">← ${obj.focusedKey}</button>
-          ${isActive ? '<button class="clr" id="filterClear">Reset</button>' : ''}
-        </div>
-        <div class="filters-body">
-          <div class="fgroup"><div class="fg-label">Country</div>
-            <div class="fchips">${countriesHTML}</div></div>
-          <div class="fgroup"><div class="fg-label">Service</div>
-            <div class="fchips">${servicesHTML}</div></div>
-          <div class="fgroup"><div class="fg-label">Year</div>
-            <div class="fchips">${yearsHTML}</div></div>
-        </div>
-        ${staged > 0 ? `
-        <div class="filters-staging">
-          <div class="fs-label">Staging — ${obj.focusedKey}</div>
-          <div class="fs-count">${staged}</div>
-          <div class="fs-status">${staged} stars en route</div>
-          <button class="fs-clear" id="stagingClear">clear → fly home</button>
-        </div>` : ''}
-      `;
+      group.setAttribute('data-open', '');
+      header?.setAttribute('aria-expanded', 'true');
     }
   }
 
   function bindEvents() {
-    container.querySelector('#filterClear')?.addEventListener('click', () => {
-      clearFilter(objects);
-      render();
+    // Accordion toggle
+    container.querySelectorAll('.fgroup-header').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const group = btn.closest('.fgroup') as HTMLElement | null;
+        if (group) toggleGroup(group);
+      });
     });
-    container.querySelector('#stagingClear')?.addEventListener('click', () => {
-      clearFilter(objects);
-      render();
+
+    // Filter chips
+    container.querySelectorAll('.fchip[data-dim][data-value]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const el = chip as HTMLElement;
+        // Dim chips (0 count) are non-interactive
+        if (el.classList.contains('dim')) return;
+
+        const dim = el.dataset.dim as FilterDimension;
+        const value = el.dataset.value!;
+        const f = createFilterState();
+
+        // Copy current filter state
+        for (const v of objects.filterState.countries) f.countries.add(v);
+        for (const v of objects.filterState.services) f.services.add(v);
+        for (const v of objects.filterState.years) f.years.add(v);
+        for (const v of objects.filterState.nucleusKeys) f.nucleusKeys.add(v);
+        for (const v of objects.filterState.proofTypes) f.proofTypes.add(v);
+        for (const v of objects.filterState.impactBands) f.impactBands.add(v);
+
+        // Toggle the clicked value
+        switch (dim) {
+          case 'countries':
+            f.countries.has(value) ? f.countries.delete(value) : f.countries.add(value);
+            break;
+          case 'services':
+            f.services.has(value) ? f.services.delete(value) : f.services.add(value);
+            break;
+          case 'years': {
+            const y = Number(value);
+            f.years.has(y) ? f.years.delete(y) : f.years.add(y);
+            break;
+          }
+          case 'proofTypes':
+            (f.proofTypes as Set<string>).has(value)
+              ? (f.proofTypes as Set<string>).delete(value)
+              : (f.proofTypes as Set<string>).add(value);
+            break;
+          case 'impactBands':
+            (f.impactBands as Set<string>).has(value)
+              ? (f.impactBands as Set<string>).delete(value)
+              : (f.impactBands as Set<string>).add(value);
+            break;
+        }
+
+        applyFilter(objects, f);
+        render();
+      });
     });
+
+    // Reset buttons (both in status bar and in focused head)
+    ['#filterClear', '#filterClearHead'].forEach(id => {
+      container.querySelector(id)?.addEventListener('click', () => {
+        clearFilter(objects);
+        render();
+      });
+    });
+
+    // Back button (focused mode)
     container.querySelector('#focusBack')?.addEventListener('click', () => {
       if (onExitFocus) {
         onExitFocus();
-        // Re-render after the callback so state changes (mode, focusedKey) are reflected
         requestAnimationFrame(() => render());
       } else {
-        // Fallback: direct state mutation (no camera animation)
         objects.mode = 'global';
         objects.focusedKey = null;
         clearFilter(objects);
@@ -123,66 +271,11 @@ export function mountFilterPanel(
       }
     });
 
-    // Mode chips
-    container.querySelectorAll('.mode-chip').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const mode = (btn as HTMLElement).dataset.mode as GroupMode;
+    // Mode chips (orbit-by switcher)
+    container.querySelectorAll('.mode-chip[data-mode]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const mode = (chip as HTMLElement).dataset.mode as GroupMode;
         onGroupModeChange(mode);
-        render();
-      });
-    });
-
-    // Nucleus chips (global view)
-    container.querySelectorAll('.fchip[data-key]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const key = (btn as HTMLElement).dataset.key!;
-        const f = createFilterState();
-        // Copy existing selections
-        for (const k of objects.filterState.nucleusKeys) f.nucleusKeys.add(k);
-        f.nucleusKeys.has(key) ? f.nucleusKeys.delete(key) : f.nucleusKeys.add(key);
-        applyFilter(objects, f);
-        render();
-      });
-    });
-
-    // Country chips (focused view)
-    container.querySelectorAll('.fchip[data-country]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const c = (btn as HTMLElement).dataset.country!;
-        const f = createFilterState();
-        for (const k of objects.filterState.countries) f.countries.add(k);
-        for (const k of objects.filterState.services) f.services.add(k);
-        for (const k of objects.filterState.years) f.years.add(k);
-        f.countries.has(c) ? f.countries.delete(c) : f.countries.add(c);
-        applyFilter(objects, f);
-        render();
-      });
-    });
-
-    // Service chips (focused view)
-    container.querySelectorAll('.fchip[data-service]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const s = (btn as HTMLElement).dataset.service!;
-        const f = createFilterState();
-        for (const k of objects.filterState.countries) f.countries.add(k);
-        for (const k of objects.filterState.services) f.services.add(k);
-        for (const k of objects.filterState.years) f.years.add(k);
-        f.services.has(s) ? f.services.delete(s) : f.services.add(s);
-        applyFilter(objects, f);
-        render();
-      });
-    });
-
-    // Year chips (focused view)
-    container.querySelectorAll('.fchip[data-year]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const y = parseInt((btn as HTMLElement).dataset.year!);
-        const f = createFilterState();
-        for (const k of objects.filterState.countries) f.countries.add(k);
-        for (const k of objects.filterState.services) f.services.add(k);
-        for (const k of objects.filterState.years) f.years.add(k);
-        f.years.has(y) ? f.years.delete(y) : f.years.add(y);
-        applyFilter(objects, f);
         render();
       });
     });
