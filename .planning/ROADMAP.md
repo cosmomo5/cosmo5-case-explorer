@@ -11,7 +11,7 @@ A locked-stack TypeScript/Three.js codebase gets a six-transition dimensional co
 - Decimal phases: Urgent insertions only (created via `/gsd:insert-phase`)
 
 - [x] **Phase 0: Pre-work** - Fix three existing bugs that compound under new transitions
-- [ ] **Phase 1: Foundation** - State machine, ShortlistStore, derived data types
+- [x] **Phase 1: Foundation** - State machine, ShortlistStore, derived data types
 - [ ] **Phase 2: Layout** - Split canvas, divider, LayoutController, ResizeObserver
 - [ ] **Phase 3: Camera Transitions** - T1/T5, camera-controls migration, TransitionChoreographer
 - [ ] **Phase 4: Star Selection and Ghost System** - T2/T6, GhostManager, StagingTrack
@@ -55,7 +55,11 @@ Plans:
   1. The canvas is visibly divided: constellation occupies the upper portion, track zone the lower, separated by a teal-gradient divider line
   2. Resizing the browser window reflows both zones without distorting the Three.js renderer aspect ratio
   3. When the reading panel is open, the constellation and track compress leftward — the Three.js canvas occupies the remaining width, not the full viewport
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — HTML/CSS restructuring + LayoutController + divider (Wave 1)
+- [ ] 02-02-PLAN.md — ResizeObserver + coordinate fixes + wiring (Wave 2)
 
 ### Phase 3: Camera Transitions
 **Goal**: Clicking a nucleus drops the camera to face the orbital plane (T1) and pressing back pulls it out (T5) — the dimensional collapse is real and legible, the transition lock prevents input during flight, and camera-controls v3.1.2 manages orbital targeting cleanly
@@ -125,8 +129,8 @@ Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 0. Pre-work | 3/3 | Complete | 2026-04-13 |
-| 1. Foundation | 0/3 | Not started | - |
-| 2. Layout | 0/TBD | Not started | - |
+| 1. Foundation | 3/3 | Complete | 2026-04-13 |
+| 2. Layout | 0/2 | Not started | - |
 | 3. Camera Transitions | 0/TBD | Not started | - |
 | 4. Star Selection and Ghost System | 0/TBD | Not started | - |
 | 5. Reading Panel | 0/TBD | Not started | - |
