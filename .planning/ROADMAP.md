@@ -29,13 +29,12 @@ A locked-stack TypeScript/Three.js codebase gets a six-transition dimensional co
   1. Regrouping (vertical/country/region switch) produces no GPU memory leak — mesh disposal disposes geometry and material after killing tweens
   2. The tick loop allocates no new `THREE.Vector3` objects per frame — scratch vectors are module-scope
   3. Staging positions center on the focused nucleus, not world origin — existing staging behavior is visually correct
-**Plans**: 4 plans
+**Plans**: 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — FilterState extension + cross-filter count algorithm (Wave 1, TDD)
-- [ ] 05-02-PLAN.md — Accordion filter panel rewrite: 5 dimensions, status bar, orbit-by switcher (Wave 2)
-- [ ] 05-03-PLAN.md — Staging sphere lifecycle: create/animate/push/dissolve (Wave 2)
-- [ ] 05-04-PLAN.md — Focused-view filter dimming + visual checkpoint (Wave 3)
+- [x] 00-01-PLAN.md — GSAP kill + dispose chain (Wave 1)
+- [x] 00-02-PLAN.md — Vec3 GC scratch vectors (Wave 1)
+- [x] 00-03-PLAN.md — Staging world-origin fix (Wave 2)
 
 ### Phase 1: Foundation
 **Goal**: The data and state layer exists — ViewState machine, ShortlistStore with pub/sub, and ProofType/ImpactScale derivation are all independently testable before any UI touches them
@@ -49,9 +48,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — ViewState machine + ShortlistStore (Wave 1)
-- [ ] 01-02-PLAN.md — ProofType + ImpactScale + StarState classifiers (Wave 1)
-- [ ] 01-03-PLAN.md — Enrichment and boot wiring (Wave 2)
+- [x] 01-01-PLAN.md — ViewState machine + ShortlistStore (Wave 1)
+- [x] 01-02-PLAN.md — ProofType + ImpactScale + StarState classifiers (Wave 1)
+- [x] 01-03-PLAN.md — Enrichment and boot wiring (Wave 2)
 
 ### Phase 2: Layout
 **Goal**: The split canvas exists as a structural fact — constellation zone (top ~72%) and staging track zone (bottom ~28%) are rendered and responsive, with the divider line visible and the scene correctly resizing when the reading panel slot is occupied
@@ -64,8 +63,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — HTML/CSS restructuring + LayoutController + divider (Wave 1)
-- [ ] 02-02-PLAN.md — ResizeObserver + coordinate fixes + wiring (Wave 2)
+- [x] 02-01-PLAN.md — HTML/CSS restructuring + LayoutController + divider (Wave 1)
+- [x] 02-02-PLAN.md — ResizeObserver + coordinate fixes + wiring (Wave 2)
 
 ### Phase 3: Camera Transitions
 **Goal**: Clicking a nucleus drops the camera to face the orbital plane (T1) and pressing back pulls it out (T5) — the dimensional collapse is real and legible, the transition lock prevents input during flight, and camera-controls v3.1.2 manages orbital targeting cleanly
@@ -79,8 +78,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — camera-controls migration + TransitionChoreographer (Wave 1)
-- [ ] 03-02-PLAN.md — T1/T5 wiring + nuclei dissolve + visual verify (Wave 2)
+- [x] 03-01-PLAN.md — camera-controls migration + TransitionChoreographer (Wave 1)
+- [x] 03-02-PLAN.md — T1/T5 wiring + nuclei dissolve + visual verify (Wave 2)
 
 ### Phase 4: Concentric Orbit Layout + Expansion
 **Goal**: Focused view shows cases on concentric orbital rings (each ring = a dimension value), with visible orbit lines, smooth rotation, and a ring-dimension switcher. Entering focus expands other spheres outward off-screen (space expansion metaphor). Exiting contracts them back.
@@ -95,9 +94,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Ring math core (TDD): computeConcentricOrbits, ringPositionAt, autoSelectRingDimension (Wave 1)
-- [ ] 04-02-PLAN.md — Scene integration: expansion/contraction, ring lines, tick branch, ring click (Wave 2)
-- [ ] 04-03-PLAN.md — Ring switcher + visual verify (Wave 3)
+- [x] 04-01-PLAN.md — Ring math core (TDD): computeConcentricOrbits, ringPositionAt, autoSelectRingDimension (Wave 1)
+- [x] 04-02-PLAN.md — Scene integration: expansion/contraction, ring lines, tick branch, ring click (Wave 2)
+- [x] 04-03-PLAN.md — Ring switcher + visual verify (Wave 3)
 
 ### Phase 5: Filter Panel + Staging Sphere
 **Goal**: The filter panel shows all dimensions in both global and focused view. Selecting filter chips in global view creates a staging sphere from matched cases. The staging sphere behaves like any other dimension-sphere (clickable, focusable). Filter panel in focused view narrows within the constellation.
@@ -114,9 +113,9 @@ Plans:
 
 Plans:
 - [x] 05-01-PLAN.md — FilterState extension + cross-filter count algorithm (Wave 1, TDD)
-- [ ] 05-02-PLAN.md — Accordion filter panel rewrite: 5 dimensions, status bar, orbit-by switcher (Wave 2)
-- [ ] 05-03-PLAN.md — Staging sphere lifecycle: create/animate/push/dissolve (Wave 2)
-- [ ] 05-04-PLAN.md — Focused-view filter dimming + visual checkpoint (Wave 3)
+- [x] 05-02-PLAN.md — Accordion filter panel rewrite: 5 dimensions, status bar, orbit-by switcher (Wave 2)
+- [x] 05-03-PLAN.md — Staging sphere lifecycle: create/animate/push/dissolve (Wave 2)
+- [x] 05-04-PLAN.md — Focused-view filter dimming + visual checkpoint (Wave 3)
 
 ### Phase 6: Reading Panel + Track Selection
 **Goal**: Clicking a case in focused view opens the reading panel. Cases can be selected to a shortlist track. Reading panel shows case details with navigation. Track persists across constellation visits.
@@ -132,10 +131,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — FilterState extension + cross-filter count algorithm (Wave 1, TDD)
-- [ ] 05-02-PLAN.md — Accordion filter panel rewrite: 5 dimensions, status bar, orbit-by switcher (Wave 2)
-- [ ] 05-03-PLAN.md — Staging sphere lifecycle: create/animate/push/dissolve (Wave 2)
-- [ ] 05-04-PLAN.md — Focused-view filter dimming + visual checkpoint (Wave 3)
+- [ ] 06-01-PLAN.md — ViewStateMachine reading transitions + emissive gold tick fix (Wave 1)
+- [ ] 06-02-PLAN.md — ReadingPanel class + main.ts wiring (Wave 2)
+- [ ] 06-03-PLAN.md — ShortlistTrack + syncShortlistToStarState (Wave 2, parallel)
+- [ ] 06-04-PLAN.md — Integration: arrow-key nav + ShortlistTrack mount + visual checkpoint (Wave 3)
 
 ### Phase 7: Polish and Accessibility
 **Goal**: Timing audit (returns ~20% slower than entries), reduced-motion audit, token audit (no purple, single ease), clean build, and end-to-end verification of the full flow: filter → stage → focus → read → shortlist
@@ -161,5 +160,5 @@ Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 7
 | 3. Camera Transitions | 2/2 | Complete | 2026-04-13 |
 | 4. Concentric Orbit Layout + Expansion | 3/3 | Complete | 2026-04-13 |
 | 5. Filter Panel + Staging Sphere | 4/4 | Complete   | 2026-04-13 |
-| 6. Reading Panel + Track Selection | 0/TBD | Not started | - |
+| 6. Reading Panel + Track Selection | 0/4 | Not started | - |
 | 7. Polish and Accessibility | 0/TBD | Not started | - |
