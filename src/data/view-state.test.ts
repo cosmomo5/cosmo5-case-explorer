@@ -35,18 +35,18 @@ describe('createViewStateMachine', () => {
     ).toThrow();
   });
 
-  it('OPEN_READING throws with message mentioning "Phase 5"', () => {
+  it('OPEN_READING from global throws (not valid from global)', () => {
     const machine = createViewStateMachine();
     expect(() =>
       machine.dispatch({ type: 'OPEN_READING', caseId: 'x' })
-    ).toThrowError(/Phase 5/);
+    ).toThrowError(/OPEN_READING/);
   });
 
-  it('CLOSE_READING throws with message mentioning "Phase 5"', () => {
+  it('CLOSE_READING from global throws (not valid from global)', () => {
     const machine = createViewStateMachine();
     expect(() =>
       machine.dispatch({ type: 'CLOSE_READING' })
-    ).toThrowError(/Phase 5/);
+    ).toThrowError(/CLOSE_READING/);
   });
 
   it('listener is called with (next, prev, event) on valid transition', () => {
