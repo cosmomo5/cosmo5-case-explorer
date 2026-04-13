@@ -369,6 +369,13 @@ export function tickOrbits(
     const mat = star.material as THREE.MeshBasicMaterial;
     if (inFocused && hasHighlight && ringOrbit) {
       mat.opacity = ringOrbit.ringValue === objects.highlightedRingValue ? 1.0 : 0.2;
+    } else if (inFocused) {
+      // In focused mode, applyFilter() manages opacity via GSAP and writes
+      // userData.starState. The tick loop defers to that stored state to avoid
+      // overwriting GSAP tweens every frame.
+      // Higher-precedence states (reading/selected/ghost) are never touched here.
+      const storedState = (star.userData.starState ?? 'idle') as StarState;
+      mat.opacity = resolveStarAppearance(storedState).opacity;
     } else {
       const isMatch = !anyFilter || matchesFilter(star.userData.caseStudy as CaseStudy, filterState);
       const starState: StarState = isMatch ? 'filterMatch' : 'filterDim';
@@ -437,7 +444,36 @@ export function applyFilter(
       }
     }
   }
-  // focused mode handled in Plan 04
+  else if (objects.mode === 'focused') {
+    // ── Focused branch: dim non-matching stars in place (FILT-07) ──────────
+    // Staging sphere is NOT created in focused mode; filter dims stars only.
+    const isActive = newFilter.isActive();
+    for (const mesh of objects.starMeshes) {
+      const caseStudy = mesh.userData.caseStudy as CaseStudy | undefined;
+      if (!caseStudy) continue;
+
+      const mat = mesh.material as THREE.MeshStandardMaterial;
+      const currentState: StarState = (mesh.userData.starState ?? 'idle') as StarState;
+
+      // Precedence: only apply filterDim/idle when star is in a filter-managed state.
+      // Higher states (reading, selected, ghost) are unaffected.
+      if (currentState === 'idle' || currentState === 'filterDim' || currentState === 'filterMatch') {
+        const matches = !isActive || matchesFilter(caseStudy, newFilter);
+        const targetOpacity = matches ? 1.0 : 0.12;
+        const targetState: StarState = matches ? 'idle' : 'filterDim';
+
+        // Set state immediately (tick loop reads this; GSAP transition adds smoothness)
+        mesh.userData.starState = targetState;
+
+        gsap.killTweensOf(mat);
+        gsap.to(mat, {
+          opacity: targetOpacity,
+          duration: 0.2,
+          ease: 'power2.out',
+        });
+      }
+    }
+  }
 }
 
 export function clearFilter(objects: SceneObjects): void {
