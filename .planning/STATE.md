@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: milestone
-status: in-progress
-stopped_at: Completed 06-02-PLAN.md (ReadingPanel component)
-last_updated: "2026-04-13T19:31:22.109Z"
+status: Execute Phase 6 plan 06-03 next (Track Selection / Shortlist)
+stopped_at: Task 1 complete (06-04); awaiting human-verify checkpoint (Task 2)
+last_updated: "2026-04-13T19:36:45.858Z"
 last_activity: "2026-04-13 (session 6) — Plan 06-02 executed: ReadingPanel class + main.ts wiring (190 tests)"
 progress:
   total_phases: 8
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 18
-  completed_plans: 7
+  completed_plans: 8
   percent: 39
 ---
 
@@ -77,6 +77,7 @@ Wave 1 → Wave 2 (02 and 03 parallel) → Wave 3
 - [Phase 06]: ReadingPanel targets #reading-panel-slot (flex child) not #panel (old overlay) — causes scene compression
 - [Phase 06]: Star clicks in global mode fall through; only focused mode opens reading panel
 - [Phase 06]: Arrow key guard is a stub in main.ts; full case cycling via arrow keys is Wave 3 (06-04)
+- [Phase 06-04]: Arrow key ring navigation sorts by ringIndex then angleOffset — consistent ring order as navigation sequence
 
 ### Decisions (added session 2, 2026-04-13)
 
@@ -129,6 +130,6 @@ Run `/gsd:execute-phase 6` to begin Phase 6.
 
 ## Session Continuity
 
-Last session: 2026-04-13T19:31:22.090Z
-Stopped at: Completed 06-02-PLAN.md (ReadingPanel component)
+Last session: 2026-04-13T19:36:42.585Z
+Stopped at: Task 1 complete (06-04); awaiting human-verify checkpoint (Task 2)
 Resume with: `/gsd:execute-phase 6`

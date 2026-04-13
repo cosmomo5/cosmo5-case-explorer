@@ -16,7 +16,7 @@ A locked-stack TypeScript/Three.js codebase gets a six-transition dimensional co
 - [x] **Phase 3: Camera Transitions** - T1/T5, camera-controls migration, TransitionChoreographer
 - [x] **Phase 4: Concentric Orbit Layout + Expansion** - Concentric rings, space expansion, ring switcher
 - [x] **Phase 5: Filter Panel + Staging Sphere** - ProofType/ImpactScale filters, staging sphere (completed 2026-04-13)
-- [ ] **Phase 6: Reading Panel + Track Selection** - Reading panel, shortlist track
+- [x] **Phase 6: Reading Panel + Track Selection** - Reading panel, shortlist track (completed 2026-04-13)
 - [ ] **Phase 7: Polish and Accessibility** - Timing asymmetry, prefers-reduced-motion audit, build verification
 
 ## Phase Details
@@ -160,5 +160,5 @@ Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 7
 | 3. Camera Transitions | 2/2 | Complete | 2026-04-13 |
 | 4. Concentric Orbit Layout + Expansion | 3/3 | Complete | 2026-04-13 |
 | 5. Filter Panel + Staging Sphere | 4/4 | Complete   | 2026-04-13 |
-| 6. Reading Panel + Track Selection | 3/4 | In Progress|  |
+| 6. Reading Panel + Track Selection | 4/4 | Complete   | 2026-04-13 |
 | 7. Polish and Accessibility | 0/TBD | Not started | - |
