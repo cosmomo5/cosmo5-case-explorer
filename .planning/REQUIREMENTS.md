@@ -52,16 +52,16 @@ Requirements for the v3.1 Dimensional Explorer milestone. Each maps to roadmap p
 
 ### Filter Panel + Staging Sphere
 
-- [ ] **FILT-01**: All-dimension filter panel — shows country, service, year, ProofType, ImpactScale chips in both global and focused view
+- [x] **FILT-01**: All-dimension filter panel — shows country, service, year, ProofType, ImpactScale chips in both global and focused view
 - [x] **FILT-02**: Filter logic — AND between dimensions, OR within each dimension
 - [x] **FILT-03**: Live chip counts per current filter combination; chips with 0 matches grey out
 - [ ] **FILT-04**: Global filter → staging sphere — selecting chips in global view creates a new sphere with distinct color; matched stars animate to it
 - [ ] **FILT-05**: Staging sphere behavior — clickable, focusable (same T1 + concentric orbit view as any dimension-sphere)
 - [ ] **FILT-06**: Other spheres push outward slightly when staging sphere appears; slight zoom toward staging
 - [ ] **FILT-07**: Focused filter — narrows within constellation (filters apply to ring contents, dimming non-matching cases)
-- [ ] **FILT-08**: Filter status display — `N / total visible` + `reset all`
+- [x] **FILT-08**: Filter status display — `N / total visible` + `reset all`
 - [ ] **FILT-09**: Staging sphere dissolves when filter is cleared (stars return to their original spheres)
-- [ ] **FILT-10**: Orbit-by switcher (Vertical/Country/Region) — changes which dimension defines the spheres in global view
+- [x] **FILT-10**: Orbit-by switcher (Vertical/Country/Region) — changes which dimension defines the spheres in global view
 
 ### Reading Panel + Track Selection
 
@@ -149,16 +149,16 @@ Deferred to future release. Tracked but not in current roadmap.
 | ORB-06 | Phase 4 | Pending |
 | ORB-07 | Phase 4 | Pending |
 | ORB-08 | Phase 4 | Pending |
-| FILT-01 | Phase 5 | Pending |
+| FILT-01 | Phase 5 | Complete |
 | FILT-02 | Phase 5 | Pending |
 | FILT-03 | Phase 5 | Pending |
 | FILT-04 | Phase 5 | Pending |
 | FILT-05 | Phase 5 | Pending |
 | FILT-06 | Phase 5 | Pending |
 | FILT-07 | Phase 5 | Pending |
-| FILT-08 | Phase 5 | Pending |
+| FILT-08 | Phase 5 | Complete |
 | FILT-09 | Phase 5 | Pending |
-| FILT-10 | Phase 5 | Pending |
+| FILT-10 | Phase 5 | Complete |
 | READ-01 | Phase 6 | Pending |
 | READ-02 | Phase 6 | Pending |
 | READ-03 | Phase 6 | Pending |
