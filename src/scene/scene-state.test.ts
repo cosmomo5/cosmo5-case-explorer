@@ -74,7 +74,7 @@ function makeFocusedSceneObjects(cases: EnrichedCaseStudy[]): SceneObjects {
 
   const starMeshes: THREE.Mesh[] = cases.map((c) => {
     const sGeo = new THREE.SphereGeometry(2.5, 4, 4);
-    const sMat = new THREE.MeshStandardMaterial({
+    const sMat = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       transparent: true,
       opacity: 0.85,
@@ -86,6 +86,7 @@ function makeFocusedSceneObjects(cases: EnrichedCaseStudy[]): SceneObjects {
       starOrbit: { nucleusKey: 'Media', orbitCenter: { x: 0, y: 0, z: 0 } },
       isFiltered: false,
       isStagingTarget: false,
+      originalColor: 0xffffff,
       // starState not set initially — undefined, treated as 'idle'
     };
     scene.add(star);

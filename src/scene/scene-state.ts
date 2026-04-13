@@ -456,6 +456,18 @@ export function tickOrbits(
     }
     objects._ringWasHighlighted = false;
   }
+
+  // Twinkle pass — oscillate glow sprite opacity with per-sprite random phase.
+  // Skip entirely when prefers-reduced-motion is active.
+  if (!prefersReduced) {
+    for (const star of starMeshes) {
+      const sprite = star.userData.glowSprite as THREE.Sprite | undefined;
+      if (!sprite) continue;
+      const spriteMat = sprite.material as THREE.SpriteMaterial;
+      const baseOpacity = (sprite.userData.baseOpacity as number) ?? 0.65;
+      spriteMat.opacity = baseOpacity * (0.7 + 0.3 * Math.sin(t * 0.7 + (sprite.userData.phase as number)));
+    }
+  }
 }
 
 export function applyFilter(

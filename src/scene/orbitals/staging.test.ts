@@ -68,7 +68,7 @@ function makeSceneObjects(cases: EnrichedCaseStudy[]): SceneObjects {
 
   const starMeshes: THREE.Mesh[] = cases.map((c) => {
     const sGeo = new THREE.SphereGeometry(2.5, 4, 4);
-    const sMat = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 });
+    const sMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 });
     const star = new THREE.Mesh(sGeo, sMat);
     star.position.set(210, 0, 0);
     star.userData = {

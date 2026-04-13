@@ -44,8 +44,8 @@ function makeStar(c: CaseStudy): THREE.Mesh {
   const mesh = new THREE.Mesh();
   mesh.userData.caseStudy = c;
   mesh.userData.starState = 'idle';
-  const mat = new THREE.MeshStandardMaterial();
-  (mat as any).emissiveIntensity = 0;
+  const mat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  mesh.userData.originalColor = 0xffffff;
   mesh.material = mat;
   return mesh;
 }
