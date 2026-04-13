@@ -16,14 +16,22 @@
 <div id="gatherVignette"></div>
 
 <canvas id="starfield" style="position:fixed;inset:0;z-index:0;pointer-events:none"></canvas>
-<canvas id="main-canvas" style="position:fixed;inset:0;z-index:3"></canvas>
+
+<div id="app-shell">
+  <div id="scene-container">
+    <canvas id="main-canvas"></canvas>
+    <div id="divider-line"></div>
+    <div id="star-labels"></div>
+    <div id="track-zone"></div>
+  </div>
+  <div id="reading-panel-slot"></div>
+</div>
 
 <div id="globe-stage">
   <canvas id="globe-canvas"></canvas>
 </div>
 
 <canvas id="constellation-canvas"></canvas>
-<div id="star-labels" style="position:fixed;inset:0;z-index:4;pointer-events:none"></div>
 <div id="focus-hint" class="focus-hint">
   <span class="fh-dot"></span><span id="fh-text">Focused</span>
   <span class="fh-close">click empty space to exit</span>
@@ -136,6 +144,8 @@
   <button class="sc" id="globalSearchClear">×</button>
 </div>
 
+<button class="home-btn" id="homeBtn" title="Reset view">⌂</button>
+
 <div class="cosmo-controls" id="cosmoControls">
   <div class="cc-row">
     <label class="cc-label" for="labelSlider">Labels</label>
@@ -157,6 +167,7 @@
     <span class="cc-key">Esc <span class="cc-keydesc">Back</span></span>
     <span class="cc-key">Scroll <span class="cc-keydesc">Zoom</span></span>
   </div>
+    <div id="ring-switcher" class="ring-switcher" aria-label="Ring dimension"></div>
 </div>
 
 <div class="panel-scrim" id="panelScrim"></div>
