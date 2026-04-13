@@ -58,7 +58,7 @@ Requirements for the v3.1 Dimensional Explorer milestone. Each maps to roadmap p
 - [x] **FILT-04**: Global filter → staging sphere — selecting chips in global view creates a new sphere with distinct color; matched stars animate to it
 - [x] **FILT-05**: Staging sphere behavior — clickable, focusable (same T1 + concentric orbit view as any dimension-sphere)
 - [x] **FILT-06**: Other spheres push outward slightly when staging sphere appears; slight zoom toward staging
-- [ ] **FILT-07**: Focused filter — narrows within constellation (filters apply to ring contents, dimming non-matching cases)
+- [x] **FILT-07**: Focused filter — narrows within constellation (filters apply to ring contents, dimming non-matching cases)
 - [x] **FILT-08**: Filter status display — `N / total visible` + `reset all`
 - [x] **FILT-09**: Staging sphere dissolves when filter is cleared (stars return to their original spheres)
 - [x] **FILT-10**: Orbit-by switcher (Vertical/Country/Region) — changes which dimension defines the spheres in global view
@@ -155,7 +155,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | FILT-04 | Phase 5 | Complete |
 | FILT-05 | Phase 5 | Complete |
 | FILT-06 | Phase 5 | Complete |
-| FILT-07 | Phase 5 | Pending |
+| FILT-07 | Phase 5 | Complete |
 | FILT-08 | Phase 5 | Complete |
 | FILT-09 | Phase 5 | Complete |
 | FILT-10 | Phase 5 | Complete |

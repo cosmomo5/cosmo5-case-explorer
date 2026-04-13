@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: milestone
 status: completed
-stopped_at: Completed 05-03-PLAN.md (all fixes applied, build clean)
-last_updated: "2026-04-13T17:52:17.579Z"
+stopped_at: Completed Task 1 of 05-04-PLAN.md; at checkpoint Task 2 (human-verify)
+last_updated: "2026-04-13T18:00:03.751Z"
 last_activity: "2026-04-13 (session 4) — Plan 05-01 executed: FilterState extended + cross-filter counts (130 tests)"
 progress:
   total_phases: 8
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 14
-  completed_plans: 3
+  completed_plans: 4
   percent: 14
 ---
 
@@ -68,6 +68,8 @@ Wave 1 → Wave 2 (02 and 03 parallel) → Wave 3
 - [Phase 05-filter-panel-staging-sphere]: Filter panel signature kept unchanged; allCases from nucleusOrbits.flatMap; per-file jsdom directive
 - [Phase 05-03]: scene field added to SceneObjects to enable applyFilter to add/remove staging sphere mesh without a scene parameter
 - [Phase 05-03]: Staging NucleusOrbitData uses speed=0 orbitR=0 for static sphere positioned by mesh.position
+- [Phase 05-filter-panel-staging-sphere]: Tick loop focused opacity defers to userData.starState — recomputing every frame defeated GSAP material tweens
+- [Phase 05-filter-panel-staging-sphere]: StarState precedence gate in applyFilter focused branch: only idle/filterDim/filterMatch overwritten; reading/selected/ghost untouched
 
 ### Decisions (added session 2, 2026-04-13)
 
@@ -122,6 +124,6 @@ Plans at: `.planning/phases/05-filter-panel-staging-sphere/`
 
 ## Session Continuity
 
-Last session: 2026-04-13T17:52:17.559Z
-Stopped at: Completed 05-03-PLAN.md (all fixes applied, build clean)
+Last session: 2026-04-13T17:59:57.077Z
+Stopped at: Completed Task 1 of 05-04-PLAN.md; at checkpoint Task 2 (human-verify)
 Resume with: `/gsd:execute-phase 5`
