@@ -82,23 +82,35 @@ describe('computeChipCounts', () => {
     expect(serviceCounts.get('Amazon')).toBeUndefined(); // e2 filtered out by country
   });
 
-  it('returns 0 (or undefined) for values that have no matching cases under cross-filter', () => {
+  it('cross-filter: each dimension removes only its own filter when counting (not other dims)', () => {
     const f = createFilterState();
-    f.proofTypes.add(ProofType.Revenue); // only e1 + e3 pass
+    f.proofTypes.add(ProofType.Revenue); // only e1 + e3 pass proofType filter
 
     const counts = computeChipCounts([e1, e2, e3], f);
 
-    // services cross-filter: proofType removed → all 3 cases count → Amazon present
-    const serviceCountsNoCrossFilter = counts.get('services')!;
-    expect(serviceCountsNoCrossFilter.get('Amazon')).toBe(1);
+    // services: cross-filter removes services filter, but KEEPS proofTypes=Revenue
+    // → only e1 + e3 (Revenue) pass → Amazon (e2, Awareness) NOT counted
+    const serviceCounts = counts.get('services')!;
+    expect(serviceCounts.get('Video Ads')).toBe(2); // e1 + e3
+    expect(serviceCounts.get('SEA')).toBe(1);       // e1 only
+    expect(serviceCounts.has('Amazon')).toBe(false); // e2 excluded by proofTypes
 
-    // impactBands cross-filter: proofType removed → all cases count
+    // proofTypes: cross-filter removes proofTypes filter → all 3 cases count
+    const proofCounts = counts.get('proofTypes')!;
+    expect(proofCounts.get(ProofType.Revenue)).toBe(2);   // e1 + e3
+    expect(proofCounts.get(ProofType.Awareness)).toBe(1); // e2 included (own dim removed)
+
+    // impactBands: cross-filter removes impactBands filter, keeps proofTypes=Revenue
+    // → only e1 + e3 pass → incremental (e2) NOT counted
     const bandCounts = counts.get('impactBands')!;
-    expect(bandCounts.get('incremental')).toBe(1); // e2 included (proofType removed for impactBands count)
+    expect(bandCounts.get('significant')).toBe(1); // e1
+    expect(bandCounts.get('notable')).toBe(1);     // e3
+    expect(bandCounts.has('incremental')).toBe(false); // e2 excluded by proofTypes
 
-    // years cross-filter: proofType removed → all cases count
+    // years: cross-filter removes years filter, keeps proofTypes=Revenue
+    // → only e1 + e3 pass → year 2025 = e3 only, year 2026 = e1 only
     const yearCounts = counts.get('years')!;
-    expect(yearCounts.get('2025')).toBe(2); // e2 + e3
+    expect(yearCounts.get('2025')).toBe(1); // e3 only (e2 excluded by proofTypes)
     expect(yearCounts.get('2026')).toBe(1); // e1
   });
 
