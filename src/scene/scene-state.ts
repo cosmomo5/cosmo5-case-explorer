@@ -655,6 +655,16 @@ export function focusSphere(
   gsap.to((nucleus.material as THREE.MeshBasicMaterial), { opacity: 1.0, duration: 0.6 });
 
   // ── Stars: dim non-focused, animate own stars to ring positions ───────
+  // Pitfall 3 (from research): when T1 focuses the staging sphere, all stars have
+  // starOrbit.nucleusKey pointing to their original nucleus — none point to STAGING_KEY.
+  // Stars that were staging targets must have their isStagingTarget flag cleared and their
+  // position tweens killed so the tick loop can reclaim orbital motion ownership after T1.
+  if (key === STAGING_KEY) {
+    for (const star of objects.starMeshes) {
+      gsap.killTweensOf(star.position);
+      star.userData.isStagingTarget = false;
+    }
+  }
   for (const star of objects.starMeshes) {
     const starNucKey = (star.userData.starOrbit as StarOrbit).nucleusKey;
     if (starNucKey !== key) {
