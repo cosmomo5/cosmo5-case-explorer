@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { ShortlistEntry } from '../data/shortlist-store';
 import * as THREE from 'three';
 
 vi.mock('gsap', () => ({
@@ -13,6 +14,7 @@ vi.mock('gsap', () => ({
 
 import {
   applyFilter,
+  syncShortlistToStarState,
   type SceneObjects,
 } from './scene-state';
 import type { EnrichedCaseStudy } from '../data/enrich';
@@ -217,5 +219,106 @@ describe('applyFilter — focused mode (FILT-07)', () => {
     applyFilter(objects, filter);
 
     expect(objects.nucleusMeshes.has('__staging__')).toBe(false);
+  });
+});
+
+// ── syncShortlistToStarState tests ───────────────────────────────────────────
+
+describe('syncShortlistToStarState', () => {
+  let objects: SceneObjects;
+
+  const caseA = makeCase('a');
+  const caseB = makeCase('b');
+  const caseC = makeCase('c');
+
+  beforeEach(() => {
+    objects = makeFocusedSceneObjects([caseA, caseB, caseC]);
+    vi.clearAllMocks();
+  });
+
+  function starFor(id: string): THREE.Mesh {
+    return objects.starMeshes.find(
+      s => (s.userData.caseStudy as ReturnType<typeof makeCase>).id === id,
+    )!;
+  }
+
+  function entries(...ids: string[]): ShortlistEntry[] {
+    return ids.map(id => ({ caseId: id, nucleusKey: 'Media' }));
+  }
+
+  it('marks shortlisted star as "selected" when currently "idle"', () => {
+    starFor('a').userData.starState = 'idle';
+
+    syncShortlistToStarState(objects, entries('a'));
+
+    expect(starFor('a').userData.starState).toBe('selected');
+  });
+
+  it('marks shortlisted star as "selected" when currently "filterMatch"', () => {
+    starFor('a').userData.starState = 'filterMatch';
+
+    syncShortlistToStarState(objects, entries('a'));
+
+    expect(starFor('a').userData.starState).toBe('selected');
+  });
+
+  it('marks shortlisted star as "selected" when currently "filterDim"', () => {
+    starFor('a').userData.starState = 'filterDim';
+
+    syncShortlistToStarState(objects, entries('a'));
+
+    expect(starFor('a').userData.starState).toBe('selected');
+  });
+
+  it('does NOT overwrite a star with starState="reading"', () => {
+    starFor('a').userData.starState = 'reading';
+
+    syncShortlistToStarState(objects, entries('a'));
+
+    expect(starFor('a').userData.starState).toBe('reading');
+  });
+
+  it('does NOT overwrite a star with starState="ghost"', () => {
+    starFor('a').userData.starState = 'ghost';
+
+    syncShortlistToStarState(objects, entries('a'));
+
+    expect(starFor('a').userData.starState).toBe('ghost');
+  });
+
+  it('restores "selected" star to "idle" when case is removed from shortlist', () => {
+    starFor('a').userData.starState = 'selected';
+
+    // Pass empty shortlist — 'a' is no longer shortlisted
+    syncShortlistToStarState(objects, entries());
+
+    expect(starFor('a').userData.starState).toBe('idle');
+  });
+
+  it('leaves "filterDim" star unchanged when it is not shortlisted', () => {
+    starFor('b').userData.starState = 'filterDim';
+
+    // Only 'a' is shortlisted; 'b' is not
+    syncShortlistToStarState(objects, entries('a'));
+
+    // 'b' should remain filterDim — sync does NOT reset filter states
+    expect(starFor('b').userData.starState).toBe('filterDim');
+  });
+
+  it('leaves "filterMatch" star unchanged when it is not shortlisted', () => {
+    starFor('b').userData.starState = 'filterMatch';
+
+    syncShortlistToStarState(objects, entries('a'));
+
+    expect(starFor('b').userData.starState).toBe('filterMatch');
+  });
+
+  it('handles star with undefined starState (treated as idle) — sets selected when shortlisted', () => {
+    // starState not set on 'c' (undefined)
+    starFor('c').userData.starState = undefined;
+
+    syncShortlistToStarState(objects, entries('c'));
+
+    expect(starFor('c').userData.starState).toBe('selected');
   });
 });
