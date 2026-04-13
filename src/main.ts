@@ -5,8 +5,14 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { createStarfield } from './scene/background/starfield';
 import { createRenderer } from './scene/renderer';
-import { buildOrbitalScene, tickOrbits, focusSphere, unfocusSphere } from './scene/scene-state';
+import { buildOrbitalScene, tickOrbits, focusSphere, unfocusSphere, switchRingDimension } from './scene/scene-state';
+import type { RingDimension } from './scene/orbitals/concentric';
 import type { CaseStudy } from './data/types';
+import { enrichCases } from './data/enrich';
+import { createViewStateMachine } from './data/view-state';
+import { createShortlistStore } from './data/shortlist-store';
+import { createLayoutController } from './layout/layout-controller';
+import { createTransitionChoreographer } from './animation/transition-choreographer';
 import { mountFilterPanel } from './ui/filter-panel';
 import { regroupScene } from './scene/regroup';
 import { Tooltip, projectToScreen } from './ui/tooltip';
@@ -15,6 +21,15 @@ import { DetailPanel } from './ui/detail-panel';
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.globalTimeline.timeScale(0);
 }
+
+const DIM_LABELS: Record<string, string> = {
+  proofType: 'Proof type',
+  impactBand: 'Impact',
+  year: 'Year',
+  country: 'Country',
+  region: 'Region',
+};
+const ALL_DIMS: RingDimension[] = ['proofType', 'impactBand', 'year', 'country', 'region'];
 
 // ── DOM refs ──────────────────────────────────────────────────────────────
 // elStats kept for future use (contains s-c/s-t/s-s/s-y children)
@@ -51,7 +66,13 @@ async function boot() {
   try {
     const resp = await fetch('/cases.json');
     if (!resp.ok) throw new Error(`cases.json ${resp.status}`);
-    const cases: CaseStudy[] = await resp.json();
+    const rawCases: CaseStudy[] = await resp.json();
+    const cases = enrichCases(rawCases);
+
+    // ── State primitives (boot-level, never inside SceneObjects) ────────
+    const viewState = createViewStateMachine();
+    const shortlistStore = createShortlistStore();
+    void shortlistStore; // Phase 4 will wire UI to this store
 
     // ── Populate stats strip ─────────────────────────────────────────────
     const territories = new Set(cases.flatMap(c => c.countries));
@@ -72,11 +93,23 @@ async function boot() {
     if (starfieldCanvas) createStarfield(starfieldCanvas);
 
     // ── 3D Scene ─────────────────────────────────────────────────────────
+    const sceneContainer = document.getElementById('scene-container') as HTMLElement;
     const mainCanvas = document.getElementById('main-canvas') as HTMLCanvasElement;
-    const { scene, camera, renderer, controls } = createRenderer(mainCanvas);
+    const { scene, camera, renderer, controls } = createRenderer(mainCanvas, sceneContainer);
+    const clock = new THREE.Clock();
+    const choreographer = createTransitionChoreographer(controls);
+    const VIEW_DISTANCE = 200; // T1 face-on distance; tune empirically
     const labelContainer = document.getElementById('star-labels') as HTMLElement;
+    const layoutController = createLayoutController();
 
     const sceneObjects = buildOrbitalScene(cases, 'vertical', scene, labelContainer);
+    sceneObjects.controls = controls;
+
+    // ── Sync ViewState → SceneObjects.mode for backward compatibility ───
+    viewState.subscribe((next) => {
+      sceneObjects.mode = next.kind === 'global' ? 'global' : 'focused';
+      sceneObjects.focusedKey = next.kind === 'constellation' ? next.nucleusKey : null;
+    });
 
     // ── Filter panel (inside filters sidebar) ───────────────────────────
     const filterPanelEl = document.getElementById('filters') as HTMLElement;
@@ -99,20 +132,62 @@ async function boot() {
     // ── Tick loop ─────────────────────────────────────────────────────────
     function tick(t: number) {
       requestAnimationFrame(tick);
-      controls.update(); // applies damping
+      controls.update(clock.getDelta()); // camera-controls requires delta
       tickOrbits(sceneObjects, t, camera);
 
       // Update cluster label positions every frame
       for (const [key, div] of sceneObjects.nucleusLabels.entries()) {
         const mesh = sceneObjects.nucleusMeshes.get(key);
         if (!mesh) continue;
-        const screen = projectToScreen(mesh.position, camera);
+        const screen = projectToScreen(mesh.position, camera, sceneContainer.clientWidth, sceneContainer.clientHeight);
         div.style.transform = `translate(${screen.x + 14}px, ${screen.y - 14}px)`;
         // Show/hide based on threshold
         const isFocused = sceneObjects.focusedKey === key;
         const showLabel = labelThreshold > 0 || isFocused;
         if (showLabel && !div.classList.contains('show')) div.classList.add('show');
         if (!showLabel && div.classList.contains('show') && !isFocused) div.classList.remove('show');
+      }
+
+      // Position ring labels at the rightmost screen-x point of each ring.
+      // Analytically: project camera right vector onto the orbital plane, normalize
+      // to get the direction that maximises screen-x on each ring.
+      if (sceneObjects.mode === 'focused' && sceneObjects.ringLabelEls.length > 0) {
+        const focusedNucleus = sceneObjects.focusedKey
+          ? sceneObjects.nucleusMeshes.get(sceneObjects.focusedKey)
+          : null;
+        if (focusedNucleus) {
+          const focusedOrbit = sceneObjects.focusedKey
+            ? sceneObjects.nucleusOrbits[sceneObjects.focusedKey]
+            : null;
+          if (focusedOrbit) {
+            // Camera right axis in world space
+            const camRight = new THREE.Vector3();
+            camRight.setFromMatrixColumn(camera.matrixWorld, 0);
+
+            // Project camRight onto the orbit plane (spanned by orbitU and orbitV)
+            const ou = new THREE.Vector3(focusedOrbit.orbitU.x, focusedOrbit.orbitU.y, focusedOrbit.orbitU.z);
+            const ov = new THREE.Vector3(focusedOrbit.orbitV.x, focusedOrbit.orbitV.y, focusedOrbit.orbitV.z);
+            const cosA = camRight.dot(ou);
+            const cosB = camRight.dot(ov);
+            const projLen = Math.sqrt(cosA * cosA + cosB * cosB);
+            // Normalized direction within the plane that most aligns with camera right
+            const dirCos = projLen > 0.001 ? cosA / projLen : 1;
+            const dirSin = projLen > 0.001 ? cosB / projLen : 0;
+
+            for (let li = 0; li < sceneObjects.ringLabelEls.length; li++) {
+              const labelEl = sceneObjects.ringLabelEls[li];
+              const radius = parseFloat(labelEl.dataset.ringRadius ?? '0');
+              const pt = new THREE.Vector3(
+                focusedNucleus.position.x + radius * (ou.x * dirCos + ov.x * dirSin),
+                focusedNucleus.position.y + radius * (ou.y * dirCos + ov.y * dirSin),
+                focusedNucleus.position.z + radius * (ou.z * dirCos + ov.z * dirSin),
+              );
+              const s = projectToScreen(pt, camera, sceneContainer.clientWidth, sceneContainer.clientHeight);
+              labelEl.style.left = `${s.x + 6}px`;
+              labelEl.style.top = `${s.y - 10}px`;
+            }
+          }
+        }
       }
 
       renderer.render(scene, camera);
@@ -123,6 +198,7 @@ async function boot() {
     const tooltip = new Tooltip();
     const detailPanel = new DetailPanel();
     const raycaster = new THREE.Raycaster();
+    raycaster.params.Line = { threshold: 3 };
     const mouse = new THREE.Vector2();
 
     // Suppress click if the user dragged (OrbitControls moves camera)
@@ -141,7 +217,11 @@ async function boot() {
 
       // Tooltip hover
       if (sceneObjects.filterState.isActive()) { tooltip.hide(); return; }
-      mouse.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+      const moveRect = mainCanvas.getBoundingClientRect();
+      mouse.set(
+        ((e.clientX - moveRect.left) / moveRect.width) * 2 - 1,
+        -((e.clientY - moveRect.top) / moveRect.height) * 2 + 1,
+      );
       raycaster.setFromCamera(mouse, camera);
       const hits = raycaster.intersectObjects(sceneObjects.starMeshes);
       if (hits.length > 0) {
@@ -161,35 +241,73 @@ async function boot() {
     mainCanvas.addEventListener('pointerup', (e) => {
       if (didDrag) return; // was a drag, not a click
 
-      mouse.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+      const upRect = mainCanvas.getBoundingClientRect();
+      mouse.set(
+        ((e.clientX - upRect.left) / upRect.width) * 2 - 1,
+        -((e.clientY - upRect.top) / upRect.height) * 2 + 1,
+      );
       raycaster.setFromCamera(mouse, camera);
+
+      // Star click → open detail panel (check BEFORE ring lines — stars sit on rings)
+      const starHits = raycaster.intersectObjects(sceneObjects.starMeshes);
+      if (starHits.length > 0) {
+        if (choreographer.state.inProgress) return; // CAM-04
+        const c = (starHits[0].object as THREE.Mesh).userData.caseStudy as CaseStudy;
+        detailPanel.open(c);
+        return;
+      }
+
+      // Ring click → highlight all cases on that ring (only if no star was hit)
+      if (sceneObjects.mode === 'focused' && sceneObjects.ringLineMeshes.length > 0) {
+        const ringHits = raycaster.intersectObjects(sceneObjects.ringLineMeshes);
+        if (ringHits.length > 0) {
+          if (choreographer.state.inProgress) return;
+          const hitLine = ringHits[0].object as THREE.LineLoop;
+          const hitIndex = sceneObjects.ringLineMeshes.indexOf(hitLine);
+          if (hitIndex >= 0) {
+            const ringValue = sceneObjects.ringLineValues[hitIndex] ?? null;
+            sceneObjects.highlightedRingValue =
+              sceneObjects.highlightedRingValue === ringValue ? null : ringValue;
+            return;
+          }
+        }
+      }
 
       // Nucleus click → focus that sphere
       const nucleusMeshArr = [...sceneObjects.nucleusMeshes.values()];
       const nucHits = raycaster.intersectObjects(nucleusMeshArr);
       if (nucHits.length > 0) {
         const key = (nucHits[0].object as THREE.Mesh).userData.key as string;
-        enterFocus(key, controls);
-        return;
-      }
-
-      // Star click → open detail panel
-      const starHits = raycaster.intersectObjects(sceneObjects.starMeshes);
-      if (starHits.length > 0) {
-        const c = (starHits[0].object as THREE.Mesh).userData.caseStudy as CaseStudy;
-        detailPanel.open(c);
+        enterFocus(key);
         return;
       }
 
       // Click empty space while focused → unfocus
       if (sceneObjects.mode === 'focused') {
+        if (choreographer.state.inProgress) return; // CAM-04
         exitFocus();
       }
     });
 
     // ── Focus / unfocus helpers ───────────────────────────────────────────
-    function enterFocus(key: string, orbitCtl = controls): void {
-      focusSphere(sceneObjects, key, camera, orbitCtl);
+    function enterFocus(key: string): void {
+      if (choreographer.state.inProgress) return; // CAM-04: ignore input during transition
+
+      // If already in constellation (arrow-key cycling), exit first
+      if (viewState.getState().kind === 'constellation') {
+        viewState.dispatch({ type: 'EXIT_CONSTELLATION' });
+      }
+      viewState.dispatch({ type: 'ENTER_CONSTELLATION', nucleusKey: key });
+
+      // Compute face-on camera position from orbital plane basis vectors
+      const nucOrbit = sceneObjects.nucleusOrbits[key];
+      const nucleus = sceneObjects.nucleusMeshes.get(key)!;
+      const u = new THREE.Vector3(nucOrbit.orbitU.x, nucOrbit.orbitU.y, nucOrbit.orbitU.z);
+      const v = new THREE.Vector3(nucOrbit.orbitV.x, nucOrbit.orbitV.y, nucOrbit.orbitV.z);
+      const faceOn = new THREE.Vector3().crossVectors(u, v).normalize();
+
+      choreographer.startT1(nucleus.position, faceOn, VIEW_DISTANCE);
+      focusSphere(sceneObjects, key, scene, camera, controls);
 
       // Update crumb breadcrumb
       const groupCount = sceneObjects.nucleusOrbits[key]?.cases.length ?? 0;
@@ -205,26 +323,71 @@ async function boot() {
       const fhText = document.getElementById('fh-text');
       if (fhText) fhText.textContent = key;
 
-      // Show all labels, highlight the focused one
+      // Show focused label only; hide non-focused labels
       for (const [k, div] of sceneObjects.nucleusLabels.entries()) {
-        div.classList.toggle('focused', k === key);
-        div.classList.add('show');
+        if (k === key) {
+          div.classList.add('focused', 'show');
+        } else {
+          div.classList.remove('focused', 'show'); // hide non-focused labels
+        }
       }
 
-      // Body state drives all gated CSS
-      document.body.classList.add('constellation');
+      // Body state drives all gated CSS (centralized via LayoutController)
+      layoutController.setViewMode('constellation');
 
       // Show controls panel, search bar, filter sidebar
       elControls.classList.add('on');
       elSearchWrap.classList.add('on');
       elFiltersWrap.classList.add('on');
 
-      // Keep pan available in focused mode too — useful for inspection
-      orbitCtl.enablePan = true;
+      // Ring dimension switcher (ORB-03)
+      const switcherEl = document.getElementById('ring-switcher')!;
+      switcherEl.innerHTML = ALL_DIMS
+        .map(d => `<button data-dim="${d}" class="${d === sceneObjects.currentRingDimension ? 'active' : ''}">${DIM_LABELS[d]}</button>`)
+        .join('');
+
+      const switcherAbort = new AbortController();
+      switcherEl.addEventListener('click', (e) => {
+        const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-dim]');
+        if (!btn) return;
+        const newDim = btn.getAttribute('data-dim') as RingDimension;
+        if (newDim === sceneObjects.currentRingDimension) return;
+
+        switchRingDimension(sceneObjects, scene, newDim, {
+          baseRadius: 40,
+          ringSpacing: 15,
+          angularSpeedBase: 0.00003,
+        });
+
+        switcherEl.querySelectorAll<HTMLButtonElement>('[data-dim]').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-dim') === newDim);
+        });
+      }, { signal: switcherAbort.signal });
+
+      (sceneObjects as any)._switcherAbort = switcherAbort;
+
     }
 
     function exitFocus(): void {
-      unfocusSphere(sceneObjects, camera, controls);
+      if (choreographer.state.inProgress) return; // CAM-04: ignore input during transition
+
+      // Clean up ring switcher
+      const abort = (sceneObjects as any)._switcherAbort as AbortController | undefined;
+      abort?.abort();
+      delete (sceneObjects as any)._switcherAbort;
+      const switcherEl = document.getElementById('ring-switcher');
+      if (switcherEl) switcherEl.innerHTML = '';
+
+      if (viewState.getState().kind === 'constellation') {
+        viewState.dispatch({ type: 'EXIT_CONSTELLATION' });
+      }
+
+      choreographer.startT5(
+        new THREE.Vector3(80, 880, 280),
+        new THREE.Vector3(0, 0, 0),
+        () => { renderer.render(scene, camera); }, // force render after T5 for raycast matrix
+      );
+      unfocusSphere(sceneObjects, scene, camera, controls);
 
       elCrumb.classList.remove('on');
       elFocusHint.classList.remove('on');
@@ -237,14 +400,30 @@ async function boot() {
         div.classList.remove('focused', 'show');
       }
 
-      document.body.classList.remove('constellation');
+      layoutController.setViewMode('global');
     }
 
     // ── Keyboard shortcuts ────────────────────────────────────────────────
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
+        if (choreographer.state.inProgress) return; // CAM-04
+        // Step-back: unwind one layer at a time
         if (detailPanel.isOpen()) { detailPanel.close(); return; }
+        if (sceneObjects.highlightedRingValue !== null) {
+          sceneObjects.highlightedRingValue = null;
+          sceneObjects._ringWasHighlighted = true; // trigger restore in tick
+          return;
+        }
         if (sceneObjects.mode === 'focused') { exitFocus(); return; }
+      }
+
+      // TODO(Phase 5): remove Shift+P — reading panel replaces this
+      if (e.key === 'P' && e.shiftKey) {
+        const panelSlot = document.getElementById('reading-panel-slot');
+        if (panelSlot) {
+          const isOpen = panelSlot.classList.contains('open');
+          layoutController.setPanelOpen(!isOpen);
+        }
       }
 
       // Arrow keys: cycle through nucleus groups
@@ -260,7 +439,29 @@ async function boot() {
     });
 
     // ── Back button (breadcrumb) ──────────────────────────────────────────
-    elBack.addEventListener('click', () => exitFocus());
+    elBack.addEventListener('click', () => {
+      if (choreographer.state.inProgress) return;
+      // Step-back: clear highlight first, then exit focus
+      if (sceneObjects.highlightedRingValue !== null) {
+        sceneObjects.highlightedRingValue = null;
+        sceneObjects._ringWasHighlighted = true;
+        return;
+      }
+      exitFocus();
+    });
+
+    // ── Home button — reset camera to default position ───────────────────
+    const elHomeBtn = document.getElementById('homeBtn');
+    if (elHomeBtn) {
+      elHomeBtn.addEventListener('click', () => {
+        if (sceneObjects.mode === 'focused') {
+          exitFocus();
+        } else {
+          // Just reset camera to home
+          controls.setLookAt(80, 880, 280, 0, 0, 0, true);
+        }
+      });
+    }
 
     // ── Filter tab toggle ─────────────────────────────────────────────────
     elFiltersWrap.classList.add('on'); // always show the tab

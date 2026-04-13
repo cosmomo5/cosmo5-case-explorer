@@ -60,6 +60,8 @@ export interface SceneObjects {
   _ringWasHighlighted: boolean;
   /** Timeout ID for delayed staging sphere disposal — prevents race when filter is re-applied within 700ms of clearing */
   _stagingDisposalTimeout: ReturnType<typeof setTimeout> | undefined;
+  /** Optional camera-controls ref — set by main.ts after scene creation. Enables camera lean toward staging sphere (FILT-06). */
+  controls?: CameraControls;
 }
 
 export function buildOrbitalScene(
@@ -540,20 +542,26 @@ function restoreStagingPush(objects: SceneObjects): void {
  */
 function zoomTowardStaging(objects: SceneObjects): void {
   const stagingMesh = objects.nucleusMeshes.get(STAGING_KEY);
-  if (!stagingMesh) return;
-  // camera-controls proxy pattern: animate a synthetic t value and call moveTo in onUpdate
-  // This is intentionally a lightweight lean — the user initiates full T1 focus by clicking.
+  if (!stagingMesh || !objects.controls) return;
+
+  const controls = objects.controls;
   const pos = stagingMesh.position;
+
+  // Capture current camera target to interpolate from
+  const startTarget = new THREE.Vector3();
+  controls.getTarget(startTarget);
+
+  // 30% lean toward staging sphere — cosmetic hint, not full T1 focus
+  const leanTarget = new THREE.Vector3().lerpVectors(startTarget, pos, 0.3);
+
   const proxy = { t: 0 };
   gsap.to(proxy, {
     t: 1,
     duration: 0.6,
     ease: 'power2.out',
     onUpdate: () => {
-      // objects.controls is not in SceneObjects — camera lean is applied by the
-      // choreographer layer in main.ts. For now this function is a no-op placeholder.
-      // FILT-06 camera behavior wired in Plan 04 via TransitionChoreographer.
-      void pos; void proxy;
+      const current = new THREE.Vector3().lerpVectors(startTarget, leanTarget, proxy.t);
+      controls.moveTo(current.x, current.y, current.z, false);
     },
   });
 }
