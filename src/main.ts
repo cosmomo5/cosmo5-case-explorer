@@ -16,7 +16,6 @@ import { createTransitionChoreographer } from './animation/transition-choreograp
 import { mountFilterPanel } from './ui/filter-panel';
 import { regroupScene } from './scene/regroup';
 import { Tooltip, projectToScreen } from './ui/tooltip';
-import { DetailPanel } from './ui/detail-panel';
 import { ReadingPanel } from './ui/reading-panel';
 import { ShortlistTrack } from './ui/shortlist-track';
 
@@ -49,7 +48,6 @@ const elHero     = document.getElementById('hero')          as HTMLElement;
 const elControls = document.getElementById('cosmoControls') as HTMLElement;
 const elFiltersWrap = document.getElementById('filtersWrap') as HTMLElement;
 const elFiltersTab  = document.getElementById('filtersTab')  as HTMLElement;
-const elSearchWrap  = document.getElementById('searchWrap')  as HTMLElement;
 const elGlobalSearch= document.getElementById('globalSearch') as HTMLInputElement;
 const elGlobalClear = document.getElementById('globalSearchClear') as HTMLElement;
 const elLabelSlider = document.getElementById('labelSlider') as HTMLInputElement;
@@ -219,7 +217,6 @@ async function boot() {
 
     // ── Raycasting ───────────────────────────────────────────────────────
     const tooltip = new Tooltip();
-    const detailPanel = new DetailPanel();
     const raycaster = new THREE.Raycaster();
     raycaster.params.Line = { threshold: 3 };
     const mouse = new THREE.Vector2();
@@ -363,9 +360,8 @@ async function boot() {
       // Body state drives all gated CSS (centralized via LayoutController)
       layoutController.setViewMode('constellation');
 
-      // Show controls panel, search bar, filter sidebar
+      // Show controls panel and filter sidebar
       elControls.classList.add('on');
-      elSearchWrap.classList.add('on');
       elFiltersWrap.classList.add('on');
 
       // Ring dimension switcher (ORB-03)
@@ -421,7 +417,6 @@ async function boot() {
       elFocusHint.classList.remove('on');
       elHero.classList.remove('exit');
       elControls.classList.remove('on');
-      elSearchWrap.classList.remove('on');
 
       // Hide all labels (they'll reappear if threshold > 0 in tick)
       for (const div of sceneObjects.nucleusLabels.values()) {
@@ -437,7 +432,6 @@ async function boot() {
         if (choreographer.state.inProgress) return; // CAM-04
         // Step-back: unwind one layer at a time
         if (readingPanel.isOpen()) { readingPanel.close(); return; }
-        if (detailPanel.isOpen()) { detailPanel.close(); return; }
         if (sceneObjects.highlightedRingValue !== null) {
           sceneObjects.highlightedRingValue = null;
           sceneObjects._ringWasHighlighted = true; // trigger restore in tick
@@ -513,7 +507,7 @@ async function boot() {
     }
 
     // ── Filter tab toggle ─────────────────────────────────────────────────
-    elFiltersWrap.classList.add('on'); // always show the tab
+    // .on is added by enterConstellation (line 369); no need to add it on boot
     elFiltersTab.addEventListener('click', () => {
       elFiltersWrap.classList.toggle('collapsed');
     });
@@ -534,7 +528,6 @@ async function boot() {
           mat.opacity = match ? 1.0 : 0.08;
         }
       }
-      elSearchWrap.classList.toggle('search-match', q.length > 0);
     });
 
     elGlobalClear.addEventListener('click', () => {

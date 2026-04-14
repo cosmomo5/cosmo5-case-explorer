@@ -27,11 +27,6 @@
   <div id="reading-panel-slot"></div>
 </div>
 
-<div id="globe-stage">
-  <canvas id="globe-canvas"></canvas>
-</div>
-
-<canvas id="constellation-canvas"></canvas>
 <div id="focus-hint" class="focus-hint">
   <span class="fh-dot"></span><span id="fh-text">Focused</span>
   <span class="fh-close">click empty space to exit</span>
@@ -104,9 +99,6 @@
     </div>
     <div class="filters-foot">
       <div class="f-stat"><span>Matching</span><b id="f-count">—</b></div>
-      <button class="gather-btn" id="gatherBtn" disabled>
-        <span class="gi"></span><span id="gatherLbl">Gather to center</span>
-      </button>
     </div>
   </aside>
 </div>
@@ -134,15 +126,8 @@
   </div>
 </div>
 
-<div class="rail" id="countryRail"></div>
-
-<div class="search-wrap" id="searchWrap">
-  <svg class="si" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-    <circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/>
-  </svg>
-  <input type="text" id="globalSearch" placeholder="Search cases…" autocomplete="off"/>
-  <button class="sc" id="globalSearchClear">×</button>
-</div>
+<input type="text" id="globalSearch" placeholder="Search cases…" autocomplete="off"/>
+<button class="sc" id="globalSearchClear">×</button>
 
 <button class="home-btn" id="homeBtn" title="Reset view">⌂</button>
 
@@ -170,50 +155,6 @@
     <div id="ring-switcher" class="ring-switcher" aria-label="Ring dimension"></div>
 </div>
 
-<div class="panel-scrim" id="panelScrim"></div>
-<aside class="panel" id="panel">
-  <button class="close" id="close">×</button>
-  <div class="panel-inner">
-    <div class="p-eye"><span class="dot"></span><span id="p-region">—</span></div>
-    <div class="p-client" id="p-client">—</div>
-    <div class="p-title" id="p-title"></div>
-    <div class="p-meta" id="p-meta"></div>
-
-    <div class="p-section" id="p-chal-wrap">
-      <div class="p-section-label">The Challenge</div>
-      <div class="p-section-text" id="p-chal">—</div>
-    </div>
-
-    <div class="p-section" id="p-appr-wrap">
-      <div class="p-section-label">Our Approach</div>
-      <div class="p-section-text" id="p-appr">—</div>
-    </div>
-
-    <div class="p-impact" id="p-impact" style="display:none">
-      <div class="p-impact-label">The Impact</div>
-      <div class="metrics-grid" id="p-metrics"></div>
-    </div>
-
-    <div id="p-contrib-wrap" style="display:none">
-      <div class="p-contrib">
-        <div class="avatar" id="p-avatar">—</div>
-        <div>
-          <div class="cname" id="p-cname">—</div>
-          <div class="csrc" id="p-csrc">Cosmo5 Contributor</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="p-locked" id="p-locked" style="display:none">
-      ⚠ Confidential — this case study is not cleared for distribution in this view.
-    </div>
-  </div>
-</aside>
-
-<div class="ctip" id="ctip">
-  <span class="cn" id="ctip-n">—</span>
-  <span class="cc" id="ctip-c">—</span>
-</div>
 
 <div class="loader" id="loader">
   <div>
