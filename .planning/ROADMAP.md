@@ -31,7 +31,7 @@
 **Goal:** The codebase matches v3.2 intent before any new UI is added. All orphaned v1/v2 DOM removed. Phyllotaxis code preserved and isolated for Phase 12 adaptation. Schema extended for imagery. Branch strategy documented.
 **Depends on:** Nothing (first phase of v3.2).
 **Requirements:** CLN-01, CLN-02, CLN-03, CLN-04, CLN-05, CLN-06
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 Plans:
 - [ ] 08-01-PLAN.md — Remove orphaned DOM (index.html), TS (detail-panel.ts + main.ts), and CSS (style.css)
 - [ ] 08-02-PLAN.md — Isolate phyllotaxis geometry into src/scene/phyllotaxis.ts (TDD)

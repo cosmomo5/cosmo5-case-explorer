@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
 status: "PROJECT.md updated, MILESTONES.md created (v3.1 archived), REQUIREMENTS.md appended with 56 v3.2 requirements, ROADMAP.md rewritten for v3.2 with 8 phases (8–15). Ready for `/gsd:plan-phase 8`."
-stopped_at: Completed 08-03 schema extension and branch strategy docs
-last_updated: "2026-04-14T20:52:10.476Z"
+stopped_at: Completed 08-clean-substrate/08-02-PLAN.md
+last_updated: "2026-04-14T20:55:21.700Z"
 last_activity: 2026-04-14 — v3.2 milestone initialized via new-milestone workflow. Phase numbering continues from v3.1 (0–7 + 6.5 shipped; new phases 8–15).
 progress:
   total_phases: 8
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 8 (Clean Substrate) — ready to plan
-**Milestone:** v3.2 formalized in GSD system. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** PROJECT.md updated, MILESTONES.md created (v3.1 archived), REQUIREMENTS.md appended with 56 v3.2 requirements, ROADMAP.md rewritten for v3.2 with 8 phases (8–15). Ready for `/gsd:plan-phase 8`.
-**Last activity:** 2026-04-14 — v3.2 milestone initialized via new-milestone workflow. Phase numbering continues from v3.1 (0–7 + 6.5 shipped; new phases 8–15).
+**Phase:** 8 (Clean Substrate) — 2 of 3 plans complete
+**Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
+**Status:** Phase 8 plans 01 (orphan removal) and 02 (phyllotaxis module) complete. Plan 03 (schema extension + branch strategy docs) remaining.
+**Last activity:** 2026-04-14 — 08-02 phyllotaxis geometry module: camera-independent `computePhyllotaxisPositions`, 195 tests passing (190 + 5 new), CLN-04 complete.
 
-Progress: [░░░░░░░░░░] 0% of v3.2
+Progress: [██████░░░░] 55% of v3.2 plans (12/22)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-14T20:52:10.431Z
-Stopped at: Completed 08-03 schema extension and branch strategy docs
+Last session: 2026-04-14T20:55:21.662Z
+Stopped at: Completed 08-clean-substrate/08-02-PLAN.md
 Resume with: `/gsd:plan-phase 8` — or continue with content-imagery project owner assignment in parallel.
