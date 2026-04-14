@@ -17,6 +17,10 @@ export interface CaseStudy {
   challenge: string;
   approach: string;
   metrics: Metric[];
+  imagery?: {
+    logo?: string;        // relative path from public/case-imagery/, e.g. "cosmo5/logo.svg"
+    key_visual?: string;  // relative path from public/case-imagery/, e.g. "cosmo5/key-visual.jpg"
+  };
 }
 
 export type GroupMode = 'vertical' | 'country' | 'region';
