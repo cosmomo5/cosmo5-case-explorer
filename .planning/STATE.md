@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: The Observatory Experience
-status: v3.2 initialized — PROJECT.md, MILESTONES.md, REQUIREMENTS.md, ROADMAP.md written. Ready for /gsd:plan-phase 8.
-stopped_at: "v3.2 formalized in GSD system 2026-04-14. 56 requirements mapped across 8 phases (8–15). Next: /gsd:plan-phase 8."
-last_updated: "2026-04-14T18:00:00.000Z"
-last_activity: "2026-04-14 — v3.2 milestone initialized via new-milestone workflow. All artifacts written. Phase numbering continues from v3.1 (ended at 7, new phases 8–15)."
+status: Phase 8 (Clean Substrate) — in execution
+stopped_at: "Phase 8 plans created 2026-04-14. Ready for /gsd:execute-phase 8."
+last_updated: "2026-04-14T18:30:00.000Z"
+last_activity: "2026-04-14 — Phase 8 plans written (08-01, 08-02, 08-03). Ready for execution."
 progress:
   total_phases: 8
   completed_phases: 0
@@ -42,6 +42,25 @@ Progress: [░░░░░░░░░░] 0% of v3.2
 - **Q3 — Terminal action:** REFRAMED. Primary user = internal team, not prospect. No Compile/Share. Instead: Review Mode (sequential paginated reader) + localStorage persistence (reading list, query history, recently viewed). Welcome-back state on return.
 - **Q4 — Imagery:** Commissioned as parallel content project. Schema extended with optional `imagery?: { logo, key_visual }`. Assets land in `public/case-imagery/<case-slug>/`. Permission-false cases suppress imagery, show `[CONFIDENTIAL]` readout.
 - **Q5 — Gather:** NOT retired. Adapted to Comparison Mode for reading list (≥3 items). Phyllotaxis formation at center, other stars dim heavily, spatial simultaneous view of curated set. Complements Review Mode (sequential) vs Comparison (simultaneous).
+
+## Branch Strategy (locked 2026-04-14, Q2 resolution)
+
+phase-1c is canonical. draft/v3-starmap is specification-only.
+
+Each v3.2 plan that imports a v3-starmap move names:
+- What v3-starmap did (with commit SHA reference)
+- What phase-1c will do (adapted implementation)
+- Whether this improves or contorts phase-1c
+
+Guardrail: if phase-1c contorts to match v3-starmap's shape, stop and design fresh.
+
+Import decisions by move:
+- Query input + keyword mapping → import as spec (Phase 10)
+- CRT radial grid substrate → import as spec (Phase 9)
+- Instrument-calibrating loader → import as spec (Phase 9)
+- Phyllotaxis geometry → import as spec (Phase 8, for Phase 12 use)
+- Affinity clustering → skip (concentric supersedes)
+- Phyllotaxis gather as filter-trigger → skip (adapted for Comparison Mode in Phase 12)
 
 ## Blockers and Contingencies
 
