@@ -210,8 +210,8 @@ Deferred to future release. Tracked but not in current roadmap.
 - [ ] **CLN-02**: Orphaned CSS removed from style.css corresponding to removed DOM. Preserve gather-mode CSS for Phase 12 adaptation. Keep `.cl` (in use).
 - [ ] **CLN-03**: Orphaned main.ts code removed (old DetailPanel import if unused, unused element getters).
 - [ ] **CLN-04**: Phyllotaxis geometry + transition code isolated into `src/scene/phyllotaxis.ts` (or similar), documented "preserved for Comparison Mode (Phase 12)". Current gather wiring removed.
-- [ ] **CLN-05**: Hybrid branch strategy documented — phase-1c canonical, v3-starmap specification-only. Decision recorded in STATE.md with guardrail.
-- [ ] **CLN-06**: `CaseStudy` schema extended with optional `imagery?: { logo?: string; key_visual?: string }`. Empty asset directory `public/case-imagery/` created.
+- [x] **CLN-05**: Hybrid branch strategy documented — phase-1c canonical, v3-starmap specification-only. Decision recorded in STATE.md with guardrail.
+- [x] **CLN-06**: `CaseStudy` schema extended with optional `imagery?: { logo?: string; key_visual?: string }`. Empty asset directory `public/case-imagery/` created.
 
 ### Atmosphere (Phase 9)
 

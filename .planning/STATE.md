@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
 milestone: v3.2
-milestone_name: The Observatory Experience
-status: Phase 8 (Clean Substrate) — in execution
-stopped_at: "Phase 8 plans created 2026-04-14. Ready for /gsd:execute-phase 8."
-last_updated: "2026-04-14T18:30:00.000Z"
-last_activity: "2026-04-14 — Phase 8 plans written (08-01, 08-02, 08-03). Ready for execution."
+milestone_name: — The Observatory Experience
+status: "PROJECT.md updated, MILESTONES.md created (v3.1 archived), REQUIREMENTS.md appended with 56 v3.2 requirements, ROADMAP.md rewritten for v3.2 with 8 phases (8–15). Ready for `/gsd:plan-phase 8`."
+stopped_at: Completed 08-03 schema extension and branch strategy docs
+last_updated: "2026-04-14T20:52:10.476Z"
+last_activity: 2026-04-14 — v3.2 milestone initialized via new-milestone workflow. Phase numbering continues from v3.1 (0–7 + 6.5 shipped; new phases 8–15).
 progress:
   total_phases: 8
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 3
+  completed_plans: 1
   percent: 0
 ---
 
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-14
-Stopped at: v3.2 milestone formalized in GSD system. PROJECT.md, MILESTONES.md, REQUIREMENTS.md, ROADMAP.md all written. Ready for Phase 8 planning.
+Last session: 2026-04-14T20:52:10.431Z
+Stopped at: Completed 08-03 schema extension and branch strategy docs
 Resume with: `/gsd:plan-phase 8` — or continue with content-imagery project owner assignment in parallel.
