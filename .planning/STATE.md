@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
-status: completed
+status: planning
 stopped_at: Completed 08-01-PLAN.md — orphaned DOM, CSS, and detail-panel.ts removed. 195 tests pass.
-last_updated: "2026-04-14T20:59:28.352Z"
+last_updated: "2026-04-14T21:08:52.631Z"
 last_activity: "2026-04-14 — 08-02 phyllotaxis geometry module: camera-independent `computePhyllotaxisPositions`, 195 tests passing (190 + 5 new), CLN-04 complete."
 progress:
   total_phases: 8
@@ -30,7 +30,7 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 **Phase:** 8 (Clean Substrate) — 2 of 3 plans complete
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Phase 8 plans 01 (orphan removal) and 02 (phyllotaxis module) complete. Plan 03 (schema extension + branch strategy docs) remaining.
+**Status:** Ready to plan
 **Last activity:** 2026-04-14 — 08-02 phyllotaxis geometry module: camera-independent `computePhyllotaxisPositions`, 195 tests passing (190 + 5 new), CLN-04 complete.
 
 Progress: [██████░░░░] 55% of v3.2 plans (12/22)
