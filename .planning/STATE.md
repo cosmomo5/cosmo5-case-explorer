@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
-status: "PROJECT.md updated, MILESTONES.md created (v3.1 archived), REQUIREMENTS.md appended with 56 v3.2 requirements, ROADMAP.md rewritten for v3.2 with 8 phases (8–15). Ready for `/gsd:plan-phase 8`."
-stopped_at: Completed 08-clean-substrate/08-02-PLAN.md
-last_updated: "2026-04-14T20:55:21.700Z"
-last_activity: 2026-04-14 — v3.2 milestone initialized via new-milestone workflow. Phase numbering continues from v3.1 (0–7 + 6.5 shipped; new phases 8–15).
+status: completed
+stopped_at: Completed 08-01-PLAN.md — orphaned DOM, CSS, and detail-panel.ts removed. 195 tests pass.
+last_updated: "2026-04-14T20:59:28.352Z"
+last_activity: "2026-04-14 — 08-02 phyllotaxis geometry module: camera-independent `computePhyllotaxisPositions`, 195 tests passing (190 + 5 new), CLN-04 complete."
 progress:
   total_phases: 8
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
-  percent: 0
+  completed_plans: 3
+  percent: 55
 ---
 
 # Project State
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-14T20:55:21.662Z
-Stopped at: Completed 08-clean-substrate/08-02-PLAN.md
+Last session: 2026-04-14T20:59:28.301Z
+Stopped at: Completed 08-01-PLAN.md — orphaned DOM, CSS, and detail-panel.ts removed. 195 tests pass.
 Resume with: `/gsd:plan-phase 8` — or continue with content-imagery project owner assignment in parallel.

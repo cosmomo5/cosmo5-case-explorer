@@ -16,7 +16,7 @@
 - Integer phases (8–15): Planned milestone work
 - Decimal phases: Urgent insertions only (created via `/gsd:insert-phase`)
 
-- [ ] **Phase 8: Clean Substrate** — Remove orphaned DOM, isolate phyllotaxis for Comparison Mode, extend schema with imagery field, document branch strategy
+- [x] **Phase 8: Clean Substrate** — Remove orphaned DOM, isolate phyllotaxis for Comparison Mode, extend schema with imagery field, document branch strategy (completed 2026-04-14)
 - [ ] **Phase 9: Atmosphere** — CRT graticule substrate, instrument-calibrating loader, corner wordmark
 - [ ] **Phase 10: Query Bar** — Central conversational input, keyword→dimension mapping, live field response, Advanced drawer fallback
 - [ ] **Phase 11: Reading Panel as Instrument** — Restructure header/body/impact as instrument readout, archive imagery integration, Fraunces italic deployment
@@ -31,7 +31,7 @@
 **Goal:** The codebase matches v3.2 intent before any new UI is added. All orphaned v1/v2 DOM removed. Phyllotaxis code preserved and isolated for Phase 12 adaptation. Schema extended for imagery. Branch strategy documented.
 **Depends on:** Nothing (first phase of v3.2).
 **Requirements:** CLN-01, CLN-02, CLN-03, CLN-04, CLN-05, CLN-06
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
 - [ ] 08-01-PLAN.md — Remove orphaned DOM (index.html), TS (detail-panel.ts + main.ts), and CSS (style.css)
 - [ ] 08-02-PLAN.md — Isolate phyllotaxis geometry into src/scene/phyllotaxis.ts (TDD)
