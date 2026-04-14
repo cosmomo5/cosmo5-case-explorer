@@ -1,95 +1,108 @@
-# Case Study Explorer v3.1 — Dimensional Explorer
+# Case Study Explorer
 
 ## What This Is
 
-A Three.js dimensional explorer for navigating 116 marketing intelligence case studies. Users move through three levels of focus — 3D orbital field, 2D constellation plane, 1D shortlist track — building a curated set of proof for client pitches. Built for internal sales and strategy teams at Cosmo5 who need to find relevant case study precedents before presentations.
+A Three.js observatory for 116 marketing intelligence case studies. The Cosmo5 strategy and sales team navigates a dark field of stars organized into concentric orbital rings around cluster nuclei, queries the field conversationally, reads cases rendered as instrument readouts, and curates reading lists for later study. Used internally across multiple sessions as a showcase of the agency's accomplishments that the team itself inhabits when preparing for client conversations.
 
 ## Core Value
 
-**A prospect-facing discovery tool that lets you build a pitch deck's worth of proof in 60 seconds.** If the shortlisting flow (browse → select → read → compare) doesn't work, nothing else matters.
+**A considered internal place where the Cosmo5 team builds, returns to, and studies their mental library of proof.** Closer to a museum's study room than a pitch deck. Functional, but a place worth inhabiting — the standard stays high because this is a showcase of the agency's own work, and the place that showcases it should earn that role.
+
+## Aesthetic Premise (v3.2)
+
+*"A cosmos of proof, navigable as an atlas — observed, not advertised."*
+
+"Cosmos" names the space. "Navigable as an atlas" names the method. "Observed, not advertised" names the epistemic stance — rules out marketing-summary register, feature-card grids, celebratory metric typography.
+
+## Current Milestone: v3.2 The Observatory Experience
+
+**Goal:** Migrate the 2026-04-12 design direction (Kunumi query-driven navigation + BYLD analog-era precision + Cosmo5 observatory foundation) into the v3.1 phase-1c codebase. Reframe for internal team use with persistent state across sessions, two distinct study surfaces (Review Mode for sequential immersion, Comparison Mode for simultaneous spatial comparison), and clean substrate with imagery integration.
+
+**Source specification:** `.planning/MILESTONE-v3.2.md`
+
+**Target features:**
+- Query bar with conversational placeholder replaces filter panel as primary input
+- CRT celestial graticule + instrument-calibrating loader (first paint)
+- Reading panel as instrument readout (typography + real imagery from content project)
+- Reading list → Review Mode (paginated full-viewport reader) + Comparison Mode (adapted gather → phyllotaxis formation of staged stars)
+- localStorage persistence: reading list, query history, recently viewed, welcome-back
+- Clean substrate: ~45 orphaned DOM nodes from v1/v2 removed
+- Hero collapse: no marketing banner on land
+- Full edge-state coverage (empty, no-matches, error, narrow-viewport, reduced-motion, keyboard, ARIA)
 
 ## Requirements
 
-### Validated
+### Validated (shipped in v3.1)
 
-- ✓ Three.js orbital mechanics (nuclei orbit staging center, stars orbit nuclei) — existing
-- ✓ GSAP animations (focus/unfocus, filter/staging, group switch) — existing
-- ✓ Grouping modes (vertical/country/region) with SERVICE_TO_VERTICAL map — existing
-- ✓ Filter panel with attribute chips (country, service, year) — existing
-- ✓ Hover tooltip (client + title) — existing
-- ✓ Case detail panel — existing (needs rework to command bridge)
-- ✓ Ambient starfield background — existing
-- ✓ CSS token system (teal, gold, no purple, single ease) — existing
-- ✓ Typography (DM Mono, Noto Sans 900, Fraunces) — existing
-- ✓ prefers-reduced-motion gates (3 gates) — existing
-- ✓ 116 cases loaded from cases.json — existing
+- ✓ Three.js orbital engine with concentric rings by dimension (proofType/impactBand/year/country/region) — v3.1 Phase 4
+- ✓ Camera-based focus transitions (T1 1200ms / T5 1400ms, camera-controls v3.1.2) — v3.1 Phase 3
+- ✓ Split canvas layout (constellation zone + bottom track) — v3.1 Phase 2
+- ✓ Reading panel (command-bridge right-slide, 340px) — v3.1 Phase 6
+- ✓ Shortlist store + track component with sync-to-star-state — v3.1 Phase 6
+- ✓ Ring-dimension switcher with live cross-filter — v3.1 Phase 5
+- ✓ Staging sphere at focused nucleus centroid — v3.1 Phase 5
+- ✓ Visual warmth: glow sprites, twinkle, blue-indigo nebula — v3.1 Phase 6.5
+- ✓ Accessibility: no maximum-scale=1, prefers-reduced-motion gates, keyboard arrow navigation — v3.1 Phase 7
+- ✓ CSS token system (teal/gold semantics, no purple, single --ease) — v3.1 foundation
+- ✓ Typography stack (DM Mono, Noto Sans 900, Fraunces loaded) — v3.1 foundation
 
-### Active
+### Active (v3.2 — see MILESTONE-v3.2.md for full breakdown)
 
-- [ ] Split canvas layout: constellation zone (top ~72%) + staging track (bottom ~28%)
-- [ ] Camera-based flattening: T1 transition rotates camera to face orbital plane
-- [ ] Star selection model: click to toggle, star leaves orbit, ghost remains
-- [ ] Staging track: 1D horizontal line, stars align, connectors between them
-- [ ] Cross-constellation shortlist: persists across constellation visits
-- [ ] Reading panel: command bridge layout, slides in from right (340px), scene compresses
-- [ ] Instrument readout format in reading panel: DM Mono grid cells, metric cards
-- [ ] ← → navigation controls both track and panel simultaneously
-- [ ] Enriched filter panel (focused mode): proof type + impact scale dimensions
-- [ ] Live chip count updates based on current filter combination
-- [ ] T1 transition: global → constellation (~1200ms), rings flatten by perspective
-- [ ] T2 transition: star → track (~600ms), crosses divider, ghost at orbit
-- [ ] T3 transition: panel open (~400ms), slides in, scene compresses
-- [ ] T4 transition: panel close (~350ms), slides out, scene expands
-- [ ] T5 transition: constellation → global (~1400ms), camera pulls back + rotates
-- [ ] T6 transition: remove from shortlist (~400ms), star returns to orbit
-- [ ] Ghost star mechanic: dimmed star at orbital position when original is on track
-- [ ] Active star glows gold in constellation while being read in panel
-- [ ] Returns ~20% slower than entries (expansion feels larger)
-- [ ] Derived data fields: proofType (from metrics) and impactScale (from metrics magnitude)
+- [ ] Clean substrate: remove orphaned v1/v2 DOM; preserve phyllotaxis for Comparison Mode
+- [ ] CRT graticule + instrument-calibrating loader on first paint
+- [ ] Query bar with keyword→dimension mapping + live field response
+- [ ] Advanced drawer (filter fallback for power users)
+- [ ] Reading panel as instrument readout with archive imagery integration
+- [ ] Reading List rename + persistence + Review Mode + Comparison Mode
+- [ ] Star flight animation (orbit→track on add, track→orbit on remove, orbit→formation on compare)
+- [ ] Hero collapse — remove marketing banner on land
+- [ ] Welcome-back state on return visit
+- [ ] Query history chips
+- [ ] Full edge state coverage
+- [ ] Imagery schema + integration (parallel content project)
 
-### Out of Scope
+### Out of Scope (v3.2)
 
-- Kunumi conversational query interface — future v3.2+, not this pass
-- BYLD CRT grid atmospheric layer — consider for v3.2, not blocking
-- Archive artifact thumbnails in starmap — depends on case study imagery availability
-- Global search → staging integration — deferred
-- D3 globe intro rework — existing globe stays as-is
-- Offline support / caching — not needed for internal tool
-- Analytics / usage tracking — not this version
-- Mobile/touch-first layout — desktop-first internal tool
+- **Kunumi conversational AI / LLM query layer** — keyword mapping is sufficient; LLM deferred to v3.3+
+- **Mobile / narrow-viewport interactive support** — designed "desktop-only" message only; full mobile redesign is a separate project
+- **Analytics / usage tracking** — internal tool, no tracking
+- **Authentication / user accounts** — localStorage persistence only
+- **Server-side compile, Google Slides integration, URL-encoded sharing** — not relevant to internal use (reframed 2026-04-14)
+- **Gather as filter-result trigger** — adapted to Comparison Mode on reading list instead
+- **Purple in UI chrome** — v3.2 scope; future iterations can reintroduce with intention
+- **Backend / API / CMS** — cases.json remains single source of truth
 
 ## Context
 
-**Existing codebase:** ~2,700 lines TypeScript + CSS on branch `phase-1c`. Orbital mechanics, rendering pipeline, filter panel, tooltip, and detail panel all exist but follow the old model (sphere-expands-to-fill, phyllotaxis staging at origin, modal detail panel).
+**Two-branch history (important for v3.2).** The project has two parallel branches from 2026-04: `phase-1c` (v3.1, shipped) and `draft/v3-starmap` (13 commits implementing early direction-note moves: query input, affinity clustering, CRT grid, calibrating loader). v3.2 declares **phase-1c canonical**. v3-starmap serves as specification reference only — its moves are consulted and re-implemented in phase-1c with a guardrail: import a v3-starmap move only if the phase-1c re-implementation improves on or matches it.
 
-**Design direction:** Three reference points — Cosmo5's own astronomical metaphor (foundation), Kunumi Institute (structural model: inquiry over filtering), BYLD (register: analog-era precision instruments). Direction note at `design/reviews/cosmo5-case-explorer/2026-04-12-direction-note.md`.
+**Design direction (authoritative).** `/mnt/c/Users/moham/Documents/Thales/design/reviews/cosmo5-case-explorer/2026-04-12-direction-note.md`. Three references, one execution: Kunumi Institute (structure), BYLD (register), Cosmo5 itself (foundation).
 
-**Key design decision from brainstorming:** The dimensional collapse (3D → 2D → 1D) is the central interaction concept. Each transition enacts a reduction in degrees of freedom. The flattening is a camera move, not a geometry change. The staging track coexists with the constellation (split canvas), not as a separate state.
-
-**Codebase map:** `.planning/codebase/` — 7 documents covering stack, architecture, structure, conventions, testing, integrations, concerns.
+**Content-imagery project runs in parallel with v3.2 development.** Schema extended with optional `imagery?: { logo, key_visual }`. Assets land in `public/case-imagery/<case-slug>/`. Content team needs: named owner, cadence (batched 20/week preferred), format confirmation (SVG logo, 1200px JPG key visual), permission-false fallback policy.
 
 ## Constraints
 
 - **Stack**: TypeScript 5, Three.js 0.170, GSAP 3.12, D3 7.9, Vite 6 — no framework changes
 - **Data**: 116 cases in static cases.json — no backend, no API
-- **Tokens**: No purple. Gold = navigation/active. Teal = confirmed/measured. Single `--ease`.
-- **Accessibility**: `prefers-reduced-motion` respected (3 gates), no `maximum-scale=1`
-- **Performance**: No new Vec3 allocations in hot loops; reuse scratch vectors
+- **Tokens**: No purple in UI chrome (v3.2 scope). Gold = navigation/active. Teal = confirmed/measured. Single `--ease`
+- **Accessibility**: WCAG 2.1 AA. `prefers-reduced-motion` respected, no `maximum-scale=1`
+- **Performance**: No new Vec3 allocations in hot loops; reuse scratch vectors. Lighthouse target ≥80 desktop. Bundle <800KB gzipped JS
 - **Compatibility**: Desktop browsers; Chrome/Firefox/Safari primary targets
+- **Persistence**: localStorage only — no accounts, no server
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Minimal point nucleus (not rendered sphere) | Stars are the content; nucleus is the anchor. 3D comes from rings + star depth, not nucleus volume. | — Pending |
-| Split canvas (constellation + track coexist) | User can browse constellation while building shortlist. No state transition needed to add more. | — Pending |
-| Command bridge reading panel (right slide) | Spaceship cockpit feel: navigation port, reading starboard. Scene stays visible when reading. | — Pending |
-| Camera-based flattening (not geometry change) | Rings were always circular; camera rotates to face them. Conceptually honest dimensional collapse. | — Pending |
-| Cross-constellation shortlist | Real use case: build a pitch with proof from multiple verticals. Shortlist must survive navigation. | — Pending |
-| Stars fly direct to track (no gather step) | Faster, more direct. The divider crossing IS the animation event. No ceremony needed. | — Pending |
-| Ghost at orbital position when star is staged | User can see what's been taken. Click ghost to return star. Orbit shows the gap. | — Pending |
-| Proof Type + Impact Scale filter dimensions | Only meaningful inside a constellation. A CMO and a performance lead want different proof. | — Pending |
-| Returns ~20% slower than entries | Expansion feels larger than compression. Psychological asymmetry in dimensional transitions. | — Pending |
+| phase-1c is canonical branch | v3-starmap diverged; phase-1c has richer interaction model (concentric + reading list + 190 tests) | ✓ Pending v3.2 |
+| Primary user = internal team, not external prospect | Reframed 2026-04-14; changes information architecture, persistence, terminal action | ✓ Pending v3.2 |
+| Retire Compile + Share endpoints | Internal users stage for their own review, not handoff to strangers | ✓ Pending v3.2 |
+| Adapt gather → Comparison Mode for reading list | Preserves phyllotaxis mechanic with sharper purpose (comparison vs filter-result) | ✓ Pending v3.2 |
+| localStorage persistence | Internal tool, multi-session use, no server infrastructure needed | ✓ Pending v3.2 |
+| Imagery in scope via parallel content project | Full Kunumi archive-as-texture move; content team commits to sourcing | ✓ Pending v3.2 + content |
+| Minimal point nucleus (not rendered sphere) | Stars are content; nucleus is anchor. 3D from rings + depth, not nucleus volume | ✓ Validated v3.1 |
+| Camera-based flattening (not geometry change) | Rings were always circular; camera rotates to face them. Conceptually honest | ✓ Validated v3.1 |
+| Returns ~20% slower than entries | Expansion feels larger than compression. Psychological asymmetry | ✓ Validated v3.1 |
 
 ---
-*Last updated: 2026-04-13 after brainstorming session and GSD initialization*
+*Last updated: 2026-04-14 after milestone v3.2 definition (primary user reframed, 5 open questions answered, MILESTONE-v3.2.md finalized)*

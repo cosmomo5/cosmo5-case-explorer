@@ -1,181 +1,127 @@
-# Roadmap: Case Study Explorer v3.1 — Dimensional Explorer
+# Roadmap: Case Study Explorer
 
-## Overview
+## Active Milestone: v3.2 — The Observatory Experience
 
-A locked-stack TypeScript/Three.js codebase gets a six-transition dimensional collapse: 3D orbital field → 2D constellation plane → 1D staging track. Eight phases execute in strict dependency order. The shortlisting flow (browse → select → read → compare) is the only thing that matters — every phase either unblocks it or hardens it. Phase 0 clears three compounding bugs before any new transitions are built. Phases 5 and 6 can run in parallel once Phase 4 ships. Phase 7 verifies the integrated system and hardens accessibility.
+**Aesthetic premise:** *"A cosmos of proof, navigable as an atlas — observed, not advertised."*
 
-## Phases
+**Goal:** Migrate the 2026-04-12 design direction (Kunumi query-driven navigation + BYLD analog-era precision + Cosmo5 observatory foundation) into the v3.1 phase-1c codebase. Reframe for internal team use with persistent state across sessions, two distinct study surfaces (Review Mode, Comparison Mode), and clean substrate with imagery integration.
+
+**Source:** `.planning/MILESTONE-v3.2.md`
+
+**Primary user:** Internal Cosmo5 strategy/sales team.
+
+### v3.2 Phases
 
 **Phase Numbering:**
-- Integer phases (0-7): Planned milestone work
+- Integer phases (8–15): Planned milestone work
 - Decimal phases: Urgent insertions only (created via `/gsd:insert-phase`)
 
-- [x] **Phase 0: Pre-work** - Fix three existing bugs that compound under new transitions
-- [x] **Phase 1: Foundation** - State machine, ShortlistStore, derived data types
-- [x] **Phase 2: Layout** - Split canvas, divider, LayoutController, ResizeObserver
-- [x] **Phase 3: Camera Transitions** - T1/T5, camera-controls migration, TransitionChoreographer
-- [x] **Phase 4: Concentric Orbit Layout + Expansion** - Concentric rings, space expansion, ring switcher
-- [x] **Phase 5: Filter Panel + Staging Sphere** - ProofType/ImpactScale filters, staging sphere (completed 2026-04-13)
-- [x] **Phase 6: Reading Panel + Track Selection** - Reading panel, shortlist track (completed 2026-04-13)
-- [ ] **Phase 6.5: Visual Warmth** - Restore star glow sprites, twinkle animation, nebula atmospheric depth (inserted 2026-04-13)
-- [ ] **Phase 7: Polish and Accessibility** - Timing asymmetry, prefers-reduced-motion audit, build verification
+- [ ] **Phase 8: Clean Substrate** — Remove orphaned DOM, isolate phyllotaxis for Comparison Mode, extend schema with imagery field, document branch strategy
+- [ ] **Phase 9: Atmosphere** — CRT graticule substrate, instrument-calibrating loader, corner wordmark
+- [ ] **Phase 10: Query Bar** — Central conversational input, keyword→dimension mapping, live field response, Advanced drawer fallback
+- [ ] **Phase 11: Reading Panel as Instrument** — Restructure header/body/impact as instrument readout, archive imagery integration, Fraunces italic deployment
+- [ ] **Phase 12: Reading List + Review Mode + Comparison Mode** — Rename, track redesign, star flight, localStorage persistence, Review Mode paginated reader, Comparison Mode adapted gather
+- [ ] **Phase 13: Hero Collapse** — Remove marketing banner + stats strip, verify wordmark adequate
+- [ ] **Phase 14: Edge States and Coverage** — Empty/no-match/error/narrow-viewport states, transition interrupts, a11y audit
+- [ ] **Phase 15: Ship** — Full-flow verification, visual regression check, WCAG 2.1 AA, Lighthouse, OG tags, Vercel deploy, Mo approval
 
-## Phase Details
+### Phase Details
 
-### Phase 0: Pre-work
-**Goal**: The codebase is clean enough to build on — three known bugs that compound under new transitions are eliminated
-**Depends on**: Nothing (first phase)
-**Requirements**: FIX-01, FIX-02, FIX-03
-**Success Criteria** (what must be TRUE):
-  1. Regrouping (vertical/country/region switch) produces no GPU memory leak — mesh disposal disposes geometry and material after killing tweens
-  2. The tick loop allocates no new `THREE.Vector3` objects per frame — scratch vectors are module-scope
-  3. Staging positions center on the focused nucleus, not world origin — existing staging behavior is visually correct
-**Plans**: 3 plans
+#### Phase 8: Clean Substrate
+**Goal:** The codebase matches v3.2 intent before any new UI is added. All orphaned v1/v2 DOM removed. Phyllotaxis code preserved and isolated for Phase 12 adaptation. Schema extended for imagery. Branch strategy documented.
+**Depends on:** Nothing (first phase of v3.2).
+**Requirements:** CLN-01, CLN-02, CLN-03, CLN-04, CLN-05, CLN-06
+**Success Criteria:**
+1. `index.html` contains only DOM used by active v3.1 components + new v3.2 elements (gather DOM preserved for Phase 12).
+2. `grep -rn "countryRail\|panelScrim\|globe-stage" src/` returns nothing except test files or comments.
+3. Phyllotaxis geometry code isolated in a clearly labeled module, documented as "preserved for Comparison Mode (Phase 12)."
+4. `CaseStudy` type has optional `imagery` field. Empty `public/case-imagery/` directory exists.
+5. Build is clean. All 190 existing v3.1 tests still pass.
+6. STATE.md declares phase-1c canonical and documents hybrid branch strategy.
 
-Plans:
-- [x] 00-01-PLAN.md — GSAP kill + dispose chain (Wave 1)
-- [x] 00-02-PLAN.md — Vec3 GC scratch vectors (Wave 1)
-- [x] 00-03-PLAN.md — Staging world-origin fix (Wave 2)
+#### Phase 9: Atmosphere
+**Goal:** First paint announces the observatory before any interaction happens. CRT graticule + calibrating loader + corner wordmark establish the register.
+**Depends on:** Phase 8.
+**Requirements:** ATM-01, ATM-02, ATM-03, ATM-04
+**Success Criteria:**
+1. Fresh page load shows calibration sequence in honest boot time (not padded) before field is interactive.
+2. CRT graticule is present but does not compete for attention (user notices only on focused look).
+3. Corner wordmark is readable, ≤80px wide, no overlaps at any breakpoint.
+4. On reduced-motion, loader resolves instantly without ticking animation.
 
-### Phase 1: Foundation
-**Goal**: The data and state layer exists — ViewState machine, ShortlistStore with pub/sub, and ProofType/ImpactScale derivation are all independently testable before any UI touches them
-**Depends on**: Phase 0
-**Requirements**: FND-01, FND-02, FND-03, FND-04, FND-05, FND-06
-**Success Criteria** (what must be TRUE):
-  1. The app has three named view states (`global`, `constellation`, `reading`) and dispatches typed events on transitions
-  2. Adding a case to the shortlist from Constellation A, navigating away, entering Constellation B, and checking the shortlist still shows Constellation A's cases
-  3. Every case in cases.json has a computed `proofType` and `impactScale` field accessible at runtime
-  4. A star's rendered opacity is determined by a single precedence chain (reading > selected > ghost > filter-match > filter-dim > idle) with no contention between systems
-**Plans**: 3 plans
+#### Phase 10: Query Bar
+**Goal:** The primary interaction surface is a conversational first-person declarative input. Filter panel collapses to progressive-disclosure Advanced drawer.
+**Depends on:** Phase 9 (atmosphere establishes register before query is visible).
+**Requirements:** QRY-01, QRY-02, QRY-03, QRY-04, QRY-05, QRY-06, QRY-07, QRY-08
+**Success Criteria:**
+1. A user can type `fintech growth` and see the field respond within 800ms without opening any panel.
+2. The Advanced drawer exposes v3.1 filter-panel functionality at equal fidelity.
+3. Empty query shows full field; typing + backspacing to empty restores full field smoothly.
+4. `N MATCHES` readout updates live.
+5. Full flow testable without a mouse: Tab to input, type, Enter, Tab to drawer, Tab to fields.
 
-Plans:
-- [x] 01-01-PLAN.md — ViewState machine + ShortlistStore (Wave 1)
-- [x] 01-02-PLAN.md — ProofType + ImpactScale + StarState classifiers (Wave 1)
-- [x] 01-03-PLAN.md — Enrichment and boot wiring (Wave 2)
+#### Phase 11: Reading Panel as Instrument
+**Goal:** Reading panel stops reading as marketing summary and becomes an observation of a completed case. Every metric, fact, and attribution rendered as instrument readout. Archive imagery integrated.
+**Depends on:** Phase 8 (schema extended). Not blocking on Phases 9–10 for scene work but final aesthetic check depends on atmosphere being present.
+**Requirements:** RP-01, RP-02, RP-03, RP-04, RP-05, RP-06, RP-07
+**Success Criteria:**
+1. Reading panel reads as "observation of a case" rather than "marketing summary."
+2. Every metric appears as DM Mono readout, not celebratory big-bold-number typography.
+3. Fraunces italic appears at exactly one evidentiary moment — not sprinkled decoratively.
+4. Missing imagery data does not break the layout.
+5. `permission: false` cases show `[CONFIDENTIAL]` readout cleanly.
+6. `ADD TO READING LIST` is the clear primary action in the panel.
 
-### Phase 2: Layout
-**Goal**: The split canvas exists as a structural fact — constellation zone (top ~72%) and staging track zone (bottom ~28%) are rendered and responsive, with the divider line visible and the scene correctly resizing when the reading panel slot is occupied
-**Depends on**: Phase 1
-**Requirements**: LAY-01, LAY-02, LAY-03, LAY-04, LAY-05
-**Success Criteria** (what must be TRUE):
-  1. The canvas is visibly divided: constellation occupies the upper portion, track zone the lower, separated by a teal-gradient divider line
-  2. Resizing the browser window reflows both zones without distorting the Three.js renderer aspect ratio
-  3. When the reading panel is open, the constellation and track compress leftward — the Three.js canvas occupies the remaining width, not the full viewport
-**Plans**: 2 plans
+#### Phase 12: Reading List + Review Mode + Comparison Mode
+**Goal:** The Reading List becomes a persistent, returnable staging area for the internal user's ongoing study. Two distinct study surfaces open from it: Review Mode (sequential immersion) and Comparison Mode (simultaneous spatial comparison — adapted gather).
+**Depends on:** Phase 11 (reading panel drives selection) and Phase 8 (phyllotaxis code isolated).
+**Requirements:** RL-01 through RL-08, RV-01 through RV-04, CM-01 through CM-06
+**Success Criteria:**
+1. Adding cases persists across page reload, browser restart, tab close. Clearing browser data clears the list.
+2. Welcome-back readout appears on return visit when list is non-empty.
+3. Review Mode paginates cleanly through 1–20 cases; navigation smooth, Esc exits, list intact.
+4. Comparison Mode activates only at ≥3 readings; below threshold, button disabled with explanatory tooltip.
+5. Comparison Mode's phyllotaxis formation is visually distinct from focus mode.
+6. Query history chips surface recent queries; click re-runs.
+7. All star flight animations respect `prefers-reduced-motion` and do not freeze under rapid interaction.
+8. No leftover "Shortlist" strings in UI.
 
-Plans:
-- [x] 02-01-PLAN.md — HTML/CSS restructuring + LayoutController + divider (Wave 1)
-- [x] 02-02-PLAN.md — ResizeObserver + coordinate fixes + wiring (Wave 2)
+#### Phase 13: Hero Collapse
+**Goal:** The land state is the field, not a banner. Remove hero + stats. Corner wordmark is the only brand presence.
+**Depends on:** Phases 9–10 (atmosphere + query must exist before hero is removed).
+**Requirements:** HC-01, HC-02, HC-03, HC-04
+**Success Criteria:**
+1. `index.html` has no `#hero` or `#stats` elements. `style.css` has no `.hero` or `.stats` rules.
+2. First-paint shows field + query + corner wordmark. No marketing banner.
+3. An internal user describes the tool as "an observatory / atlas / explorer" — not "a landing page."
+4. All v3.1 tests affected are updated with new expectations, not deleted.
 
-### Phase 3: Camera Transitions
-**Goal**: Clicking a nucleus drops the camera to face the orbital plane (T1) and pressing back pulls it out (T5) — the dimensional collapse is real and legible, the transition lock prevents input during flight, and camera-controls v3.1.2 manages orbital targeting cleanly
-**Depends on**: Phase 2
-**Requirements**: CAM-01, CAM-02, CAM-03, CAM-04, CAM-05, CAM-06
-**Success Criteria** (what must be TRUE):
-  1. Clicking a nucleus triggers T1: camera rotates to face the orbital plane (~1200ms), other nuclei dissolve, rings flatten by perspective
-  2. Pressing back triggers T5: camera pulls back and rotates away (~1400ms, ~20% slower than T1), nuclei fade back in
-  3. Clicking anything during an active T1 or T5 has no effect — input is locked until the transition completes
-  4. OrbitControls is replaced by camera-controls v3.1.2 with no observable regression in normal orbit/zoom behavior
-**Plans**: 2 plans
+#### Phase 14: Edge States and Coverage
+**Goal:** Every path through the app has a designed state. No raw error messages, no frozen transitions, narrow-viewport has a designed message.
+**Depends on:** Phases 8–13 (all happy paths exist first).
+**Requirements:** EDG-01 through EDG-08
+**Success Criteria:**
+1. Every state in the state machine has a designed visual representation. No raw `undefined` or placeholder strings.
+2. Killing network during first paint produces a designed error state, not a broken page.
+3. Rapid clicking during transitions never produces a frozen or flickering state.
+4. At narrow viewport, user sees designed "desktop-only" message — not a broken layout.
+5. A screen-reader user can complete the full flow (tested with VoiceOver or NVDA).
 
-Plans:
-- [x] 03-01-PLAN.md — camera-controls migration + TransitionChoreographer (Wave 1)
-- [x] 03-02-PLAN.md — T1/T5 wiring + nuclei dissolve + visual verify (Wave 2)
+#### Phase 15: Ship
+**Goal:** The experience is verified end-to-end against the vision. Regressions fixed. Build shipped.
+**Depends on:** Phases 8–14.
+**Requirements:** SHP-01 through SHP-07
+**Success Criteria:**
+1. A fresh internal user completes the full flow end-to-end on first attempt.
+2. No regressions from v3.1. Visual warmth intact.
+3. WCAG 2.1 Level AA checks pass.
+4. Lighthouse desktop ≥80. Bundle <800KB gzipped JS.
+5. Vercel preview deployed, Mo approves. STATE.md + card updated.
 
-### Phase 4: Concentric Orbit Layout + Expansion
-**Goal**: Focused view shows cases on concentric orbital rings (each ring = a dimension value), with visible orbit lines, smooth rotation, and a ring-dimension switcher. Entering focus expands other spheres outward off-screen (space expansion metaphor). Exiting contracts them back.
-**Depends on**: Phase 3
-**Requirements**: ORB-01, ORB-02, ORB-03, ORB-04, ORB-05, ORB-06, ORB-07, ORB-08
-**Success Criteria** (what must be TRUE):
-  1. In focused view, cases are arranged on concentric circles — each ring corresponds to a value of one dimension (e.g., service types), outer ring has the most cases
-  2. The ring dimension is auto-selected (best subdivision of master dimension) but the user can override via a switcher
-  3. Visible orbit lines are drawn for each ring; clicking a ring highlights all cases on it
-  4. Cases rotate slowly along their ring orbit
-  5. Entering focus: other dimension-spheres expand outward and leave the screen; exiting: they contract back
-**Plans**: 3 plans
+---
 
-Plans:
-- [x] 04-01-PLAN.md — Ring math core (TDD): computeConcentricOrbits, ringPositionAt, autoSelectRingDimension (Wave 1)
-- [x] 04-02-PLAN.md — Scene integration: expansion/contraction, ring lines, tick branch, ring click (Wave 2)
-- [x] 04-03-PLAN.md — Ring switcher + visual verify (Wave 3)
+## Completed Milestones
 
-### Phase 5: Filter Panel + Staging Sphere
-**Goal**: The filter panel shows all dimensions in both global and focused view. Selecting filter chips in global view creates a staging sphere from matched cases. The staging sphere behaves like any other dimension-sphere (clickable, focusable). Filter panel in focused view narrows within the constellation.
-**Depends on**: Phase 4
-**Requirements**: FILT-01, FILT-02, FILT-03, FILT-04, FILT-05, FILT-06, FILT-07, FILT-08, FILT-09, FILT-10
-**Success Criteria** (what must be TRUE):
-  1. Filter panel shows all dimensions (country, service, year, ProofType, ImpactScale) in both views
-  2. In global view, selecting chips creates a staging sphere with a distinct color; matched stars animate to it
-  3. The staging sphere is clickable — entering it triggers the same T1 focus + concentric orbit view as any dimension-sphere
-  4. Other spheres push outward slightly when staging sphere appears; slight zoom toward staging
-  5. In focused view, filter panel narrows within the constellation (filters apply to ring contents)
-  6. AND between dimensions, OR within each dimension; live chip counts; chips with 0 matches grey out
-**Plans**: 4 plans
+See `.planning/MILESTONES.md` for archived milestone records.
 
-Plans:
-- [x] 05-01-PLAN.md — FilterState extension + cross-filter count algorithm (Wave 1, TDD)
-- [x] 05-02-PLAN.md — Accordion filter panel rewrite: 5 dimensions, status bar, orbit-by switcher (Wave 2)
-- [x] 05-03-PLAN.md — Staging sphere lifecycle: create/animate/push/dissolve (Wave 2)
-- [x] 05-04-PLAN.md — Focused-view filter dimming + visual checkpoint (Wave 3)
-
-### Phase 6: Reading Panel + Track Selection
-**Goal**: Clicking a case in focused view opens the reading panel. Cases can be selected to a shortlist track. Reading panel shows case details with navigation. Track persists across constellation visits.
-**Depends on**: Phase 5
-**Requirements**: READ-01, READ-02, READ-03, READ-04, READ-05, READ-06, READ-07, READ-08, READ-09, READ-10
-**Success Criteria** (what must be TRUE):
-  1. Clicking a case star opens the 340px reading panel from the right; scene compresses leftward
-  2. Panel shows instrument readout + case sections (services, challenge, approach, results with metric cards)
-  3. ← → navigates between cases on the same ring or in the shortlist
-  4. Active case glows gold in the orbit while being read
-  5. Cases can be added to the shortlist track (bottom zone); track persists across focus/unfocus
-  6. Esc or close button collapses panel and restores canvas width
-**Plans**: 4 plans
-
-Plans:
-- [ ] 06-01-PLAN.md — ViewStateMachine reading transitions + emissive gold tick fix (Wave 1)
-- [ ] 06-02-PLAN.md — ReadingPanel class + main.ts wiring (Wave 2)
-- [ ] 06-03-PLAN.md — ShortlistTrack + syncShortlistToStarState (Wave 2, parallel)
-- [ ] 06-04-PLAN.md — Integration: arrow-key nav + ShortlistTrack mount + visual checkpoint (Wave 3)
-
-### Phase 6.5: Visual Warmth
-**Goal**: The observatory feels alive — stars glow and twinkle, the nebula has atmospheric depth, the overall impression shifts from "technical demo" to "inhabited space"
-**Depends on**: Phase 6
-**Requirements**: WARM-01, WARM-02, WARM-03, WARM-04, WARM-05
-**Success Criteria** (what must be TRUE):
-  1. Each star has a visible soft glow halo (SpriteMaterial + AdditiveBlending) extending ~7x beyond the mesh
-  2. Stars twinkle — per-star opacity oscillation with random phase offset
-  3. Star material is MeshBasicMaterial (self-emissive), not MeshStandardMaterial (lit)
-  4. Nebula has visible atmospheric depth at perceptual level (not flat)
-  5. Mo's first impression is NOT "cold"
-**Plans**: 1 plan
-
-Plans:
-- [ ] 06.5-01-PLAN.md — Star glow sprites + material switch + twinkle + nebula warmth (Wave 1)
-
-### Phase 7: Polish and Accessibility
-**Goal**: Timing audit (returns ~20% slower than entries), reduced-motion audit, token audit (no purple, single ease), clean build, and end-to-end verification of the full flow: filter → stage → focus → read → shortlist
-**Depends on**: Phase 6
-**Requirements**: POL-01, POL-02, POL-03, POL-04, POL-05, POL-06, POL-07, POL-08
-**Success Criteria** (what must be TRUE):
-  1. All return transitions are ~20% slower than corresponding entries
-  2. `prefers-reduced-motion: reduce` respected — CSS keyframes to 0.01ms, GSAP paused, orbital rotation stops
-  3. No purple tokens; single `cubic-bezier` in CSS
-  4. `npm run build` zero errors
-  5. Full flow test: enter Media sphere, select 2 cases to track, return, enter Performance, select 3 → track shows 5
-
-## Progress
-
-**Execution Order:**
-Phases 0 → 1 → 2 → 3 → 4 → 5 + 6 (parallel) → 6.5 → 7
-
-| Phase | Plans Complete | Status | Completed |
-|-------|----------------|--------|-----------|
-| 0. Pre-work | 3/3 | Complete | 2026-04-13 |
-| 1. Foundation | 3/3 | Complete | 2026-04-13 |
-| 2. Layout | 2/2 | Complete | 2026-04-13 |
-| 3. Camera Transitions | 2/2 | Complete | 2026-04-13 |
-| 4. Concentric Orbit Layout + Expansion | 3/3 | Complete | 2026-04-13 |
-| 5. Filter Panel + Staging Sphere | 4/4 | Complete   | 2026-04-13 |
-| 6. Reading Panel + Track Selection | 4/4 | Complete   | 2026-04-13 |
-| 6.5. Visual Warmth | 0/1 | Not started | - |
-| 7. Polish and Accessibility | 0/TBD | Not started | - |
+- **v3.1 — Dimensional Explorer** (shipped 2026-04-14, 9 phases 0–7 + 6.5)

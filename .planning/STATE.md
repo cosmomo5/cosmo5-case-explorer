@@ -1,101 +1,79 @@
 ---
 gsd_state_version: 1.0
-milestone: v3.1
-milestone_name: milestone
-status: Phase 6.5 Plan 01 — Tasks 1-3 complete, awaiting checkpoint:human-verify (Task 4)
-stopped_at: "06.5-01 Tasks 1-3 committed (36cdf54, 205b419, 71939b2). Awaiting Mo visual verification: star glows, twinkle, nebula depth, reading-state gold. Run npm run dev at case-study-explorer, open http://localhost:5173."
-last_updated: "2026-04-13T22:10:00.000Z"
-last_activity: "2026-04-13 — Phase 6.5 Plan 01 executed: MeshBasicMaterial stars, canvas-texture glow sprites, twinkle animation, blue-indigo nebula gradients. 190 tests pass."
+milestone: v3.2
+milestone_name: The Observatory Experience
+status: v3.2 initialized — PROJECT.md, MILESTONES.md, REQUIREMENTS.md, ROADMAP.md written. Ready for /gsd:plan-phase 8.
+stopped_at: "v3.2 formalized in GSD system 2026-04-14. 56 requirements mapped across 8 phases (8–15). Next: /gsd:plan-phase 8."
+last_updated: "2026-04-14T18:00:00.000Z"
+last_activity: "2026-04-14 — v3.2 milestone initialized via new-milestone workflow. All artifacts written. Phase numbering continues from v3.1 (ended at 7, new phases 8–15)."
 progress:
-  total_phases: 9
-  completed_phases: 7
-  total_plans: 18
-  completed_plans: 18
-  percent: 78
+  total_phases: 8
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-13)
+See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.md` (finalized 2026-04-14).
 
-**Core value:** A prospect-facing discovery tool that lets you build a pitch deck's worth of proof in 60 seconds.
-**Current focus:** Phase 6.5 — restore visual warmth (star glows, twinkle, nebula atmosphere)
+**Core value (revised 2026-04-14):** A considered internal place where the Cosmo5 strategy/sales team builds, returns to, and studies their mental library of proof. A showcase of the agency's accomplishments that the team itself inhabits across sessions. Closer to a museum's study room than a pitch deck.
+
+**Aesthetic premise:** *"A cosmos of proof, navigable as an atlas — observed, not advertised."*
+
+**Current focus (v3.2):** The Observatory Experience. Migrate the 2026-04-12 direction note moves (Kunumi query-driven navigation + BYLD analog-era precision + Cosmo5 observatory foundation) into the v3.1 phase-1c codebase, reframed for internal use with localStorage persistence, Review Mode (sequential deep reading), and Comparison Mode (adapted gather mechanic for simultaneous spatial comparison of the reading list).
 
 ## Current Position
 
-Phase: 6.5 (Visual Warmth) — Plan 01 tasks 1-3 committed, awaiting visual checkpoint
-Plan: 06.5-01-PLAN.md (Task 4 checkpoint:human-verify pending)
-Status: MeshBasicMaterial stars, glow sprites, twinkle animation, blue-indigo nebula all landed. 190 tests pass.
-Last activity: 2026-04-13 — Visual warmth code complete. Awaiting Mo's visual verification before closing plan.
+**Phase:** 8 (Clean Substrate) — ready to plan
+**Milestone:** v3.2 formalized in GSD system. MILESTONE-v3.2.md is the source-of-truth reference.
+**Status:** PROJECT.md updated, MILESTONES.md created (v3.1 archived), REQUIREMENTS.md appended with 56 v3.2 requirements, ROADMAP.md rewritten for v3.2 with 8 phases (8–15). Ready for `/gsd:plan-phase 8`.
+**Last activity:** 2026-04-14 — v3.2 milestone initialized via new-milestone workflow. Phase numbering continues from v3.1 (0–7 + 6.5 shipped; new phases 8–15).
 
-Progress: [███████░░░] 78%
+Progress: [░░░░░░░░░░] 0% of v3.2
+
+## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
+
+- **Q1 — Premise:** *"A cosmos of proof, navigable as an atlas — observed, not advertised."*
+- **Q2 — Branch strategy:** phase-1c canonical. Hybrid approach: consult `draft/v3-starmap` as spec, rewrite in phase-1c. Guardrail: import v3-starmap moves only if phase-1c re-implementation improves on or matches them.
+- **Q3 — Terminal action:** REFRAMED. Primary user = internal team, not prospect. No Compile/Share. Instead: Review Mode (sequential paginated reader) + localStorage persistence (reading list, query history, recently viewed). Welcome-back state on return.
+- **Q4 — Imagery:** Commissioned as parallel content project. Schema extended with optional `imagery?: { logo, key_visual }`. Assets land in `public/case-imagery/<case-slug>/`. Permission-false cases suppress imagery, show `[CONFIDENTIAL]` readout.
+- **Q5 — Gather:** NOT retired. Adapted to Comparison Mode for reading list (≥3 items). Phyllotaxis formation at center, other stars dim heavily, spatial simultaneous view of curated set. Complements Review Mode (sequential) vs Comparison (simultaneous).
+
+## Blockers and Contingencies
+
+**Content-imagery project (Q4) needs:**
+- Named owner on Cosmo5 content side (blocker/unblocker reference for Phase 3 plans).
+- Delivery cadence: batched 20/week preferred (enables progressive Phase 3 integration) vs all-at-once.
+- Format confirmation: SVG logos + JPG key visuals, 1200px longest edge.
+- Fallback policy: if imagery can't be sourced for a case within 2 weeks, that case ships without imagery rather than blocking the phase.
+
+**Nothing blocks Phase 0.**
 
 ## What Needs to Happen Next
 
-### 1. Phase 6.5: Visual Warmth — CHECKPOINT PENDING
+### Immediate
+Run `/gsd:plan-phase 8`. Phase 8 (Clean Substrate) covers requirements CLN-01 through CLN-06 — orphan removal, phyllotaxis isolation for Phase 12 adaptation, schema extension for imagery, branch-strategy documentation. Expected ~3 plans.
 
-**Tasks 1-3 complete.** Mo needs to visually verify at `http://localhost:5173` (run `npm run dev`):
-- Star glows: soft halo ~7x beyond mesh sphere
-- Twinkle: individual stars flicker at different rates over 5-10 seconds
-- Nebula: visible atmospheric blobs (not flat near-black)
-- Reading state: click a case star, it glows gold; close panel, returns to normal
-- Overall: first word should NOT be "cold"
+### In Parallel (content side, not Claude's task)
+Kick off content-imagery project. Name the owner. Agree cadence. Start sourcing the first batch of logos and key visuals.
 
-After Mo types "approved," close the plan and advance to Phase 7.
+### Milestone-Level
+Sequence: Phase 0 → Phase 1 (atmosphere) → Phase 2 (query bar) → Phase 3 (reading panel + imagery integration) → Phase 4 (reading list + Review Mode + Comparison Mode + localStorage) → Phase 5 (hero collapse) → Phase 6 (edge states + accessibility) → Phase 7 (ship).
 
-### 2. Phase 7: Polish and Accessibility (AFTER 6.5)
+## Design Direction (Authoritative)
 
-Timing audit, reduced-motion, token audit, build verification, full-flow E2E test.
+`/mnt/c/Users/moham/Documents/Thales/design/reviews/cosmo5-case-explorer/2026-04-12-direction-note.md`. Three references: Kunumi (structure), BYLD (register), Cosmo5 (foundation). v3.2 is the execution, reframed for internal use.
 
-## Accumulated Context
+## v3.1 Context (Previous Milestone — Completed 2026-04-14)
 
-### Decisions (Phases 0-4)
-
-- camera-controls v3.1.2 replaces OrbitControls (Phase 3)
-- GSAP proxy pattern for camera animation
-- Concentric ring default dimension: auto-selected by normalized entropy
-- Space expansion: non-focused nuclei fly outward × 4.5 during T1
-- Click priority: star > ring line > nucleus > empty space
-- Stars use MeshStandardMaterial + 3-light rig
-- Ring labels at camera-right projection
-
-### Decisions (Phase 5)
-
-- Accordion filter panel (5 dims), not chip bar
-- Staging sphere at centroid, coral color, 30% camera lean
-- Focused view dims non-matching stars (opacity 0.12)
-- Cross-filter: AND between dims, OR within dim
-
-### Decisions (Phase 6)
-
-- ReadingPanel targets #reading-panel-slot (not old #panel overlay)
-- ViewStateMachine OPEN_READING/CLOSE_READING wired
-- Tick loop fixed: MeshStandardMaterial cast, emissive gold for reading state
-- ShortlistTrack in #track-zone, syncShortlistToStarState enforces precedence
-- Arrow keys navigate ring cases when panel open
-
-### Design Review Fixes Landed (2026-04-13)
-
-- Filter panel: `display:none` by default, shown with `.on` only in constellation mode. Removed premature `.on` from boot path (main.ts:516).
-- Reading panel: 200+ lines of observatory-register CSS for all `rp-*` classes (instrument readout, sections, metrics, shortlist button).
-- Track zone: repositioned as 44px absolute bottom strip, gated on `body.constellation`, gold register.
-- Hero/stats: `body.constellation .hero/.stats` set to `opacity:0; pointer-events:none`.
-- Duplicate `.fchip` rules: Phase 5 re-declarations removed, gold-border active state preserved as single source.
-
-### Remaining Visual Issues
-
-- **Stars look cold** — bare MeshStandardMaterial spheres, no glow, no twinkle (Phase 6.5 scope)
-- **Nebula lacks atmospheric depth** — gold at 4-6% opacity is perceptually invisible (Phase 6.5 scope)
-- Nucleus halos may be oversized — check after glow sprites are added (may self-correct)
-
-### Blockers/Concerns
-
-- None blocking. Phase 6.5 is scoped and ready to plan.
+Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around cluster nuclei, camera-based T1/T5 transitions, ring-dimension switcher (proofType/impactBand/year/country/region), split canvas (constellation + bottom track), reading panel (command-bridge layout), shortlist track, visual warmth (star glow sprites, twinkle animation, blue-indigo nebula), accessibility audit (prefers-reduced-motion, no maximum-scale). 190 tests passing. Build clean.
 
 ## Session Continuity
 
-Last session: 2026-04-13
-Stopped at: CSS design review fixes landed (5 edits). Phase 6.5 context doc written, roadmap updated. 190/190 tests pass.
-Resume with: Plan Phase 6.5 (`/gsd:plan-phase 6.5`), then execute. Three deliverables: star glow sprites, twinkle animation, nebula warmth.
+Last session: 2026-04-14
+Stopped at: v3.2 milestone formalized in GSD system. PROJECT.md, MILESTONES.md, REQUIREMENTS.md, ROADMAP.md all written. Ready for Phase 8 planning.
+Resume with: `/gsd:plan-phase 8` — or continue with content-imagery project owner assignment in parallel.
