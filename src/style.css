@@ -130,26 +130,37 @@ body.constellation #divider-line{display:block}
 .focus-hint .fh-close{color:rgba(255,255,255,.4);font-size:9px;letter-spacing:.1em;
   padding-left:10px;border-left:1px solid rgba(255,255,255,.1)}
 
-/* ── Header ── */
-header{position:fixed;top:0;left:0;right:0;z-index:10;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:26px 36px;pointer-events:none}
-header>*{pointer-events:auto}
-.brand{display:flex;align-items:center;gap:16px}
-.c5-logo{display:flex;flex-direction:column;align-items:flex-start;gap:3px;line-height:1}
-.c5-word{font-family:'Noto Sans',sans-serif;font-size:16px;font-weight:900;
-  letter-spacing:.28em;color:#fff;line-height:1}
-.c5-dots{display:flex;gap:3px;padding-left:1px}
-.c5-dots span{display:block;border-radius:50%;background:var(--gold);
-  box-shadow:0 0 6px rgba(232,177,90,.45)}
-.c5-dots span:nth-child(1){width:4px;height:4px}
-.c5-dots span:nth-child(2){width:3px;height:3px;margin-top:1px}
-.c5-dots span:nth-child(3){width:4px;height:4px}
-.c5-dots span:nth-child(4){width:3px;height:3px;margin-top:1px}
-.c5-dots span:nth-child(5){width:4px;height:4px}
-.brand .sub{font-size:9.5px;color:var(--mute);font-family:'DM Mono',monospace;
-  text-transform:uppercase;letter-spacing:.18em;font-weight:300;margin-top:1px}
-.nav-meta{display:none}
+/* ── Corner wordmark — sole brand surface on land ── */
+header.wordmark-corner {
+  position: fixed;
+  top: 20px;
+  left: 24px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: max-content;
+  max-width: 80px;
+  pointer-events: none;
+}
+
+.wm-primary {
+  font-family: 'DM Mono', monospace;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--teal);
+  line-height: 1;
+}
+
+.wm-sub {
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1;
+}
 
 /* ── Hero (earth mode) ── */
 .hero{position:fixed;z-index:5;left:36px;bottom:44px;max-width:500px;
