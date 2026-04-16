@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
-status: executing
+status: planning
 stopped_at: Completed 10-05-PLAN.md — Advanced drawer with filter panel integration. 239 tests passing.
-last_updated: "2026-04-16T13:50:22.442Z"
-last_activity: "2026-04-16 — 10-04: mountQueryBar implemented, legacy #globalSearch removed, countMatches/countMatchingClusters. 239 tests passing, 0 skipped, tsc clean."
+last_updated: "2026-04-16T14:09:10.779Z"
+last_activity: "2026-04-16 — 10-05: Advanced drawer implemented. hideModeSwitcher on mountFilterPanel, drawer DOM/CSS/ARIA, lazy-mount wiring in mountQueryBar. 239 tests passing, tsc clean."
 progress:
   total_phases: 8
   completed_phases: 3
   total_plans: 11
   completed_plans: 11
-  percent: 67
+  percent: 70
 ---
 
 # Project State
@@ -30,7 +30,7 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 **Phase:** 10 (Query Bar) — COMPLETE. All 5 plans (10-01 through 10-05) executed.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** In progress
+**Status:** Ready to plan
 **Last activity:** 2026-04-16 — 10-05: Advanced drawer implemented. hideModeSwitcher on mountFilterPanel, drawer DOM/CSS/ARIA, lazy-mount wiring in mountQueryBar. 239 tests passing, tsc clean.
 
 Progress: [███████░░░] 70% of v3.2 plans (21/30)
