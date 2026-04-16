@@ -20,6 +20,7 @@ import { regroupScene } from './scene/regroup';
 import { Tooltip, projectToScreen } from './ui/tooltip';
 import { ReadingPanel } from './ui/reading-panel';
 import { ShortlistTrack } from './ui/shortlist-track';
+import { mountReviewMode } from './ui/review-mode';
 import { LoaderController } from './ui/loader';
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -133,6 +134,32 @@ async function boot() {
       sceneObjects,
     );
     void shortlistTrack; // consumed by ShortlistStore subscription internally
+
+    // ── ReviewMode: full-viewport paginated reader overlay ────────────────
+    const reviewMode = mountReviewMode({
+      caseById,
+      shortlistStore,
+    });
+
+    // Subscribe to REVIEW button clicks in shortlist track
+    const rlReviewBtn = document.getElementById('rlReview') as HTMLButtonElement | null;
+    if (rlReviewBtn) {
+      rlReviewBtn.addEventListener('click', () => {
+        reviewMode.open();
+      });
+    }
+
+    // Subscribe to card clicks in shortlist track (open review mode at that case)
+    trackContainer.addEventListener('click', (e: Event) => {
+      const target = e.target as HTMLElement;
+      const card = target.closest('[data-case-id]');
+      if (card && !target.closest('.rl-remove')) {
+        const caseId = card.getAttribute('data-case-id');
+        if (caseId) {
+          reviewMode.open(caseId);
+        }
+      }
+    });
 
     // ── Subscribe ShortlistStore → syncShortlistToStarState ──────────────
     shortlistStore.subscribe((entries) => {
