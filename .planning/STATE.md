@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 11 (Reading Panel as Instrument) — IN PROGRESS. Plan 11-01 complete.
+**Phase:** 11 (Reading Panel as Instrument) — IN PROGRESS. Plans 11-01 and 11-02 complete.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
 **Status:** Executing Phase 11 restructuring
-**Last activity:** 2026-04-16 — 11-01: Reading panel restructured as instrument readout. Header grid (6 fields), imagery integration, body sections renamed, metrics as readout rows, button text updated. 239 tests passing, tsc clean.
+**Last activity:** 2026-04-16 — 11-02: Reading panel styled with instrument-readout CSS. Fraunces italic opsz 144 on title, DM Mono throughout, teal on metrics/sections, gold button with teal hover. 239 tests passing, tsc clean.
 
-Progress: [███████░░░] 72% of v3.2 plans (22/30)
+Progress: [███████░░░] 73% of v3.2 plans (23/30)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-16T14:51:00.000Z
-Stopped at: Completed 11-01-PLAN.md — Reading panel restructured as instrument readout. 239 tests passing.
-Resume with: Phase 11-01 complete. Run `/gsd:execute-phase 11 02` to begin Phase 11 Plan 02 (Reading Panel Styling).
+Last session: 2026-04-16T14:54:34.000Z
+Stopped at: Completed 11-02-PLAN.md — Reading panel styled with instrument-readout CSS. 239 tests passing, tsc clean.
+Resume with: Phase 11 Plans 01-02 complete. Run `/gsd:execute-phase 11 03` to begin Phase 11 Plan 03 (Reading Panel Edge Cases).
