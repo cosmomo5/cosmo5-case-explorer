@@ -20,7 +20,7 @@
 - [x] **Phase 9: Atmosphere** — CRT graticule substrate, instrument-calibrating loader, corner wordmark (completed 2026-04-16)
 - [x] **Phase 10: Query Bar** — Central conversational input, keyword→dimension mapping, live field response, Advanced drawer fallback (1/5 plans complete — Wave 0 test stubs) (completed 2026-04-16)
 - [x] **Phase 11: Reading Panel as Instrument** — Restructure header/body/impact as instrument readout, archive imagery integration, Fraunces italic deployment (2/3 plans complete) (completed 2026-04-16)
-- [ ] **Phase 12: Reading List + Review Mode + Comparison Mode** — Rename, track redesign, star flight, localStorage persistence, Review Mode paginated reader, Comparison Mode adapted gather (2/5 plans complete) (2026-04-16)
+- [x] **Phase 12: Reading List + Review Mode + Comparison Mode** — Rename, track redesign, star flight, localStorage persistence, Review Mode paginated reader, Comparison Mode adapted gather (2/5 plans complete) (2026-04-16) (completed 2026-04-16)
 - [ ] **Phase 13: Hero Collapse** — Remove marketing banner + stats strip, verify wordmark adequate
 - [ ] **Phase 14: Edge States and Coverage** — Empty/no-match/error/narrow-viewport states, transition interrupts, a11y audit
 - [ ] **Phase 15: Ship** — Full-flow verification, visual regression check, WCAG 2.1 AA, Lighthouse, OG tags, Vercel deploy, Mo approval
@@ -93,7 +93,7 @@ Plans:
 **Goal:** The Reading List becomes a persistent, returnable staging area for the internal user's ongoing study. Two distinct study surfaces open from it: Review Mode (sequential immersion) and Comparison Mode (simultaneous spatial comparison — adapted gather).
 **Depends on:** Phase 11 (reading panel drives selection) and Phase 8 (phyllotaxis code isolated).
 **Requirements:** RL-01 through RL-08, RV-01 through RV-04, CM-01 through CM-06
-**Plans:** 2/5 plans complete
+**Plans:** 5/5 plans complete
 Plans:
 - [x] 12-01-PLAN.md — localStorage persistence (reading list, query history, recently-viewed) + query history chips (completed 2026-04-16)
 - [x] 12-02-PLAN.md — Track redesign (card layout, count, REVIEW/COMPARE buttons) + welcome-back state (completed 2026-04-16)

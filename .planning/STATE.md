@@ -4,12 +4,12 @@ milestone: v3.2
 milestone_name: — The Observatory Experience
 status: planning
 stopped_at: Completed 12-05-PLAN.md — Comparison Mode with phyllotaxis formation. 242 tests passing, tsc clean.
-last_updated: "2026-04-16T18:45:00Z"
-last_activity: "2026-04-16 — 12-05: Comparison Mode (stars fly to phyllotaxis formation). Entry: gather stars, dim non-list, show labels. Exit: restore state, Esc support. 242 tests passing, tsc clean."
+last_updated: "2026-04-16T15:41:51.734Z"
+last_activity: "2026-04-16 — 12-05: Comparison Mode (stars fly to phyllotaxis formation for spatial side-by-side analysis). Entry animation (900ms flight, 0.08 dim), exit restoration, Esc support, EXIT button. 242 tests passing, tsc clean."
 progress:
   total_phases: 8
-  completed_phases: 4
-  total_plans: 14
+  completed_phases: 5
+  total_plans: 18
   completed_plans: 18
   percent: 86
 ---
@@ -30,7 +30,7 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 **Phase:** 12 (Reading List + Review Mode + Comparison Mode) — COMPLETE. Plans 12-01, 12-02, 12-03, 12-04, 12-05 done.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Phase 12 complete. Ready for Phase 13 (Hero Collapse: camera transition from galaxy to reading-list hero).
+**Status:** Ready to plan
 **Last activity:** 2026-04-16 — 12-05: Comparison Mode (stars fly to phyllotaxis formation for spatial side-by-side analysis). Entry animation (900ms flight, 0.08 dim), exit restoration, Esc support, EXIT button. 242 tests passing, tsc clean.
 
 Progress: [████████████░] 86% of v3.2 plans (28/30) — Phase 12 complete (5/5 plans)
