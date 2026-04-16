@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
-status: executing
+status: planning
 stopped_at: Completed 09-03-PLAN.md — corner wordmark implemented. ATM-03 complete. 207 tests passing.
-last_updated: "2026-04-16T11:10:01.990Z"
-last_activity: "2026-04-16 — 09-01 CRT celestial graticule: crtGridTexture() + createGraticule() + starfield integration. ATM-01 complete. 207 tests passing."
+last_updated: "2026-04-16T11:14:20.358Z"
+last_activity: "2026-04-16 — 09-03 corner wordmark: header.wordmark-corner + .wm-primary/.wm-sub in DM Mono. ATM-03 complete. 207 tests passing."
 progress:
   total_phases: 8
   completed_phases: 2
   total_plans: 6
   completed_plans: 6
-  percent: 56
+  percent: 64
 ---
 
 # Project State
@@ -30,7 +30,7 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 **Phase:** 9 (Atmosphere) — 3 of 3 plans complete (PHASE COMPLETE)
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** In progress
+**Status:** Ready to plan
 **Last activity:** 2026-04-16 — 09-03 corner wordmark: header.wordmark-corner + .wm-primary/.wm-sub in DM Mono. ATM-03 complete. 207 tests passing.
 
 Progress: [███████░░░] 64% of v3.2 plans (16/25)
