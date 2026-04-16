@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
 status: planning
-stopped_at: Completed 11-02-PLAN.md — Reading panel styled with instrument-readout CSS. 239 tests passing, tsc clean.
-last_updated: "2026-04-16T14:59:31.604Z"
-last_activity: "2026-04-16 — 11-02: Reading panel styled with instrument-readout CSS. Fraunces italic opsz 144 on title, DM Mono throughout, teal on metrics/sections, gold button with teal hover. 239 tests passing, tsc clean."
+stopped_at: Completed 12-04-PLAN.md — Review Mode overlay with full-viewport pagination. 242 tests passing, tsc clean.
+last_updated: "2026-04-16T18:35:00Z"
+last_activity: "2026-04-16 — 12-04: Review Mode overlay (full-viewport paginated reader). Arrow key + button navigation. CASE N OF M progress. Remove control in-place. Wired to REVIEW button and card clicks. 242 tests passing, tsc clean."
 progress:
   total_phases: 8
   completed_phases: 4
   total_plans: 14
-  completed_plans: 15
-  percent: 77
+  completed_plans: 17
+  percent: 79
 ---
 
 # Project State
@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 12 (Reading List + Review Mode + Comparison Mode) — IN PROGRESS. Plans 12-01, 12-02 complete.
+**Phase:** 12 (Reading List + Review Mode + Comparison Mode) — IN PROGRESS. Plans 12-01, 12-02, 12-03, 12-04 complete.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Ready to execute Phase 12 Plan 03
-**Last activity:** 2026-04-16 — 12-02: Reading List track redesigned with card layout (client/sector/metric/timestamp/remove). REVIEW and COMPARE buttons added. Welcome-back readout on boot. 242 tests passing, tsc clean.
+**Status:** Ready to execute Phase 12 Plan 05 (Comparison Mode)
+**Last activity:** 2026-04-16 — 12-04: Review Mode overlay (full-viewport paginated reader). Arrow key navigation, CASE N OF M counter, in-place remove control. Wired to REVIEW button and card clicks. 242 tests passing, tsc clean.
 
-Progress: [████████░░] 77% of v3.2 plans (25/30)
+Progress: [█████████░] 79% of v3.2 plans (27/30)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-16T15:30:00.000Z
-Stopped at: Completed 12-01-PLAN.md — localStorage persistence layer. 239 tests passing, tsc clean.
-Resume with: Phase 12 Plan 01 complete. Run `/gsd:execute-phase 12 02` to begin Phase 12 Plan 02 (Star Flight Animations).
+Last session: 2026-04-16T18:35:00Z
+Stopped at: Completed 12-04-PLAN.md — Review Mode overlay. 242 tests passing, tsc clean.
+Resume with: Phase 12 Plans 01-04 complete. Run `/gsd:execute-phase 12 05` to begin Phase 12 Plan 05 (Comparison Mode).
