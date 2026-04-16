@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
 status: executing
-stopped_at: Completed 10-04-PLAN.md — Query bar wired with keyword mapping + wave propagation. 239 tests passing.
-last_updated: "2026-04-16T12:12:59.605Z"
-last_activity: "2026-04-16 — 10-04: mountQueryBar implemented, legacy #globalSearch removed, countMatches/countMatchingClusters on SceneObjects. 239 tests passing, 0 skipped, tsc clean."
+stopped_at: Completed 10-05-PLAN.md — Advanced drawer with filter panel integration. 239 tests passing.
+last_updated: "2026-04-16T13:50:22.442Z"
+last_activity: "2026-04-16 — 10-04: mountQueryBar implemented, legacy #globalSearch removed, countMatches/countMatchingClusters. 239 tests passing, 0 skipped, tsc clean."
 progress:
   total_phases: 8
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 11
-  completed_plans: 10
-  percent: 60
+  completed_plans: 11
+  percent: 67
 ---
 
 # Project State
@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 10 (Query Bar) — 10-01, 10-02, 10-03, 10-04 complete. 10-05 remaining.
+**Phase:** 10 (Query Bar) — COMPLETE. All 5 plans (10-01 through 10-05) executed.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
 **Status:** In progress
-**Last activity:** 2026-04-16 — 10-04: mountQueryBar implemented, legacy #globalSearch removed, countMatches/countMatchingClusters. 239 tests passing, 0 skipped, tsc clean.
+**Last activity:** 2026-04-16 — 10-05: Advanced drawer implemented. hideModeSwitcher on mountFilterPanel, drawer DOM/CSS/ARIA, lazy-mount wiring in mountQueryBar. 239 tests passing, tsc clean.
 
-Progress: [███████░░░] 67% of v3.2 plans (20/30)
+Progress: [███████░░░] 70% of v3.2 plans (21/30)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
@@ -75,7 +75,7 @@ Import decisions by move:
 ## What Needs to Happen Next
 
 ### Immediate
-Run `/gsd:plan-phase 8`. Phase 8 (Clean Substrate) covers requirements CLN-01 through CLN-06 — orphan removal, phyllotaxis isolation for Phase 12 adaptation, schema extension for imagery, branch-strategy documentation. Expected ~3 plans.
+Phase 10 (Query Bar) is complete. Run `/gsd:plan-phase 11` to plan Phase 11 (Reading Panel as Instrument). Requires Phase 8 (done) and Phase 9 (done). Phase 10 also satisfies its prerequisite for Phase 13 (Hero Collapse).
 
 ### In Parallel (content side, not Claude's task)
 Kick off content-imagery project. Name the owner. Agree cadence. Start sourcing the first batch of logos and key visuals.
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-16T12:12:59.547Z
-Stopped at: Completed 10-04-PLAN.md — Query bar wired with keyword mapping + wave propagation. 239 tests passing.
-Resume with: Plan 10-05 (Advanced Drawer toggle) — or `/gsd:plan-phase 8`.
+Last session: 2026-04-16T13:50:22.430Z
+Stopped at: Completed 10-05-PLAN.md — Advanced drawer with filter panel integration. 239 tests passing.
+Resume with: Phase 10 complete. Run `/gsd:plan-phase 11` to begin Phase 11 (Reading Panel as Instrument).

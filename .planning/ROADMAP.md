@@ -18,7 +18,7 @@
 
 - [x] **Phase 8: Clean Substrate** — Remove orphaned DOM, isolate phyllotaxis for Comparison Mode, extend schema with imagery field, document branch strategy (completed 2026-04-14)
 - [x] **Phase 9: Atmosphere** — CRT graticule substrate, instrument-calibrating loader, corner wordmark (completed 2026-04-16)
-- [ ] **Phase 10: Query Bar** — Central conversational input, keyword→dimension mapping, live field response, Advanced drawer fallback (1/5 plans complete — Wave 0 test stubs)
+- [x] **Phase 10: Query Bar** — Central conversational input, keyword→dimension mapping, live field response, Advanced drawer fallback (1/5 plans complete — Wave 0 test stubs) (completed 2026-04-16)
 - [ ] **Phase 11: Reading Panel as Instrument** — Restructure header/body/impact as instrument readout, archive imagery integration, Fraunces italic deployment
 - [ ] **Phase 12: Reading List + Review Mode + Comparison Mode** — Rename, track redesign, star flight, localStorage persistence, Review Mode paginated reader, Comparison Mode adapted gather
 - [ ] **Phase 13: Hero Collapse** — Remove marketing banner + stats strip, verify wordmark adequate
@@ -58,7 +58,7 @@ Plans:
 **Goal:** The primary interaction surface is a conversational first-person declarative input. Filter panel collapses to progressive-disclosure Advanced drawer.
 **Depends on:** Phase 9 (atmosphere establishes register before query is visible).
 **Requirements:** QRY-01, QRY-02, QRY-03, QRY-04, QRY-05, QRY-06, QRY-07, QRY-08
-**Plans:** 4/5 plans executed
+**Plans:** 5/5 plans complete
 Plans:
 - [x] 10-01-PLAN.md — Wave 0 test stubs (keyword-map, filter-searchtext, filter-wave, clusters-count, query-bar DOM/ARIA)
 - [ ] 10-02-PLAN.md — keyword-map.ts + FilterState.searchText extension
