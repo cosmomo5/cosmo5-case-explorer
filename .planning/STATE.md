@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
 status: executing
-stopped_at: Completed 09-01-PLAN.md — CRT celestial graticule implemented (graticule.ts + test + starfield integration). ATM-01 complete. 207 tests passing.
-last_updated: "2026-04-16T11:02:58.534Z"
-last_activity: "2026-04-16 — 09-02 instrument-calibrating loader: LoaderController class, step-end CSS transitions, ONLINE gold, 400ms hold, reduced-motion skip. ATM-02 + ATM-04 complete. 201 tests pass."
+stopped_at: Completed 09-03-PLAN.md — corner wordmark implemented. ATM-03 complete. 207 tests passing.
+last_updated: "2026-04-16T11:10:01.990Z"
+last_activity: "2026-04-16 — 09-01 CRT celestial graticule: crtGridTexture() + createGraticule() + starfield integration. ATM-01 complete. 207 tests passing."
 progress:
   total_phases: 8
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
   percent: 56
 ---
 
@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 9 (Atmosphere) — 1 of 3 plans complete
+**Phase:** 9 (Atmosphere) — 3 of 3 plans complete (PHASE COMPLETE)
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
 **Status:** In progress
-**Last activity:** 2026-04-16 — 09-01 CRT celestial graticule: crtGridTexture() + createGraticule() + starfield integration. ATM-01 complete. 207 tests passing.
+**Last activity:** 2026-04-16 — 09-03 corner wordmark: header.wordmark-corner + .wm-primary/.wm-sub in DM Mono. ATM-03 complete. 207 tests passing.
 
-Progress: [██████░░░░] 56% of v3.2 plans (14/25)
+Progress: [███████░░░] 64% of v3.2 plans (16/25)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-16T11:02:58.479Z
-Stopped at: Completed 09-01-PLAN.md — CRT celestial graticule implemented (graticule.ts + test + starfield integration). ATM-01 complete. 207 tests passing.
+Last session: 2026-04-16T11:10:01.955Z
+Stopped at: Completed 09-03-PLAN.md — corner wordmark implemented. ATM-03 complete. 207 tests passing.
 Resume with: `/gsd:plan-phase 8` — or continue with content-imagery project owner assignment in parallel.

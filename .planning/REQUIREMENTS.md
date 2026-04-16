@@ -217,7 +217,7 @@ Deferred to future release. Tracked but not in current roadmap.
 
 - [x] **ATM-01**: CRT celestial graticule rendered behind starfield. Thin white/teal lines at low opacity (~0.06–0.10). Radial or lat/long grid (prototype both, select one). Must read as substrate, not foreground.
 - [x] **ATM-02**: Instrument-calibrating loader — sequential DM Mono text at center-screen (`OBSERVATORY INITIALIZING / LOCATING CATALOG / CALIBRATING STARMAP / ONLINE`). Uses `step-end` transitions (sharp cuts). Final `ONLINE` in gold before clearing. Timing tied to actual boot progress (not theatrical countdown).
-- [ ] **ATM-03**: Corner wordmark `COSMO5 / OBSERVATORY` in DM Mono, ≤80px wide, does not overlap any other UI at any breakpoint. Replaces existing header+logo block.
+- [x] **ATM-03**: Corner wordmark `COSMO5 / OBSERVATORY` in DM Mono, ≤80px wide, does not overlap any other UI at any breakpoint. Replaces existing header+logo block.
 - [x] **ATM-04**: Loader respects `prefers-reduced-motion` — skips to final state immediately when set.
 
 ### Query Bar (Phase 10)
