@@ -10,8 +10,8 @@ progress:
   total_phases: 8
   completed_phases: 4
   total_plans: 14
-  completed_plans: 14
-  percent: 76
+  completed_plans: 15
+  percent: 77
 ---
 
 # Project State
@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 12 (Reading List + Review Mode + Comparison Mode) — STARTED. Plan 12-01 complete.
+**Phase:** 12 (Reading List + Review Mode + Comparison Mode) — IN PROGRESS. Plans 12-01, 12-02 complete.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Ready to plan Phase 12 Plan 02
-**Last activity:** 2026-04-16 — 12-01: localStorage persistence layer complete. Reading list, query history, recently-viewed APIs implemented. Hydration wired in main.ts. Query history chips rendering in query bar. 239 tests passing, tsc clean.
+**Status:** Ready to execute Phase 12 Plan 03
+**Last activity:** 2026-04-16 — 12-02: Reading List track redesigned with card layout (client/sector/metric/timestamp/remove). REVIEW and COMPARE buttons added. Welcome-back readout on boot. 242 tests passing, tsc clean.
 
-Progress: [████████░░] 76% of v3.2 plans (24/30)
+Progress: [████████░░] 77% of v3.2 plans (25/30)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
