@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 10 (Query Bar) — COMPLETE. All 5 plans (10-01 through 10-05) executed.
+**Phase:** 11 (Reading Panel as Instrument) — IN PROGRESS. Plan 11-01 complete.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Ready to plan
-**Last activity:** 2026-04-16 — 10-05: Advanced drawer implemented. hideModeSwitcher on mountFilterPanel, drawer DOM/CSS/ARIA, lazy-mount wiring in mountQueryBar. 239 tests passing, tsc clean.
+**Status:** Executing Phase 11 restructuring
+**Last activity:** 2026-04-16 — 11-01: Reading panel restructured as instrument readout. Header grid (6 fields), imagery integration, body sections renamed, metrics as readout rows, button text updated. 239 tests passing, tsc clean.
 
-Progress: [███████░░░] 70% of v3.2 plans (21/30)
+Progress: [███████░░░] 72% of v3.2 plans (22/30)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-16T13:50:22.430Z
-Stopped at: Completed 10-05-PLAN.md — Advanced drawer with filter panel integration. 239 tests passing.
-Resume with: Phase 10 complete. Run `/gsd:plan-phase 11` to begin Phase 11 (Reading Panel as Instrument).
+Last session: 2026-04-16T14:51:00.000Z
+Stopped at: Completed 11-01-PLAN.md — Reading panel restructured as instrument readout. 239 tests passing.
+Resume with: Phase 11-01 complete. Run `/gsd:execute-phase 11 02` to begin Phase 11 Plan 02 (Reading Panel Styling).
