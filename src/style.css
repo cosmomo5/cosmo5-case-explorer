@@ -812,209 +812,220 @@ body.gather-on .cl{opacity:0 !important;pointer-events:none !important;
 }
 .fgroup[data-open] .fgroup-body { max-height: 200px; }
 
-/* ── Reading Panel (rp-*) ── */
-.rp-shell{
-  position:relative;
-  display:flex;flex-direction:column;
-  height:100%;
-  padding:0;
-  overflow-y:auto;
-  overflow-x:hidden;
-  scrollbar-width:thin;
-  scrollbar-color:rgba(232,177,90,.2) transparent;
+/* ── Reading Panel: Instrument Readout ── */
+
+.rp-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 24px;
+  gap: 16px;
+  overflow-y: auto;
 }
-.rp-shell::-webkit-scrollbar{width:3px}
-.rp-shell::-webkit-scrollbar-thumb{background:rgba(232,177,90,.2);border-radius:3px}
+
+/* Title — Fraunces italic opsz 144 (RP-06) */
+.rp-title {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: 'opsz' 144;
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0 0 12px;
+}
+
+/* Key visual strip (RP-02) */
+.rp-key-visual {
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.rp-key-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.75;
+}
+
+/* Logo inline (RP-02) */
+.rp-logo {
+  height: 24px;
+  width: auto;
+  opacity: 0.8;
+  margin-bottom: 8px;
+}
+
+/* Confidential readout (RP-07) */
+.rp-confidential {
+  font-family: 'DM Mono', monospace;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 16px 0;
+  text-align: center;
+}
+
+/* Header grid — 2 columns (RP-01) */
+.rp-header-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rp-label {
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.rp-value {
+  font-family: 'DM Mono', monospace;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Body sections (RP-03) */
+.rp-section {
+  margin-bottom: 16px;
+}
+
+.rp-section-label {
+  font-family: 'DM Mono', monospace;
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin: 16px 0 6px;
+}
+
+.rp-section-body {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+/* Metrics readout grid (RP-04) */
+.rp-metrics-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rp-metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.rp-metric-label {
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.rp-metric-value {
+  font-family: 'DM Mono', monospace;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--teal);
+}
+
+/* Button — ADD TO READING LIST (RP-05) */
+.rp-shortlist-btn {
+  font-family: 'DM Mono', monospace;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: transparent;
+  border: 1px solid var(--gold);
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+  margin-top: auto;
+}
+
+.rp-shortlist-btn:hover {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--bg);
+}
 
 /* Close button */
-#rp-close{
-  position:sticky;top:0;z-index:2;
-  display:flex;align-items:center;justify-content:flex-end;
-  padding:14px 14px 0;
-  background:rgba(14,16,32,0);
-  pointer-events:none;
-}
-#rp-close button{
-  pointer-events:auto;
-  background:none;border:none;cursor:pointer;
-  width:28px;height:28px;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:50%;
-  color:var(--dim);
-  font-size:16px;line-height:1;
-  transition:color .2s var(--ease),background .2s var(--ease);
-}
-#rp-close button:hover{color:var(--gold);background:rgba(255,255,255,.06)}
-
-/* Instrument strip — analog readout row */
-.rp-instrument{
-  display:flex;
-  align-items:stretch;
-  border-top:1px solid var(--line2);
-  border-bottom:1px solid var(--line2);
-  background:rgba(255,255,255,.02);
-}
-.rp-cell{
-  flex:1;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:10px 8px;
-  font-family:'DM Mono',monospace;
-  font-size:9px;
-  text-transform:uppercase;
-  letter-spacing:.14em;
-  color:var(--mute);
-  line-height:1.3;
-  text-align:center;
-}
-.rp-cell + .rp-cell{border-left:1px solid var(--line)}
-.rp-cell strong{
-  display:block;
-  font-size:11px;
-  font-weight:500;
-  color:var(--teal);
-  letter-spacing:.06em;
-  margin-bottom:2px;
+#rp-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 20px;
+  line-height: 1;
+  transition: color 0.2s var(--ease);
 }
 
-/* Body content */
-.rp-body{
-  padding:20px 20px 32px;
-  flex:1;
-  display:flex;flex-direction:column;
-  gap:0;
+#rp-close:hover {
+  color: var(--gold);
 }
 
-/* Title */
-.rp-title{
-  font-family:'Noto Sans',sans-serif;
-  font-weight:900;
-  font-size:clamp(17px,1.8vw,22px);
-  line-height:1.18;
-  letter-spacing:-.01em;
-  color:var(--text);
-  margin-bottom:14px;
+/* Body content container */
+.rp-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
 }
-
-/* Service chips */
-.rp-chips{
-  display:flex;flex-wrap:wrap;gap:5px;
-  margin-bottom:20px;
-  padding-bottom:18px;
-  border-bottom:1px solid var(--line);
-}
-.rp-chip{
-  font-family:'DM Mono',monospace;
-  font-size:9px;
-  text-transform:uppercase;
-  letter-spacing:.1em;
-  padding:4px 9px;
-  border-radius:2px;
-  border:1px solid rgba(232,177,90,.28);
-  background:rgba(232,177,90,.06);
-  color:rgba(232,177,90,.8);
-  line-height:1;
-}
-
-/* Content sections */
-.rp-section{margin-bottom:22px}
-.rp-section-label{
-  font-family:'DM Mono',monospace;
-  font-size:10px;
-  color:var(--gold);
-  text-transform:uppercase;
-  letter-spacing:.18em;
-  margin-bottom:10px;
-  opacity:.9;
-}
-.rp-section-text{
-  font-size:13px;
-  line-height:1.7;
-  color:var(--dim);
-  font-weight:400;
-}
-
-/* Results section — slight visual distinction */
-.rp-results{
-  padding-top:18px;
-  border-top:1px solid var(--line);
-}
-
-/* Metric grid */
-.rp-metric-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(116px,1fr));
-  gap:10px;
-  margin-top:14px;
-}
-.rp-metric-card{
-  padding:13px 14px;
-  background:var(--surf2);
-  border-radius:5px;
-  border:1px solid rgba(255,255,255,.06);
-  transition:border-color .2s var(--ease);
-}
-.rp-metric-card:hover{border-color:rgba(94,207,192,.25)}
-.rp-metric-value{
-  font-family:'Noto Sans',sans-serif;
-  font-size:22px;
-  font-weight:900;
-  line-height:1;
-  letter-spacing:-.02em;
-  color:var(--teal);
-  margin-bottom:6px;
-}
-.rp-metric-label{
-  font-family:'DM Mono',monospace;
-  font-size:9px;
-  color:var(--mute);
-  line-height:1.45;
-  letter-spacing:.05em;
-  text-transform:uppercase;
-}
-
-/* Shortlist button — matches .gather-btn pattern, DM Mono register */
-.rp-shortlist-btn{
-  margin-top:auto;
-  background:linear-gradient(180deg,rgba(94,207,192,.14),rgba(94,207,192,.04));
-  border:1px solid rgba(94,207,192,.38);
-  color:var(--teal);
-  font-family:'DM Mono',monospace;
-  font-size:10px;
-  font-weight:500;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  padding:11px 12px;
-  border-radius:3px;
-  cursor:pointer;
-  width:100%;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:background .2s var(--ease),border-color .2s var(--ease),box-shadow .2s var(--ease);
-}
-.rp-shortlist-btn:hover{
-  background:linear-gradient(180deg,rgba(94,207,192,.26),rgba(94,207,192,.1));
-  box-shadow:0 0 18px rgba(94,207,192,.25);
-}
-.rp-shortlist-btn.on{
-  background:linear-gradient(180deg,rgba(94,207,192,.38),rgba(94,207,192,.14));
-  border-color:var(--teal);
-  color:#fff;
-  box-shadow:0 0 24px rgba(94,207,192,.4),inset 0 1px 0 rgba(255,255,255,.08);
-}
-.rp-shortlist-btn:disabled{opacity:.3;cursor:not-allowed;box-shadow:none}
 
 /* Locked banner — matches .p-locked */
-.rp-locked{
-  margin-top:20px;
-  padding:12px 14px;
-  border:1px dashed var(--mute);
-  font-family:'DM Mono',monospace;
-  font-size:10px;
-  color:var(--mute);
-  text-transform:uppercase;
-  letter-spacing:.1em;
-  line-height:1.5;
-  border-radius:2px;
+.rp-locked {
+  margin-top: 20px;
+  padding: 12px 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  border-radius: 2px;
 }
 
 /* ── Shortlist Track Zone ── */
