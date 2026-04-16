@@ -4,7 +4,9 @@ import { ReadingPanel } from './reading-panel';
 import { createViewStateMachine } from '../data/view-state';
 import { createShortlistStore } from '../data/shortlist-store';
 import { createLayoutController } from '../layout/layout-controller';
+import { createFilterState } from '../data/filter';
 import type { CaseStudy } from '../data/types';
+import type { SceneObjects } from '../scene/scene-state';
 import * as THREE from 'three';
 
 // ── Fixtures ──────────────────────────────────────────────────────────────────
@@ -62,7 +64,31 @@ function makePanel() {
   const shortlistStore = createShortlistStore();
   const starMesh1 = makeStar(caseOpen);
   const starMesh2 = makeStar(caseLocked);
-  const sceneObjects = { starMeshes: [starMesh1, starMesh2] };
+
+  // Create a minimal SceneObjects mock for testing
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+  const sceneObjects: SceneObjects = {
+    scene,
+    camera,
+    nucleusMeshes: new Map(),
+    nucleusLabels: new Map(),
+    starMeshes: [starMesh1, starMesh2],
+    starOrbits: [],
+    nucleusOrbits: {},
+    filterState: createFilterState(),
+    mode: 'global',
+    focusedKey: null,
+    groupMode: 'vertical',
+    ringLineMeshes: [],
+    ringLineValues: [],
+    ringLabelEls: [],
+    highlightedRingValue: null,
+    currentRingDimension: null,
+    _ringWasHighlighted: false,
+    _stagingDisposalTimeout: undefined,
+  };
+
   const panel = new ReadingPanel(layoutController, viewStateMachine, shortlistStore, sceneObjects);
   return { panel, layoutController, viewStateMachine, shortlistStore, starMesh1, starMesh2 };
 }
@@ -84,7 +110,29 @@ describe('ReadingPanel — constructor', () => {
     const lc = createLayoutController();
     const vsm = createViewStateMachine({ kind: 'constellation', nucleusKey: 'k' });
     const ss = createShortlistStore();
-    expect(() => new ReadingPanel(lc, vsm, ss, { starMeshes: [] })).toThrow('#reading-panel-slot');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    const sceneObjects: SceneObjects = {
+      scene,
+      camera,
+      nucleusMeshes: new Map(),
+      nucleusLabels: new Map(),
+      starMeshes: [],
+      starOrbits: [],
+      nucleusOrbits: {},
+      filterState: createFilterState(),
+      mode: 'global',
+      focusedKey: null,
+      groupMode: 'vertical',
+      ringLineMeshes: [],
+      ringLineValues: [],
+      ringLabelEls: [],
+      highlightedRingValue: null,
+      currentRingDimension: null,
+      _ringWasHighlighted: false,
+      _stagingDisposalTimeout: undefined,
+    };
+    expect(() => new ReadingPanel(lc, vsm, ss, sceneObjects)).toThrow('#reading-panel-slot');
   });
 });
 

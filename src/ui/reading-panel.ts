@@ -2,14 +2,12 @@ import type { LayoutController } from '../layout/layout-controller';
 import type { ViewStateMachine } from '../data/view-state';
 import type { ShortlistStore } from '../data/shortlist-store';
 import type { CaseStudy } from '../data/types';
+import type { SceneObjects } from '../scene/scene-state';
 import { classifyProofType } from '../data/proof-type';
 import { deriveImpactScale } from '../data/impact-scale';
 import { trackRecentlyViewed } from '../data/persistence';
+import { flyStarToTrack, returnStarToOrbit } from '../scene/star-flight';
 import * as THREE from 'three';
-
-export interface SceneObjectsForPanel {
-  starMeshes: THREE.Mesh[];
-}
 
 export class ReadingPanel {
   private slot: HTMLElement;
@@ -19,13 +17,13 @@ export class ReadingPanel {
   private layoutController: LayoutController;
   private viewStateMachine: ViewStateMachine;
   private shortlistStore: ShortlistStore;
-  private sceneObjects: SceneObjectsForPanel;
+  private sceneObjects: SceneObjects;
 
   constructor(
     layoutController: LayoutController,
     viewStateMachine: ViewStateMachine,
     shortlistStore: ShortlistStore,
-    sceneObjects: SceneObjectsForPanel,
+    sceneObjects: SceneObjects,
   ) {
     const slot = document.getElementById('reading-panel-slot');
     if (!slot) throw new Error('ReadingPanel: #reading-panel-slot not found');
@@ -149,12 +147,22 @@ export class ReadingPanel {
     const shortlistBtn = this.slot.querySelector('#rp-shortlist-btn') as HTMLButtonElement;
     shortlistBtn.textContent = this.shortlistStore.has(c.id) ? 'REMOVE' : 'ADD TO READING LIST';
     shortlistBtn.onclick = () => {
+      const mesh = this._findStarMesh(c.id);
       if (this.shortlistStore.has(c.id)) {
         this.shortlistStore.remove(c.id);
         shortlistBtn.textContent = 'ADD TO READING LIST';
+        // Trigger return animation
+        if (mesh) {
+          returnStarToOrbit(mesh, c.id);
+        }
       } else {
         this.shortlistStore.add(c.id, nucleusKey);
         shortlistBtn.textContent = 'REMOVE';
+        // Trigger flight animation
+        if (mesh && this.sceneObjects.camera && this.sceneObjects.scene) {
+          const trackPos = this._calculateTrackPosition();
+          flyStarToTrack(mesh, c.id, trackPos);
+        }
       }
     };
 
@@ -224,5 +232,41 @@ export class ReadingPanel {
     if (mat && originalColor !== undefined) {
       mat.color.setHex(originalColor);
     }
+  }
+
+  /**
+   * Calculate a position in world space for the track zone.
+   * The track is at the bottom of the viewport, so we project a screen-space
+   * point (bottom-center) into world space.
+   */
+  private _calculateTrackPosition(): THREE.Vector3 {
+    if (!this.sceneObjects.camera) {
+      // Fallback: position below the origin if camera not available
+      return new THREE.Vector3(0, -50, 0);
+    }
+
+    const camera = this.sceneObjects.camera;
+
+    // Track zone is at bottom-center of viewport
+    // Use a point at screen coordinates (0.5, 1.0) which is bottom-center
+    const screenX = 0.5;
+    const screenY = 1.0;
+
+    // Convert to normalized device coordinates (-1 to 1)
+    const ndcX = screenX * 2 - 1;
+    const ndcY = -screenY * 2 + 1; // Flip Y because screen Y is top-down, NDC is bottom-up
+
+    // Create a vector at the near plane
+    const nearPlane = new THREE.Vector3(ndcX, ndcY, -1);
+
+    // Unproject from camera
+    nearPlane.unproject(camera);
+
+    // Get a point further along the camera direction
+    // Use the camera position + direction * distance to get a world position below
+    const direction = nearPlane.clone().sub(camera.position).normalize();
+    const worldPos = camera.position.clone().add(direction.multiplyScalar(100));
+
+    return worldPos;
   }
 }

@@ -15,7 +15,7 @@ import { hydrateReadingList, setupReadingListPersistence } from './data/persiste
 import { createLayoutController } from './layout/layout-controller';
 import { createTransitionChoreographer } from './animation/transition-choreographer';
 import { mountFilterPanel } from './ui/filter-panel';
-import { mountQueryBar } from './ui/query-bar';
+import { mountQueryBar, showWelcomeBack } from './ui/query-bar';
 import { regroupScene } from './scene/regroup';
 import { Tooltip, projectToScreen } from './ui/tooltip';
 import { ReadingPanel } from './ui/reading-panel';
@@ -113,6 +113,8 @@ async function boot() {
 
     const sceneObjects = buildOrbitalScene(cases, 'vertical', scene, labelContainer);
     sceneObjects.controls = controls;
+    sceneObjects.camera = camera;
+    sceneObjects.scene = scene;
     loaderCtrl?.advance('SCENE');
 
     // ── ReadingPanel (wired to layoutController, viewState, shortlistStore) ──
@@ -128,6 +130,7 @@ async function boot() {
         if (c && sceneObjects.focusedKey) readingPanel.open(c, sceneObjects.focusedKey);
       },
       (caseId) => caseById.get(caseId)?.client ?? caseId,
+      sceneObjects,
     );
     void shortlistTrack; // consumed by ShortlistStore subscription internally
 
@@ -531,6 +534,12 @@ async function boot() {
       onGroupModeChange: (newMode) => { regroupScene(sceneObjects, newMode, scene); },
       onExitFocus: () => { exitFocus(); },
     });
+
+    // ── Show welcome-back message if reading list has entries ──────────────
+    const queryReadout = document.getElementById('queryReadout') as HTMLElement | null;
+    if (queryReadout) {
+      showWelcomeBack(shortlistStore, queryReadout);
+    }
 
     // ── Dismiss loader ────────────────────────────────────────────────────
     if (loaderCtrl) {

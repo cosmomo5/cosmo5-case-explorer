@@ -13,7 +13,7 @@ function makeStore(initialEntries: ShortlistEntry[] = []): {
 } {
   let callback: StoreCallback | null = null;
 
-  const store: ShortlistStore = {
+  const store: ShortlistStore & { _addedAtMap?: Map<string, number> } = {
     add: vi.fn(),
     remove: vi.fn(),
     clear: vi.fn(),
@@ -23,6 +23,7 @@ function makeStore(initialEntries: ShortlistEntry[] = []): {
       callback = listener;
       return () => { callback = null; };
     }),
+    _addedAtMap: new Map(),
   };
 
   return {
@@ -54,8 +55,8 @@ describe('ShortlistTrack', () => {
     const { store } = makeStore([]);
     new ShortlistTrack(container, store, vi.fn());
 
-    expect(container.querySelectorAll('.track-card').length).toBe(0);
-    expect(container.textContent).toContain('No cases shortlisted');
+    expect(container.querySelectorAll('.rl-card').length).toBe(0);
+    expect(container.textContent).toContain('No readings staged');
   });
 
   it('renders 1 card when store fires with 1 entry', () => {
@@ -64,7 +65,7 @@ describe('ShortlistTrack', () => {
 
     fire([{ caseId: 'c1', nucleusKey: 'Media' }]);
 
-    expect(container.querySelectorAll('.track-card').length).toBe(1);
+    expect(container.querySelectorAll('.rl-card').length).toBe(1);
   });
 
   it('renders 2 cards when store fires with 2 entries', () => {
@@ -76,7 +77,7 @@ describe('ShortlistTrack', () => {
       { caseId: 'c2', nucleusKey: 'Commerce' },
     ]);
 
-    expect(container.querySelectorAll('.track-card').length).toBe(2);
+    expect(container.querySelectorAll('.rl-card').length).toBe(2);
   });
 
   it('clears to empty state when store fires empty after having entries', () => {
@@ -84,25 +85,60 @@ describe('ShortlistTrack', () => {
     new ShortlistTrack(container, store, vi.fn());
 
     fire([{ caseId: 'c1', nucleusKey: 'Media' }]);
-    expect(container.querySelectorAll('.track-card').length).toBe(1);
+    expect(container.querySelectorAll('.rl-card').length).toBe(1);
 
     fire([]);
-    expect(container.querySelectorAll('.track-card').length).toBe(0);
-    expect(container.textContent).toContain('No cases shortlisted');
+    expect(container.querySelectorAll('.rl-card').length).toBe(0);
+    expect(container.textContent).toContain('No readings staged');
   });
 
-  it('clicking a card calls onSelect with the caseId', () => {
+  it('renders count indicator when entries present', () => {
     const { store, fire } = makeStore([]);
-    const onSelect = vi.fn();
-    new ShortlistTrack(container, store, onSelect);
+    new ShortlistTrack(container, store, vi.fn());
 
-    fire([{ caseId: 'c42', nucleusKey: 'Media' }]);
+    fire([{ caseId: 'c1', nucleusKey: 'Media' }]);
 
-    const card = container.querySelector('.track-card') as HTMLElement;
-    card.click();
+    const countDiv = container.querySelector('.rl-count');
+    expect(countDiv?.textContent).toContain('1 READINGS');
+  });
 
-    expect(onSelect).toHaveBeenCalledOnce();
-    expect(onSelect).toHaveBeenCalledWith('c42');
+  it('renders REVIEW and COMPARE buttons', () => {
+    const { store, fire } = makeStore([]);
+    new ShortlistTrack(container, store, vi.fn());
+
+    fire([{ caseId: 'c1', nucleusKey: 'Media' }]);
+
+    const reviewBtn = container.querySelector('#rlReview');
+    const compareBtn = container.querySelector('#rlCompare');
+    expect(reviewBtn).not.toBeNull();
+    expect(compareBtn).not.toBeNull();
+  });
+
+  it('COMPARE button is disabled when < 3 entries', () => {
+    const { store, fire } = makeStore([]);
+    new ShortlistTrack(container, store, vi.fn());
+
+    fire([
+      { caseId: 'c1', nucleusKey: 'Media' },
+      { caseId: 'c2', nucleusKey: 'Commerce' },
+    ]);
+
+    const compareBtn = container.querySelector('#rlCompare') as HTMLButtonElement;
+    expect(compareBtn.disabled).toBe(true);
+  });
+
+  it('COMPARE button is enabled when >= 3 entries', () => {
+    const { store, fire } = makeStore([]);
+    new ShortlistTrack(container, store, vi.fn());
+
+    fire([
+      { caseId: 'c1', nucleusKey: 'Media' },
+      { caseId: 'c2', nucleusKey: 'Commerce' },
+      { caseId: 'c3', nucleusKey: 'Tech' },
+    ]);
+
+    const compareBtn = container.querySelector('#rlCompare') as HTMLButtonElement;
+    expect(compareBtn.disabled).toBe(false);
   });
 
   it('renders into #track-zone container (not a new element)', () => {
@@ -122,8 +158,9 @@ describe('ShortlistTrack', () => {
 
     fire([{ caseId: 'c1', nucleusKey: 'Media' }]);
 
-    const card = container.querySelector('.track-card') as HTMLElement;
-    expect(card.textContent).toBe('Acme Corp');
+    const card = container.querySelector('.rl-card') as HTMLElement;
+    const clientSpan = card.querySelector('.rl-client') as HTMLElement;
+    expect(clientSpan.textContent).toBe('Acme Corp');
   });
 
   it('falls back to caseId when no getCaseLabel provided', () => {
@@ -132,7 +169,8 @@ describe('ShortlistTrack', () => {
 
     fire([{ caseId: 'case-99', nucleusKey: 'Media' }]);
 
-    const card = container.querySelector('.track-card') as HTMLElement;
-    expect(card.textContent).toBe('case-99');
+    const card = container.querySelector('.rl-card') as HTMLElement;
+    const clientSpan = card.querySelector('.rl-client') as HTMLElement;
+    expect(clientSpan.textContent).toBe('case-99');
   });
 });

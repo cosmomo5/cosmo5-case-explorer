@@ -6,6 +6,7 @@ import type { SceneObjects } from '../scene/scene-state';
 import type { CaseStudy, GroupMode } from '../data/types';
 import { loadQueryHistory, addQueryToHistory } from '../data/persistence';
 import { mountFilterPanel } from './filter-panel';
+import type { ShortlistStore } from '../data/shortlist-store';
 
 export interface QueryBarDeps {
   sceneObjects: SceneObjects;
@@ -178,4 +179,49 @@ export function mountQueryBar(deps: QueryBarDeps): void {
       }
     });
   }
+}
+
+/**
+ * Show a welcome-back message if the reading list has entries on boot.
+ * Displays below the query input and fades after 5s.
+ */
+export function showWelcomeBack(store: ShortlistStore, readoutEl: HTMLElement): void {
+  const entries = store.entries();
+  if (entries.length === 0) return;
+
+  // Find the most recently added entry
+  const addedAtMap = (store as any)._addedAtMap as Map<string, number> | undefined;
+  if (!addedAtMap || addedAtMap.size === 0) return;
+
+  let mostRecentTime = 0;
+  for (const [, ts] of addedAtMap.entries()) {
+    if (ts > mostRecentTime) {
+      mostRecentTime = ts;
+    }
+  }
+
+  if (mostRecentTime === 0) return;
+
+  // Format time as "Xh ago", "Xd ago", etc.
+  const now = Date.now();
+  const diffMs = now - mostRecentTime;
+  const diffS = Math.floor(diffMs / 1000);
+  const diffM = Math.floor(diffS / 60);
+  const diffH = Math.floor(diffM / 60);
+  const diffD = Math.floor(diffH / 24);
+
+  let timeStr = 'just now';
+  if (diffD > 0) timeStr = `${diffD}d ago`;
+  else if (diffH > 0) timeStr = `${diffH}h ago`;
+  else if (diffM > 0) timeStr = `${diffM}m ago`;
+
+  // Set readout text
+  readoutEl.textContent = `Welcome back. ${entries.length} reading${entries.length > 1 ? 's' : ''} in your list, last added ${timeStr}.`;
+  readoutEl.classList.add('welcome-back');
+
+  // Fade after 5s
+  setTimeout(() => {
+    readoutEl.classList.remove('welcome-back');
+    readoutEl.textContent = '';
+  }, 5000);
 }
