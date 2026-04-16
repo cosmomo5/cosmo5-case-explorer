@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
 status: planning
-stopped_at: Completed 08-01-PLAN.md — orphaned DOM, CSS, and detail-panel.ts removed. 195 tests pass.
-last_updated: "2026-04-14T21:08:52.631Z"
-last_activity: "2026-04-14 — 08-02 phyllotaxis geometry module: camera-independent `computePhyllotaxisPositions`, 195 tests passing (190 + 5 new), CLN-04 complete."
+stopped_at: Completed 09-02-PLAN.md — LoaderController, loader DOM/CSS, main.ts integration. ATM-02 ATM-04 done.
+last_updated: "2026-04-16T10:54:11.291Z"
+last_activity: "2026-04-16 — 09-02 instrument-calibrating loader: LoaderController class, step-end CSS transitions, ONLINE gold, 400ms hold, reduced-motion skip. ATM-02 + ATM-04 complete."
 progress:
   total_phases: 8
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
-  percent: 55
+  total_plans: 25
+  completed_plans: 14
+  percent: 56
 ---
 
 # Project State
@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 8 (Clean Substrate) — 2 of 3 plans complete
+**Phase:** 9 (Atmosphere) — 2 of 3 plans complete (09-01 Wave 0 stubs done, 09-02 implementation done)
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Ready to plan
-**Last activity:** 2026-04-14 — 08-02 phyllotaxis geometry module: camera-independent `computePhyllotaxisPositions`, 195 tests passing (190 + 5 new), CLN-04 complete.
+**Status:** In progress
+**Last activity:** 2026-04-16 — 09-02 instrument-calibrating loader: LoaderController class, step-end CSS transitions, ONLINE gold, 400ms hold, reduced-motion skip. ATM-02 + ATM-04 complete. 201 tests pass.
 
-Progress: [██████░░░░] 55% of v3.2 plans (12/22)
+Progress: [██████░░░░] 56% of v3.2 plans (14/25)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-14T20:59:28.301Z
-Stopped at: Completed 08-01-PLAN.md — orphaned DOM, CSS, and detail-panel.ts removed. 195 tests pass.
+Last session: 2026-04-16T10:54:11.219Z
+Stopped at: Completed 09-02-PLAN.md — LoaderController, loader DOM/CSS, main.ts integration. ATM-02 ATM-04 done.
 Resume with: `/gsd:plan-phase 8` — or continue with content-imagery project owner assignment in parallel.
