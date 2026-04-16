@@ -11,6 +11,7 @@ vi.mock('../ui/query-bar', () => ({
 
 import { countMatches, countMatchingClusters } from '../ui/query-bar';
 import { matchesFilter, createFilterState } from '../data/filter';
+import type { SceneObjects } from '../scene/scene-state';
 import type { EnrichedCaseStudy } from '../data/enrich';
 import { ProofType } from '../data/proof-type';
 
@@ -48,22 +49,24 @@ describe('countMatches — N MATCHES counting (Plan 04)', () => {
     filter.services.add('Media');
     // 2 of 3 cases have 'Media'
     vi.mocked(countMatches).mockReturnValue(2);
-    expect(countMatches(cases as any[], filter)).toBe(2);
+    expect(countMatches(cases as unknown as SceneObjects, filter)).toBe(2);
   });
 
   it('countMatches returns 0 when no cases match', () => {
     const filter = createFilterState();
     filter.services.add('PPC'); // nobody has PPC
     vi.mocked(countMatches).mockReturnValue(0);
-    expect(countMatches(cases as any[], filter)).toBe(0);
+    expect(countMatches(cases as unknown as SceneObjects, filter)).toBe(0);
   });
 
   it('empty filterState matches all cases', () => {
     const filter = createFilterState();
-    vi.mocked(countMatches).mockImplementation((starMeshes: any[], fs: any) => {
-      return starMeshes.filter(c => matchesFilter(c, fs)).length;
+    vi.mocked(countMatches).mockImplementation((objects: SceneObjects, fs: any) => {
+      // In the real impl objects.starMeshes would be iterated; here we use the
+      // test-local cases array via closure since the whole module is mocked.
+      return (objects as unknown as EnrichedCaseStudy[]).filter(c => matchesFilter(c, fs)).length;
     });
-    const result = countMatches(cases as any[], filter);
+    const result = countMatches(cases as unknown as SceneObjects, filter);
     expect(result).toBe(3);
   });
 });
@@ -84,13 +87,13 @@ describe('countMatchingClusters — M CLUSTERS counting (Plan 04)', () => {
     const filter = createFilterState();
     filter.services.add('Media'); // matches Media cluster only
     vi.mocked(countMatchingClusters).mockReturnValue(1);
-    expect(countMatchingClusters(nucleusOrbits as any, filter)).toBe(1);
+    expect(countMatchingClusters(nucleusOrbits as unknown as SceneObjects, filter)).toBe(1);
   });
 
   it('countMatchingClusters returns 0 when no clusters match', () => {
     const filter = createFilterState();
     filter.services.add('Email'); // nobody has Email
     vi.mocked(countMatchingClusters).mockReturnValue(0);
-    expect(countMatchingClusters(nucleusOrbits as any, filter)).toBe(0);
+    expect(countMatchingClusters(nucleusOrbits as unknown as SceneObjects, filter)).toBe(0);
   });
 });

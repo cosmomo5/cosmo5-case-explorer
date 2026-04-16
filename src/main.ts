@@ -14,6 +14,7 @@ import { createShortlistStore } from './data/shortlist-store';
 import { createLayoutController } from './layout/layout-controller';
 import { createTransitionChoreographer } from './animation/transition-choreographer';
 import { mountFilterPanel } from './ui/filter-panel';
+import { mountQueryBar } from './ui/query-bar';
 import { regroupScene } from './scene/regroup';
 import { Tooltip, projectToScreen } from './ui/tooltip';
 import { ReadingPanel } from './ui/reading-panel';
@@ -49,8 +50,6 @@ const elHero     = document.getElementById('hero')          as HTMLElement;
 const elControls = document.getElementById('cosmoControls') as HTMLElement;
 const elFiltersWrap = document.getElementById('filtersWrap') as HTMLElement;
 const elFiltersTab  = document.getElementById('filtersTab')  as HTMLElement;
-const elGlobalSearch= document.getElementById('globalSearch') as HTMLInputElement;
-const elGlobalClear = document.getElementById('globalSearchClear') as HTMLElement;
 const elLabelSlider = document.getElementById('labelSlider') as HTMLInputElement;
 const elLabelVal    = document.getElementById('labelVal')    as HTMLElement;
 
@@ -518,27 +517,12 @@ async function boot() {
       elFiltersWrap.classList.toggle('collapsed');
     });
 
-    // ── Global search (constellation mode search bar) ─────────────────────
-    elGlobalSearch.addEventListener('input', () => {
-      const q = elGlobalSearch.value.trim().toLowerCase();
-      for (const star of sceneObjects.starMeshes) {
-        const c = star.userData.caseStudy as CaseStudy;
-        const mat = star.material as THREE.MeshBasicMaterial;
-        if (!q) {
-          mat.opacity = 0.85;
-        } else {
-          const match = c.client.toLowerCase().includes(q)
-            || c.title.toLowerCase().includes(q)
-            || c.services.some(s => s.toLowerCase().includes(q))
-            || c.countries.some(co => co.toLowerCase().includes(q));
-          mat.opacity = match ? 1.0 : 0.08;
-        }
-      }
-    });
-
-    elGlobalClear.addEventListener('click', () => {
-      elGlobalSearch.value = '';
-      elGlobalSearch.dispatchEvent(new Event('input'));
+    // ── Query bar (primary inquiry surface) ─────────────────────────────
+    mountQueryBar({
+      sceneObjects,
+      filterState: sceneObjects.filterState,
+      cases,
+      onFilterChange: () => { /* label sync handled by tick loop */ },
     });
 
     // ── Dismiss loader ────────────────────────────────────────────────────
