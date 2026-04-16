@@ -104,8 +104,12 @@ function buildAccordionSections(
   }).join('');
 }
 
+export interface FilterPanelOptions {
+  hideModeSwitcher?: boolean;
+}
+
 /** Build the global mode HTML. */
-function buildGlobalHTML(obj: SceneObjects): string {
+function buildGlobalHTML(obj: SceneObjects, options?: FilterPanelOptions): string {
   const allCases = getAllCases(obj);
   const chipCounts = computeChipCounts(allCases, obj.filterState);
   const accordionSections = buildAccordionSections(obj, allCases, chipCounts);
@@ -120,16 +124,19 @@ function buildGlobalHTML(obj: SceneObjects): string {
       <button class="clr" id="filterClear">Reset all</button>
     </div>` : '';
 
-  const modeChips = (['vertical', 'country', 'region'] as GroupMode[]).map(m => {
-    const active = obj.groupMode === m ? ' active' : '';
-    return `<div class="mode-chip${active}" data-mode="${m}">${m.charAt(0).toUpperCase() + m.slice(1)}</div>`;
-  }).join('');
+  const modeRow = options?.hideModeSwitcher ? '' : (() => {
+    const modeChips = (['vertical', 'country', 'region'] as GroupMode[]).map(m => {
+      const active = obj.groupMode === m ? ' active' : '';
+      return `<div class="mode-chip${active}" data-mode="${m}">${m.charAt(0).toUpperCase() + m.slice(1)}</div>`;
+    }).join('');
+    return `<div class="mode-row">${modeChips}</div>`;
+  })();
 
   return `
     <div class="filters-head">
       <h3>Filter</h3>
     </div>
-    <div class="mode-row">${modeChips}</div>
+    ${modeRow}
     <div class="filters-body">
       ${accordionSections}
     </div>
@@ -170,12 +177,13 @@ export function mountFilterPanel(
   objects: SceneObjects,
   onGroupModeChange: (mode: GroupMode) => void,
   onExitFocus?: () => void,
+  options?: FilterPanelOptions,
 ): void {
   render();
 
   function render() {
     container.innerHTML = objects.mode === 'global'
-      ? buildGlobalHTML(objects)
+      ? buildGlobalHTML(objects, options)
       : buildFocusedHTML(objects);
     bindEvents();
   }
