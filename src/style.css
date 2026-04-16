@@ -1305,6 +1305,56 @@ body.constellation #track-zone {
   color: var(--teal);
 }
 
+/* ── Comparison Mode ── */
+.cm-exit {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(11, 12, 16, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 20px;
+  cursor: pointer;
+  display: none;
+  transition: all 0.2s ease;
+}
+
+.comparison-active .cm-exit {
+  display: block;
+}
+
+.cm-exit:hover {
+  border-color: var(--teal, #5dd9c1);
+  color: var(--teal, #5dd9c1);
+  background: rgba(11, 12, 16, 0.95);
+}
+
+/* Hide elements during comparison */
+.comparison-active .query-wrap,
+.comparison-active .advanced-drawer,
+.comparison-active #cosmoControls,
+.comparison-active #ring-switcher {
+  display: none !important;
+}
+
+/* Comparison gathered star labels */
+.cm-label {
+  position: absolute;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+}
+
 /* ── Accessibility: prefers-reduced-motion ── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

@@ -22,6 +22,7 @@ import { ReadingPanel } from './ui/reading-panel';
 import { ShortlistTrack } from './ui/shortlist-track';
 import { mountReviewMode } from './ui/review-mode';
 import { LoaderController } from './ui/loader';
+import { ComparisonMode } from './scene/comparison-mode';
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.globalTimeline.timeScale(0);
@@ -161,6 +162,30 @@ async function boot() {
       }
     });
 
+    // ── ComparisonMode: spatial comparison of gathered readings ──────────
+    const comparisonMode = new ComparisonMode(sceneObjects);
+
+    // Subscribe to COMPARE button clicks
+    const rlCompareBtn = document.getElementById('rlCompare') as HTMLButtonElement | null;
+    if (rlCompareBtn) {
+      rlCompareBtn.addEventListener('click', () => {
+        if (shortlistStore.entries().length >= 3) {
+          const starMeshes = shortlistStore.entries()
+            .map(entry => sceneObjects.starMeshes.find(s => s.userData.caseStudy?.id === entry.caseId))
+            .filter((m): m is THREE.Mesh => !!m);
+          comparisonMode.enter(starMeshes, caseById);
+        }
+      });
+    }
+
+    // Subscribe to EXIT COMPARISON button
+    const cmExitBtn = document.getElementById('cmExit') as HTMLButtonElement | null;
+    if (cmExitBtn) {
+      cmExitBtn.addEventListener('click', () => {
+        comparisonMode.exit();
+      });
+    }
+
     // ── Subscribe ShortlistStore → syncShortlistToStarState ──────────────
     shortlistStore.subscribe((entries) => {
       syncShortlistToStarState(sceneObjects, entries);
@@ -249,6 +274,11 @@ async function boot() {
             }
           }
         }
+      }
+
+      // Update comparison mode labels (if active)
+      if (comparisonMode.isActive) {
+        comparisonMode.updateLabelPositions(camera, sceneContainer.clientWidth, sceneContainer.clientHeight);
       }
 
       renderer.render(scene, camera);
@@ -471,6 +501,7 @@ async function boot() {
       if (e.key === 'Escape') {
         if (choreographer.state.inProgress) return; // CAM-04
         // Step-back: unwind one layer at a time
+        if (comparisonMode.isActive) { comparisonMode.exit(); return; }
         if (readingPanel.isOpen()) { readingPanel.close(); return; }
         if (sceneObjects.highlightedRingValue !== null) {
           sceneObjects.highlightedRingValue = null;
