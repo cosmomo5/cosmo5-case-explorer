@@ -113,12 +113,12 @@ describe('ReadingPanel — open()', () => {
     expect(instrument.textContent).toContain('2023');
   });
 
-  it('renders services as chips', () => {
+  it('renders challenge and approach text', () => {
     const { panel } = makePanel();
     panel.open(caseOpen, 'test-key');
     const body = document.getElementById('rp-body')!;
-    expect(body.textContent).toContain('Video Ads');
-    expect(body.textContent).toContain('SEA');
+    expect(body.textContent).toContain('Needed to grow online revenue');
+    expect(body.textContent).toContain('Multi-channel video');
   });
 
   it('renders challenge and approach sections', () => {
@@ -129,13 +129,13 @@ describe('ReadingPanel — open()', () => {
     expect(body.textContent).toContain('Multi-channel video');
   });
 
-  it('renders metric cards (one per metric)', () => {
+  it('renders metric rows (one per metric)', () => {
     const { panel } = makePanel();
     panel.open(caseOpen, 'test-key');
-    const cards = document.querySelectorAll('.rp-metric-card');
-    expect(cards).toHaveLength(2);
-    expect(cards[0].textContent).toContain('+42%');
-    expect(cards[0].textContent).toContain('Revenue uplift');
+    const rows = document.querySelectorAll('.rp-metric-row');
+    expect(rows).toHaveLength(2);
+    expect(rows[0].textContent).toContain('+42%');
+    expect(rows[0].textContent).toContain('REVENUE UPLIFT');
   });
 
   it('shows locked banner and hides body content when permission=false', () => {
