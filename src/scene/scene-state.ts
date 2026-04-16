@@ -15,13 +15,19 @@ import { computeConcentricOrbits, ringPositionAt, autoSelectRingDimension, build
 import type { RingOrbit, RingDimension, ConcentricConfig } from './orbitals/concentric';
 import type { EnrichedCaseStudy } from '../data/enrich';
 import type { ShortlistEntry } from '../data/shortlist-store';
+import {
+  STAGING_KEY,
+  createStagingNucleus,
+  disposeStagingNucleus,
+  animateStarsToStaging,
+  returnStarsFromStaging,
+  applyStagingPush,
+  zoomTowardStaging
+} from './staging';
 
 export type SceneMode = 'global' | 'focused';
 
-// ── Staging sphere constants ──────────────────────────────────────────────────
-const STAGING_KEY = '__staging__';
-const STAGING_COLOR = 0xff6b6b; // coral — distinct from teal and gold design tokens
-const NUCLEUS_RADIUS = 6; // matches SphereGeometry radius used for nucleus meshes
+
 
 /** Convert a THREE hex color int to "r,g,b" string for CSS rgba() usage */
 function hexToRgb(hex: number): string {
@@ -211,140 +217,13 @@ function matchesReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-// ── Staging sphere lifecycle ──────────────────────────────────────────────────
 
-/**
- * Create a synthetic "staging" nucleus at the centroid of existing nucleus positions.
- * Inserts it into nucleusMeshes and nucleusOrbits so the existing click handler
- * (main.ts) picks it up automatically — no new click-handling code required.
- */
-function createStagingNucleus(objects: SceneObjects, matchedCases: EnrichedCaseStudy[]): void {
-  // Cancel any pending disposal — prevents a delayed disposal from destroying the
-  // sphere we're about to create (race condition when filter changes within 700ms of clear).
-  if (objects._stagingDisposalTimeout !== undefined) {
-    clearTimeout(objects._stagingDisposalTimeout);
-    objects._stagingDisposalTimeout = undefined;
-  }
 
-  // Compute centroid: average of all existing nucleus positions (excluding staging itself)
-  let cx = 0, cy = 0, cz = 0, count = 0;
-  for (const [key, mesh] of objects.nucleusMeshes.entries()) {
-    if (key === STAGING_KEY) continue;
-    cx += mesh.position.x;
-    cy += mesh.position.y;
-    cz += mesh.position.z;
-    count++;
-  }
-  if (count > 0) { cx /= count; cy /= count; cz /= count; }
 
-  const geo = new THREE.SphereGeometry(NUCLEUS_RADIUS, 32, 32);
-  const mat = new THREE.MeshStandardMaterial({
-    color: STAGING_COLOR,
-    roughness: 0.45,
-    metalness: 0.15,
-    emissive: STAGING_COLOR,
-    emissiveIntensity: 0.3,
-  });
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.set(cx, cy, cz);
-  mesh.userData = {
-    key: STAGING_KEY,
-    isNucleus: true,
-    homePos: new THREE.Vector3(cx, cy, cz),
-  };
 
-  // NucleusOrbitData for staging: static (speed=0, phase=0) — positioned by mesh.position
-  const orbitData: NucleusOrbitData = {
-    key: STAGING_KEY,
-    orbitR: 0,
-    orbitU: { x: 1, y: 0, z: 0 },
-    orbitV: { x: 0, y: 1, z: 0 },
-    phase: 0,
-    speed: 0,
-    cases: matchedCases as CaseStudy[],
-  };
 
-  objects.nucleusMeshes.set(STAGING_KEY, mesh);
-  objects.nucleusOrbits[STAGING_KEY] = orbitData;
-  objects.scene.add(mesh);
-}
 
-/**
- * Remove the staging sphere, dispose its GPU resources, and clean up maps.
- */
-function disposeStagingNucleus(objects: SceneObjects): void {
-  const mesh = objects.nucleusMeshes.get(STAGING_KEY);
-  if (!mesh) return;
 
-  gsap.killTweensOf(mesh.position);
-  objects.scene.remove(mesh);
-  mesh.geometry.dispose();
-  (mesh.material as THREE.MeshStandardMaterial).dispose();
-  objects.nucleusMeshes.delete(STAGING_KEY);
-  delete objects.nucleusOrbits[STAGING_KEY];
-  // Restore nucleus positions that were pushed out when staging appeared (FILT-05 reverse)
-  restoreStagingPush(objects);
-}
-
-/**
- * GSAP-tween matched stars to the staging sphere surface.
- * Stores original positions in userData.originalPosition for the return journey.
- */
-function animateStarsToStaging(objects: SceneObjects, matchedCases: EnrichedCaseStudy[]): void {
-  const stagingMesh = objects.nucleusMeshes.get(STAGING_KEY);
-  if (!stagingMesh) return;
-
-  const stagingPos = stagingMesh.position;
-  const matchedIds = new Set(matchedCases.map(c => c.id));
-
-  let idx = 0;
-  for (const star of objects.starMeshes) {
-    const c = star.userData.caseStudy as CaseStudy;
-    if (!matchedIds.has(c.id)) continue;
-
-    // Store original position before first tween
-    if (!star.userData.isStagingTarget) {
-      star.userData.originalPosition = star.position.clone();
-    }
-
-    // Target: distribute matched stars across sphere surface using golden angle
-    const angle = idx * Math.PI * (3 - Math.sqrt(5));
-    const r = NUCLEUS_RADIUS * 2 * Math.sqrt((idx + 1) / matchedCases.length);
-    const target = {
-      x: stagingPos.x + r * Math.cos(angle),
-      y: stagingPos.y + r * Math.sin(angle),
-      z: stagingPos.z,
-    };
-
-    gsap.killTweensOf(star.position);
-    gsap.to(star.position, {
-      x: target.x, y: target.y, z: target.z,
-      duration: 0.8, ease: 'power2.out',
-    });
-    star.userData.isStagingTarget = true;
-    idx++;
-  }
-}
-
-/**
- * Return all staging-target stars to their original nucleus orbit positions.
- */
-function returnStarsFromStaging(objects: SceneObjects): void {
-  for (const star of objects.starMeshes) {
-    if (!star.userData.isStagingTarget) continue;
-    const orig = star.userData.originalPosition as THREE.Vector3 | undefined;
-    if (!orig) {
-      star.userData.isStagingTarget = false;
-      continue;
-    }
-    gsap.killTweensOf(star.position);
-    gsap.to(star.position, {
-      x: orig.x, y: orig.y, z: orig.z,
-      duration: 0.6, ease: 'power2.in',
-      onComplete: () => { star.userData.isStagingTarget = false; },
-    });
-  }
-}
 
 // Module-scope scratch objects — reused every tick, no allocations in the hot loop
 const _tickScratch = new THREE.Vector3();
@@ -425,15 +304,34 @@ export function tickOrbits(
       mat.opacity = resolveStarAppearance(storedState).opacity;
       // Apply gold color when star is in reading state (MeshBasicMaterial has no emissive)
       const originalColor = star.userData.originalColor as number;
+      const glowSp = star.userData.glowSprite as THREE.Sprite | undefined;
       if (storedState === 'reading') {
-        mat.color.setHex(0xe8b15a); // gold — same as appearance.colorOverride
+        mat.color.setHex(0xe8b15a); // gold
+        if (glowSp) {
+          (glowSp.material as THREE.SpriteMaterial).map = createGlowTexture(0xe8b15a);
+        }
       } else {
         mat.color.setHex(originalColor);
+        if (glowSp) {
+          (glowSp.material as THREE.SpriteMaterial).map = createGlowTexture(originalColor);
+        }
       }
     } else {
       const isMatch = !anyFilter || matchesFilter(star.userData.caseStudy as CaseStudy, filterState);
       const starState: StarState = isMatch ? 'filterMatch' : 'filterDim';
       mat.opacity = resolveStarAppearance(starState).opacity;
+      // Restore color if star was left in reading state after exiting focus
+      const origC = star.userData.originalColor as number | undefined;
+      if (origC !== undefined) {
+        const currentHex = mat.color.getHex();
+        if (currentHex !== origC) {
+          mat.color.setHex(origC);
+          const gs = star.userData.glowSprite as THREE.Sprite | undefined;
+          if (gs) {
+            (gs.material as THREE.SpriteMaterial).map = createGlowTexture(origC);
+          }
+        }
+      }
     }
   }
 
@@ -465,7 +363,7 @@ export function tickOrbits(
       if (!sprite) continue;
       const spriteMat = sprite.material as THREE.SpriteMaterial;
       const baseOpacity = (sprite.userData.baseOpacity as number) ?? 0.65;
-      spriteMat.opacity = baseOpacity * (0.7 + 0.3 * Math.sin(t * 0.7 + (sprite.userData.phase as number)));
+      spriteMat.opacity = baseOpacity * (0.85 + 0.15 * Math.sin(t * 0.3 + (sprite.userData.phase as number)));
     }
   }
 }
@@ -546,89 +444,69 @@ export function clearFilter(objects: SceneObjects): void {
   applyFilter(objects, createFilterState());
 }
 
-// ── Staging push + camera lean ────────────────────────────────────────────────
-
 /**
- * Push other nuclei outward by ×1.15 radially when staging sphere appears (FILT-05).
- * Stores original positions in userData.preFilterPosition for restore on clear.
+ * Wave-propagation filter animation (QRY-03).
+ *
+ * Dims non-matching stars in distance-sorted waves radiating outward from
+ * matching cluster nuclei. Stars nearest the matching nuclei respond first;
+ * the full field settles over ~600 ms.
+ *
+ * Precedence: stars in 'reading', 'selected', or 'ghost' state are skipped.
+ * Existing tweens are killed before new ones are started (rapid re-query safety).
  */
-function applyStagingPush(objects: SceneObjects): void {
-  for (const [key, mesh] of objects.nucleusMeshes.entries()) {
-    if (key === STAGING_KEY) continue;
-    // Store pre-filter position for restore
-    if (!mesh.userData.preFilterPosition) {
-      mesh.userData.preFilterPosition = mesh.position.clone();
-    }
-    const dir = mesh.position.clone().normalize();
-    const target = mesh.position.clone().addScaledVector(dir, mesh.position.length() * 0.15);
-    gsap.killTweensOf(mesh.position);
-    gsap.to(mesh.position, {
-      x: target.x, y: target.y, z: target.z,
-      duration: 0.3, ease: 'power2.out',
-    });
-    if (mesh.userData.halo) {
-      gsap.to((mesh.userData.halo as THREE.Mesh).position, {
-        x: target.x, y: target.y, z: target.z,
-        duration: 0.3, ease: 'power2.out',
-      });
+export function applyFilterWave(
+  objects: SceneObjects,
+  filterState: FilterState,
+): void {
+  // 1. Collect positions of nuclei whose cluster contains at least one matching case
+  const matchingNucleiPos: THREE.Vector3[] = [];
+  for (const [key, nucOrbit] of Object.entries(objects.nucleusOrbits)) {
+    const hasMatch = nucOrbit.cases.some(c => matchesFilter(c, filterState));
+    if (hasMatch) {
+      const nucleusMesh = objects.nucleusMeshes.get(key);
+      if (nucleusMesh) matchingNucleiPos.push(nucleusMesh.position.clone());
     }
   }
-}
 
-/**
- * Restore nuclei pushed by applyStagingPush back to their pre-filter positions.
- * Called from disposeStagingNucleus path.
- */
-function restoreStagingPush(objects: SceneObjects): void {
-  for (const [key, mesh] of objects.nucleusMeshes.entries()) {
-    if (key === STAGING_KEY) continue;
-    const orig = mesh.userData.preFilterPosition as THREE.Vector3 | undefined;
-    if (!orig) continue;
-    gsap.killTweensOf(mesh.position);
-    gsap.to(mesh.position, {
-      x: orig.x, y: orig.y, z: orig.z,
-      duration: 0.5, ease: 'power2.inOut',
-      onComplete: () => { delete mesh.userData.preFilterPosition; },
-    });
-    if (mesh.userData.halo) {
-      gsap.to((mesh.userData.halo as THREE.Mesh).position, {
-        x: orig.x, y: orig.y, z: orig.z,
-        duration: 0.5, ease: 'power2.inOut',
-      });
-    }
-  }
-}
+  // 2. Sort stars by minimum distance to nearest matching nucleus.
+  //    When no nucleus matches, all distances are treated as 0 (identical order).
+  const sorted = [...objects.starMeshes].sort((a, b) => {
+    if (matchingNucleiPos.length === 0) return 0;
+    const distA = Math.min(...matchingNucleiPos.map(np => a.position.distanceTo(np)));
+    const distB = Math.min(...matchingNucleiPos.map(np => b.position.distanceTo(np)));
+    return distA - distB;
+  });
 
-/**
- * Partial camera lean toward the staging sphere position (FILT-06).
- * Uses GSAP proxy pattern (never tween camera-controls directly).
- * This is a 30% lean, NOT a full T1 focus — just a cosmetic hint toward the new sphere.
- */
-function zoomTowardStaging(objects: SceneObjects): void {
-  const stagingMesh = objects.nucleusMeshes.get(STAGING_KEY);
-  if (!stagingMesh || !objects.controls) return;
+  // 3. Staggered GSAP: ~600 ms total propagation
+  const TOTAL_S = 0.6;
+  const count = sorted.length;
 
-  const controls = objects.controls;
-  const pos = stagingMesh.position;
+  sorted.forEach((star, i) => {
+    const state = star.userData.starState as StarState | undefined;
+    // Respect precedence: reading / selected / ghost are not owned by filter
+    if (state === 'reading' || state === 'selected' || state === 'ghost') return;
 
-  // Capture current camera target to interpolate from
-  const startTarget = new THREE.Vector3();
-  controls.getTarget(startTarget);
+    const c = star.userData.caseStudy as CaseStudy;
+    const matches = matchesFilter(c, filterState);
+    const targetOpacity = matches ? 0.85 : 0.12;
 
-  // 30% lean toward staging sphere — cosmetic hint, not full T1 focus
-  const leanTarget = new THREE.Vector3().lerpVectors(startTarget, pos, 0.3);
+    star.userData.starState = matches ? 'filterMatch' : 'filterDim';
 
-  const proxy = { t: 0 };
-  gsap.to(proxy, {
-    t: 1,
-    duration: 0.6,
-    ease: 'power2.out',
-    onUpdate: () => {
-      const current = new THREE.Vector3().lerpVectors(startTarget, leanTarget, proxy.t);
-      controls.moveTo(current.x, current.y, current.z, false);
-    },
+    const mat = star.material as THREE.MeshBasicMaterial;
+    // Kill any in-progress tween on this material so rapid re-queries don't stack
+    gsap.killTweensOf(mat);
+    const delay = count > 1 ? (i / (count - 1)) * TOTAL_S : 0;
+    gsap.to(mat, { opacity: targetOpacity, duration: 0.15, delay, ease: 'power2.out' });
   });
 }
+
+// ── Staging push + camera lean ────────────────────────────────────────────────
+
+
+
+
+
+
 
 
 // ── Focus: zoom into a nucleus sphere ────────────────────────────────────
@@ -746,12 +624,12 @@ export function focusSphere(
     if (homePos) {
       gsap.to(mesh.position, {
         x: homePos.x * 4.5, y: homePos.y * 4.5, z: homePos.z * 4.5,
-        duration: 1.2, ease: 'power2.inOut',
+        duration: 1.6, ease: 'power1.inOut',
       });
       if (mesh.userData.halo) {
         gsap.to((mesh.userData.halo as THREE.Mesh).position, {
           x: homePos.x * 4.5, y: homePos.y * 4.5, z: homePos.z * 4.5,
-          duration: 1.2, ease: 'power2.inOut',
+          duration: 1.6, ease: 'power1.inOut',
         });
       }
     }
@@ -790,7 +668,7 @@ export function focusSphere(
             x: homePos.x * 4.5 + offsetX,
             y: homePos.y * 4.5 + offsetY,
             z: homePos.z * 4.5 + offsetZ,
-            duration: 1.2, ease: 'power2.inOut',
+            duration: 1.6, ease: 'power1.inOut',
           });
         }
       }
@@ -803,7 +681,7 @@ export function focusSphere(
         const target = ringPositionAt(ringOrbit, 0);
         gsap.to(star.position, {
           x: target.x, y: target.y, z: target.z,
-          duration: 1.1, ease: 'power2.inOut',
+          duration: 1.1, ease: 'power1.inOut',
           onComplete: () => { star.userData.isStagingTarget = false; },
         });
       }
@@ -874,7 +752,7 @@ export function unfocusSphere(
     if (homePos) {
       gsap.to(mesh.position, {
         x: homePos.x, y: homePos.y, z: homePos.z,
-        duration: 1.4, ease: 'power2.inOut',
+        duration: 1.8, ease: 'power1.inOut',
         onComplete: () => {
           // Release this nucleus's stars to the tick loop now that it has returned home
           for (const star of objects.starMeshes) {
@@ -887,7 +765,7 @@ export function unfocusSphere(
       if (mesh.userData.halo) {
         gsap.to((mesh.userData.halo as THREE.Mesh).position, {
           x: homePos.x, y: homePos.y, z: homePos.z,
-          duration: 1.4, ease: 'power2.inOut',
+          duration: 1.8, ease: 'power1.inOut',
         });
       }
     }
