@@ -9,9 +9,9 @@ last_activity: "2026-04-16 — 11-02: Reading panel styled with instrument-reado
 progress:
   total_phases: 8
   completed_phases: 4
-  total_plans: 13
-  completed_plans: 13
-  percent: 73
+  total_plans: 14
+  completed_plans: 14
+  percent: 76
 ---
 
 # Project State
@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 11 (Reading Panel as Instrument) — IN PROGRESS. Plans 11-01 and 11-02 complete.
+**Phase:** 12 (Reading List + Review Mode + Comparison Mode) — STARTED. Plan 12-01 complete.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Ready to plan
-**Last activity:** 2026-04-16 — 11-02: Reading panel styled with instrument-readout CSS. Fraunces italic opsz 144 on title, DM Mono throughout, teal on metrics/sections, gold button with teal hover. 239 tests passing, tsc clean.
+**Status:** Ready to plan Phase 12 Plan 02
+**Last activity:** 2026-04-16 — 12-01: localStorage persistence layer complete. Reading list, query history, recently-viewed APIs implemented. Hydration wired in main.ts. Query history chips rendering in query bar. 239 tests passing, tsc clean.
 
-Progress: [███████░░░] 73% of v3.2 plans (23/30)
+Progress: [████████░░] 76% of v3.2 plans (24/30)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-16T14:54:34.000Z
-Stopped at: Completed 11-02-PLAN.md — Reading panel styled with instrument-readout CSS. 239 tests passing, tsc clean.
-Resume with: Phase 11 Plans 01-02 complete. Run `/gsd:execute-phase 11 03` to begin Phase 11 Plan 03 (Reading Panel Edge Cases).
+Last session: 2026-04-16T15:30:00.000Z
+Stopped at: Completed 12-01-PLAN.md — localStorage persistence layer. 239 tests passing, tsc clean.
+Resume with: Phase 12 Plan 01 complete. Run `/gsd:execute-phase 12 02` to begin Phase 12 Plan 02 (Star Flight Animations).
