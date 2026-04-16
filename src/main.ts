@@ -18,6 +18,7 @@ import { regroupScene } from './scene/regroup';
 import { Tooltip, projectToScreen } from './ui/tooltip';
 import { ReadingPanel } from './ui/reading-panel';
 import { ShortlistTrack } from './ui/shortlist-track';
+import { LoaderController } from './ui/loader';
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.globalTimeline.timeScale(0);
@@ -63,12 +64,16 @@ function animateCount(el: HTMLElement, target: number, duration = 1.2): void {
 }
 
 async function boot() {
+  const loader = document.getElementById('loader');
+  const loaderCtrl = loader ? new LoaderController(loader) : null;
+
   try {
     const resp = await fetch('/cases.json');
     if (!resp.ok) throw new Error(`cases.json ${resp.status}`);
     const rawCases: CaseStudy[] = await resp.json();
     const cases = enrichCases(rawCases);
     const caseById = new Map<string, CaseStudy>(cases.map(c => [c.id, c]));
+    loaderCtrl?.advance('DATA');
 
     // ── State primitives (boot-level, never inside SceneObjects) ────────
     const viewState = createViewStateMachine();
@@ -104,6 +109,7 @@ async function boot() {
 
     const sceneObjects = buildOrbitalScene(cases, 'vertical', scene, labelContainer);
     sceneObjects.controls = controls;
+    loaderCtrl?.advance('SCENE');
 
     // ── ReadingPanel (wired to layoutController, viewState, shortlistStore) ──
     const readingPanel = new ReadingPanel(layoutController, viewState, shortlistStore, sceneObjects);
@@ -536,15 +542,16 @@ async function boot() {
     });
 
     // ── Dismiss loader ────────────────────────────────────────────────────
-    const loader = document.getElementById('loader');
-    if (loader) loader.classList.add('done');
+    if (loaderCtrl) {
+      loaderCtrl.advance('ONLINE');
+      setTimeout(() => loaderCtrl.done(), 400);
+    }
 
   } catch (err) {
     console.error('[v3 boot error]', err);
-    const loader = document.getElementById('loader');
     if (loader) {
-      const lk = loader.querySelector('.lk') as HTMLElement | null;
-      if (lk) lk.textContent = `Boot error — check console`;
+      const ls1 = loader.querySelector('.ls1') as HTMLElement | null;
+      if (ls1) ls1.textContent = `Boot error — check console`;
     }
   }
 }

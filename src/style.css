@@ -633,13 +633,40 @@ body.gather-on .cl{opacity:0 !important;pointer-events:none !important;
 .loader{position:fixed;inset:0;z-index:100;background:var(--bg);
   display:grid;place-items:center;transition:opacity 1s ease .3s,visibility 1s ease .3s}
 .loader.done{opacity:0;visibility:hidden}
-.loader .lk{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);
-  text-transform:uppercase;letter-spacing:.3em}
-.loader .lk em{color:var(--teal);font-style:normal}
-.loader .bar{width:200px;height:1px;background:var(--line);margin-top:22px;overflow:hidden}
-.loader .bar>div{width:35%;height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));
-  animation:ld 1.8s var(--ease) infinite}
-@keyframes ld{0%{transform:translateX(-100%)}100%{transform:translateX(320%)}}
+
+/* Loader status — instrument calibration readout */
+.loader-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  font-family: 'DM Mono', monospace;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.loader-status .ls {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0s step-end, height 0s step-end;
+}
+
+/* Each step shows only its corresponding line */
+[data-step="INIT"] .ls1,
+[data-step="DATA"] .ls2,
+[data-step="SCENE"] .ls3,
+[data-step="ONLINE"] .ls-online {
+  opacity: 1;
+  height: auto;
+}
+
+/* ONLINE state in gold */
+[data-step="ONLINE"] .ls-online {
+  color: var(--gold);
+}
 
 /* ── Hover ring on star (CSS-only fallback) ── */
 .year-badge{display:inline-flex;align-items:center;gap:4px}
