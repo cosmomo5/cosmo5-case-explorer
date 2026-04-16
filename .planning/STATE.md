@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
 status: executing
-stopped_at: Completed 10-03-PLAN.md — applyFilterWave implemented. 239 tests passing.
-last_updated: "2026-04-16T12:02:50.583Z"
-last_activity: "2026-04-16 — 10-03 applyFilterWave: wave-propagation filter animation in scene-state.ts. 239 tests passing, tsc clean."
+stopped_at: Completed 10-02-PLAN.md — FilterState.searchText + keyword-map implemented. 239 tests passing, 0 skipped.
+last_updated: "2026-04-16T12:03:50Z"
+last_activity: "2026-04-16 — 10-02: FilterState.searchText + matchesFilter extension + keyword-map.ts (29 hints, applyQuery). 239 tests passing, 0 skipped, tsc clean."
 progress:
   total_phases: 8
   completed_phases: 2
@@ -28,10 +28,10 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 10 (Query Bar) — 3 of 5 plans complete (10-01, 10-02 pending, 10-03 done)
+**Phase:** 10 (Query Bar) — 10-01, 10-02, 10-03 complete
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
 **Status:** In progress
-**Last activity:** 2026-04-16 — 10-03 applyFilterWave implemented in scene-state.ts. Wave-propagation filter animation, 239 tests passing, tsc clean.
+**Last activity:** 2026-04-16 — 10-02: FilterState.searchText + keyword-map.ts (29 hints, applyQuery). 6 previously-skipped tests unskipped and passing. 239 tests total, 0 skipped, tsc clean.
 
 Progress: [██████░░░░] 60% of v3.2 plans (18/30)
 
