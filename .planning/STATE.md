@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
 status: planning
-stopped_at: Completed 12-04-PLAN.md — Review Mode overlay with full-viewport pagination. 242 tests passing, tsc clean.
-last_updated: "2026-04-16T18:35:00Z"
-last_activity: "2026-04-16 — 12-04: Review Mode overlay (full-viewport paginated reader). Arrow key + button navigation. CASE N OF M progress. Remove control in-place. Wired to REVIEW button and card clicks. 242 tests passing, tsc clean."
+stopped_at: Completed 12-05-PLAN.md — Comparison Mode with phyllotaxis formation. 242 tests passing, tsc clean.
+last_updated: "2026-04-16T18:45:00Z"
+last_activity: "2026-04-16 — 12-05: Comparison Mode (stars fly to phyllotaxis formation). Entry: gather stars, dim non-list, show labels. Exit: restore state, Esc support. 242 tests passing, tsc clean."
 progress:
   total_phases: 8
   completed_phases: 4
   total_plans: 14
-  completed_plans: 17
-  percent: 79
+  completed_plans: 18
+  percent: 86
 ---
 
 # Project State
@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 12 (Reading List + Review Mode + Comparison Mode) — IN PROGRESS. Plans 12-01, 12-02, 12-03, 12-04 complete.
+**Phase:** 12 (Reading List + Review Mode + Comparison Mode) — COMPLETE. Plans 12-01, 12-02, 12-03, 12-04, 12-05 done.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Ready to execute Phase 12 Plan 05 (Comparison Mode)
-**Last activity:** 2026-04-16 — 12-04: Review Mode overlay (full-viewport paginated reader). Arrow key navigation, CASE N OF M counter, in-place remove control. Wired to REVIEW button and card clicks. 242 tests passing, tsc clean.
+**Status:** Phase 12 complete. Ready for Phase 13 (Hero Collapse: camera transition from galaxy to reading-list hero).
+**Last activity:** 2026-04-16 — 12-05: Comparison Mode (stars fly to phyllotaxis formation for spatial side-by-side analysis). Entry animation (900ms flight, 0.08 dim), exit restoration, Esc support, EXIT button. 242 tests passing, tsc clean.
 
-Progress: [█████████░] 79% of v3.2 plans (27/30)
+Progress: [████████████░] 86% of v3.2 plans (28/30) — Phase 12 complete (5/5 plans)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
@@ -75,13 +75,15 @@ Import decisions by move:
 ## What Needs to Happen Next
 
 ### Immediate
-Phase 10 (Query Bar) is complete. Run `/gsd:plan-phase 11` to plan Phase 11 (Reading Panel as Instrument). Requires Phase 8 (done) and Phase 9 (done). Phase 10 also satisfies its prerequisite for Phase 13 (Hero Collapse).
+Phase 12 complete (5/5 plans). Next: Phase 13 (Hero Collapse) — camera transition from full-galaxy T1 view to reading-list hero on focus. Requires Phase 12 (done), Phase 10 (done), Phase 9 (done), Phase 8 (done).
 
 ### In Parallel (content side, not Claude's task)
-Kick off content-imagery project. Name the owner. Agree cadence. Start sourcing the first batch of logos and key visuals.
+Imagery sourcing for case studies. Schema: optional imagery field with logo + key_visual. Format: SVG logos + JPG visuals, 1200px longest edge. Fallback policy: if imagery unavailable within 2 weeks, ship case without imagery.
 
 ### Milestone-Level
-Sequence: Phase 0 → Phase 1 (atmosphere) → Phase 2 (query bar) → Phase 3 (reading panel + imagery integration) → Phase 4 (reading list + Review Mode + Comparison Mode + localStorage) → Phase 5 (hero collapse) → Phase 6 (edge states + accessibility) → Phase 7 (ship).
+Completed: Phase 0–8 (foundation), Phase 9 (instrument calibration), Phase 10 (query bar), Phase 11 (reading panel instrument), Phase 12 (reading list + review + comparison).
+Remaining: Phase 13 (hero collapse), Phase 6 (edge states + accessibility), Phase 7 (ship).
+Sequence unfolds as: Phase 0 → Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5 (moved to Phase 13) → Phase 6 → Phase 7.
 
 ## Design Direction (Authoritative)
 
@@ -93,6 +95,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-16T18:35:00Z
-Stopped at: Completed 12-04-PLAN.md — Review Mode overlay. 242 tests passing, tsc clean.
-Resume with: Phase 12 Plans 01-04 complete. Run `/gsd:execute-phase 12 05` to begin Phase 12 Plan 05 (Comparison Mode).
+Last session: 2026-04-16T18:45:00Z
+Stopped at: Completed 12-05-PLAN.md — Comparison Mode with phyllotaxis formation. 242 tests passing, tsc clean.
+Resume with: Phase 12 complete (5/5 plans). Run `/gsd:execute-phase 13 01` to begin Phase 13 (Hero Collapse).
