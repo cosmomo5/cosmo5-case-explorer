@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
 status: planning
-stopped_at: Completed 09-03-PLAN.md — corner wordmark implemented. ATM-03 complete. 207 tests passing.
-last_updated: "2026-04-16T11:14:20.358Z"
-last_activity: "2026-04-16 — 09-03 corner wordmark: header.wordmark-corner + .wm-primary/.wm-sub in DM Mono. ATM-03 complete. 207 tests passing."
+stopped_at: Completed 10-01-PLAN.md — Wave 0 test stubs for query bar. 233 tests passing (6 skipped).
+last_updated: "2026-04-16T11:54:43Z"
+last_activity: "2026-04-16 — 10-01 Wave 0 test stubs: 5 test files + 2 stub modules in src/tests/ and src/data/ and src/ui/. 233 tests passing, 6 skipped."
 progress:
   total_phases: 8
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
-  percent: 64
+  total_plans: 7
+  completed_plans: 7
+  percent: 66
 ---
 
 # Project State
@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 9 (Atmosphere) — 3 of 3 plans complete (PHASE COMPLETE)
+**Phase:** 10 (Query Bar) — 1 of 5 plans complete
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Ready to plan
-**Last activity:** 2026-04-16 — 09-03 corner wordmark: header.wordmark-corner + .wm-primary/.wm-sub in DM Mono. ATM-03 complete. 207 tests passing.
+**Status:** In progress
+**Last activity:** 2026-04-16 — 10-01 Wave 0 test stubs: keyword-map, filter-searchtext, filter-wave, clusters-count, query-bar DOM/ARIA. 233 tests passing, 6 skipped.
 
-Progress: [███████░░░] 64% of v3.2 plans (16/25)
+Progress: [███████░░░] 66% of v3.2 plans (17/25)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
