@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
 status: executing
-stopped_at: Completed 10-02-PLAN.md — FilterState.searchText + keyword-map implemented. 239 tests passing, 0 skipped.
-last_updated: "2026-04-16T12:03:50Z"
-last_activity: "2026-04-16 — 10-02: FilterState.searchText + matchesFilter extension + keyword-map.ts (29 hints, applyQuery). 239 tests passing, 0 skipped, tsc clean."
+stopped_at: Completed 10-04-PLAN.md — Query bar wired with keyword mapping + wave propagation. 239 tests passing.
+last_updated: "2026-04-16T12:12:59.605Z"
+last_activity: "2026-04-16 — 10-04: mountQueryBar implemented, legacy #globalSearch removed, countMatches/countMatchingClusters on SceneObjects. 239 tests passing, 0 skipped, tsc clean."
 progress:
   total_phases: 8
   completed_phases: 2
   total_plans: 11
-  completed_plans: 8
-  percent: 66
+  completed_plans: 10
+  percent: 60
 ---
 
 # Project State
@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 10 (Query Bar) — 10-01, 10-02, 10-03 complete
+**Phase:** 10 (Query Bar) — 10-01, 10-02, 10-03, 10-04 complete. 10-05 remaining.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
 **Status:** In progress
-**Last activity:** 2026-04-16 — 10-02: FilterState.searchText + keyword-map.ts (29 hints, applyQuery). 6 previously-skipped tests unskipped and passing. 239 tests total, 0 skipped, tsc clean.
+**Last activity:** 2026-04-16 — 10-04: mountQueryBar implemented, legacy #globalSearch removed, countMatches/countMatchingClusters. 239 tests passing, 0 skipped, tsc clean.
 
-Progress: [██████░░░░] 60% of v3.2 plans (18/30)
+Progress: [███████░░░] 67% of v3.2 plans (20/30)
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-16T12:02:50.554Z
-Stopped at: Completed 10-03-PLAN.md — applyFilterWave implemented. 239 tests passing.
-Resume with: `/gsd:plan-phase 8` — or continue with content-imagery project owner assignment in parallel.
+Last session: 2026-04-16T12:12:59.547Z
+Stopped at: Completed 10-04-PLAN.md — Query bar wired with keyword mapping + wave propagation. 239 tests passing.
+Resume with: Plan 10-05 (Advanced Drawer toggle) — or `/gsd:plan-phase 8`.

@@ -58,7 +58,7 @@ Plans:
 **Goal:** The primary interaction surface is a conversational first-person declarative input. Filter panel collapses to progressive-disclosure Advanced drawer.
 **Depends on:** Phase 9 (atmosphere establishes register before query is visible).
 **Requirements:** QRY-01, QRY-02, QRY-03, QRY-04, QRY-05, QRY-06, QRY-07, QRY-08
-**Plans:** 3/5 plans executed
+**Plans:** 4/5 plans executed
 Plans:
 - [x] 10-01-PLAN.md — Wave 0 test stubs (keyword-map, filter-searchtext, filter-wave, clusters-count, query-bar DOM/ARIA)
 - [ ] 10-02-PLAN.md — keyword-map.ts + FilterState.searchText extension

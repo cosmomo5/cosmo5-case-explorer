@@ -222,14 +222,14 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ### Query Bar (Phase 10)
 
-- [ ] **QRY-01**: Central query input with placeholder `What kind of proof do you need?`. DM Mono. Gold bottom border on focus. Width ~480–560px at desktop.
+- [x] **QRY-01**: Central query input with placeholder `What kind of proof do you need?`. DM Mono. Gold bottom border on focus. Width ~480–560px at desktop.
 - [x] **QRY-02**: Keyword → dimension mapping table. Sectors → ServiceCategory, regions → Region, metrics → impactBand, temporal terms → year. Full-text fallback across client, title, challenge, approach.
 - [x] **QRY-03**: Query → field response — non-matching stars dim in waves (~600ms propagation), matching stars brighten. Debounced typing (~250ms).
 - [x] **QRY-04**: Live readout below input: `N MATCHES / M CLUSTERS`. Updates live as query changes.
 - [ ] **QRY-05**: Advanced drawer (collapsible) exposes v3.1 filter-panel functionality at equal fidelity (all 5 dimensions). Default collapsed. Opening overrides query filters.
-- [ ] **QRY-06**: Clear/reset — `x` button clears query and restores full field.
-- [ ] **QRY-07**: Keyboard — Enter submits, Escape clears. Tab reaches advanced drawer controls in logical order.
-- [ ] **QRY-08**: ARIA — input labeled `Case library query`. Readout announced via `aria-live="polite"`.
+- [x] **QRY-06**: Clear/reset — `x` button clears query and restores full field.
+- [x] **QRY-07**: Keyboard — Enter submits, Escape clears. Tab reaches advanced drawer controls in logical order.
+- [x] **QRY-08**: ARIA — input labeled `Case library query`. Readout announced via `aria-live="polite"`.
 
 ### Reading Panel as Instrument (Phase 11)
 
