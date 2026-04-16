@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
-status: planning
-stopped_at: Completed 09-02-PLAN.md — LoaderController, loader DOM/CSS, main.ts integration. ATM-02 ATM-04 done.
-last_updated: "2026-04-16T10:54:11.291Z"
-last_activity: "2026-04-16 — 09-02 instrument-calibrating loader: LoaderController class, step-end CSS transitions, ONLINE gold, 400ms hold, reduced-motion skip. ATM-02 + ATM-04 complete."
+status: executing
+stopped_at: Completed 09-01-PLAN.md — CRT celestial graticule implemented (graticule.ts + test + starfield integration). ATM-01 complete. 207 tests passing.
+last_updated: "2026-04-16T11:02:58.534Z"
+last_activity: "2026-04-16 — 09-02 instrument-calibrating loader: LoaderController class, step-end CSS transitions, ONLINE gold, 400ms hold, reduced-motion skip. ATM-02 + ATM-04 complete. 201 tests pass."
 progress:
   total_phases: 8
   completed_phases: 1
-  total_plans: 25
-  completed_plans: 14
+  total_plans: 6
+  completed_plans: 5
   percent: 56
 ---
 
@@ -93,6 +93,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-16T10:54:11.219Z
-Stopped at: Completed 09-02-PLAN.md — LoaderController, loader DOM/CSS, main.ts integration. ATM-02 ATM-04 done.
+Last session: 2026-04-16T11:02:58.479Z
+Stopped at: Completed 09-01-PLAN.md — CRT celestial graticule implemented (graticule.ts + test + starfield integration). ATM-01 complete. 207 tests passing.
 Resume with: `/gsd:plan-phase 8` — or continue with content-imagery project owner assignment in parallel.
