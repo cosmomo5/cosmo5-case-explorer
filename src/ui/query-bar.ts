@@ -3,13 +3,16 @@ import { matchesFilter } from '../data/filter';
 import type { FilterState } from '../data/filter';
 import { applyFilterWave, applyFilter } from '../scene/scene-state';
 import type { SceneObjects } from '../scene/scene-state';
-import type { CaseStudy } from '../data/types';
+import type { CaseStudy, GroupMode } from '../data/types';
+import { mountFilterPanel } from './filter-panel';
 
 export interface QueryBarDeps {
   sceneObjects: SceneObjects;
   filterState: FilterState;
   cases: CaseStudy[];
   onFilterChange: () => void;
+  onGroupModeChange?: (mode: GroupMode) => void;
+  onExitFocus?: () => void;
 }
 
 /**
@@ -111,4 +114,29 @@ export function mountQueryBar(deps: QueryBarDeps): void {
     deps.onFilterChange();
     input.focus();
   });
+
+  // ── Advanced drawer ───────────────────────────────────────────────────────
+  const toggleBtn = document.getElementById('queryAdvancedToggle');
+  const drawer = document.getElementById('advancedDrawer');
+
+  if (toggleBtn && drawer) {
+    let drawerMounted = false;
+
+    toggleBtn.addEventListener('click', () => {
+      const isOpen = drawer.classList.toggle('open');
+      toggleBtn.setAttribute('aria-expanded', String(isOpen));
+      drawer.setAttribute('aria-hidden', String(!isOpen));
+
+      if (isOpen && !drawerMounted) {
+        mountFilterPanel(
+          drawer,
+          deps.sceneObjects,
+          deps.onGroupModeChange ?? (() => {}),
+          deps.onExitFocus,
+          { hideModeSwitcher: true },
+        );
+        drawerMounted = true;
+      }
+    });
+  }
 }

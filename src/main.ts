@@ -523,6 +523,8 @@ async function boot() {
       filterState: sceneObjects.filterState,
       cases,
       onFilterChange: () => { /* label sync handled by tick loop */ },
+      onGroupModeChange: (newMode) => { regroupScene(sceneObjects, newMode, scene); },
+      onExitFocus: () => { exitFocus(); },
     });
 
     // ── Dismiss loader ────────────────────────────────────────────────────

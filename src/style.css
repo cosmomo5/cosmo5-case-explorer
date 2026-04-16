@@ -287,6 +287,39 @@ body.constellation .stats{opacity:0;pointer-events:none}
   color:rgba(255,255,255,.8);
 }
 
+/* ── Advanced drawer — progressive disclosure ── */
+.query-advanced-toggle{
+  display:block;
+  margin:4px auto 0;
+  background:transparent;
+  border:none;
+  font-family:'DM Mono',monospace;
+  font-weight:300;
+  font-size:10px;
+  letter-spacing:.1em;
+  color:rgba(255,255,255,.3);
+  cursor:pointer;
+  padding:4px 8px;
+  transition:color .2s var(--ease);
+}
+.query-advanced-toggle:hover,
+.query-advanced-toggle[aria-expanded="true"]{
+  color:rgba(255,255,255,.6);
+}
+.advanced-drawer{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .3s var(--ease);
+}
+.advanced-drawer.open{
+  max-height:400px;
+}
+@media(prefers-reduced-motion:reduce){
+  .advanced-drawer{
+    transition:none;
+  }
+}
+
 /* ── Center stage disc (gather mode) ── */
 #gatherStage{position:fixed;inset:0;z-index:2;pointer-events:none;
   display:flex;align-items:center;justify-content:center;
