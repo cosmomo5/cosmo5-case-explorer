@@ -119,8 +119,16 @@
   </div>
 </div>
 
-<input type="text" id="globalSearch" placeholder="Search cases…" autocomplete="off"/>
-<button class="sc" id="globalSearchClear">×</button>
+<div class="query-wrap" id="queryWrap">
+  <div class="query-bar">
+    <input type="text" id="queryInput" role="searchbox"
+           aria-label="Case library query"
+           placeholder="What kind of proof do you need?"
+           autocomplete="off"/>
+    <span class="query-readout" id="queryReadout" aria-live="polite"></span>
+    <button class="query-clear" id="queryClear" aria-label="Clear query">×</button>
+  </div>
+</div>
 
 <button class="home-btn" id="homeBtn" title="Reset view">⌂</button>
 
