@@ -165,6 +165,21 @@
 </div>
 
 
+<div class="review-mode" id="reviewMode" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="rv-header">
+    <span class="rv-progress" id="rvProgress">CASE 1 OF 5</span>
+    <button class="rv-close" id="rvClose" aria-label="Exit Review Mode">×</button>
+  </div>
+  <div class="rv-body" id="rvBody"></div>
+  <div class="rv-footer">
+    <button class="rv-remove" id="rvRemove">REMOVE FROM LIST</button>
+    <div class="rv-nav">
+      <button class="rv-prev" id="rvPrev" aria-label="Previous case">←</button>
+      <button class="rv-next" id="rvNext" aria-label="Next case">→</button>
+    </div>
+  </div>
+</div>
+
 <div class="loader" id="loader">
   <div class="loader-status">
     <span class="ls ls1">OBSERVATORY INITIALIZING</span>
