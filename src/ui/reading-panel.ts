@@ -4,6 +4,7 @@ import type { ShortlistStore } from '../data/shortlist-store';
 import type { CaseStudy } from '../data/types';
 import { classifyProofType } from '../data/proof-type';
 import { deriveImpactScale } from '../data/impact-scale';
+import { trackRecentlyViewed } from '../data/persistence';
 import * as THREE from 'three';
 
 export interface SceneObjectsForPanel {
@@ -57,6 +58,9 @@ export class ReadingPanel {
 
     this.currentCaseId = c.id;
     this.currentNucleusKey = nucleusKey;
+
+    // Track this case as recently viewed
+    trackRecentlyViewed(c.id);
 
     // Populate instrument readout with imagery, title, and labeled grid
     const instrument = this.slot.querySelector('#rp-instrument') as HTMLElement;

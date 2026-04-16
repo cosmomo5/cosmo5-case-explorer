@@ -11,6 +11,7 @@ import type { CaseStudy } from './data/types';
 import { enrichCases } from './data/enrich';
 import { createViewStateMachine } from './data/view-state';
 import { createShortlistStore } from './data/shortlist-store';
+import { hydrateReadingList, setupReadingListPersistence } from './data/persistence';
 import { createLayoutController } from './layout/layout-controller';
 import { createTransitionChoreographer } from './animation/transition-choreographer';
 import { mountFilterPanel } from './ui/filter-panel';
@@ -77,6 +78,10 @@ async function boot() {
     // ── State primitives (boot-level, never inside SceneObjects) ────────
     const viewState = createViewStateMachine();
     const shortlistStore = createShortlistStore();
+
+    // ── Hydrate reading list from localStorage ──────────────────────────
+    hydrateReadingList(shortlistStore);
+    setupReadingListPersistence(shortlistStore);
 
     // ── Populate stats strip ─────────────────────────────────────────────
     const territories = new Set(cases.flatMap(c => c.countries));

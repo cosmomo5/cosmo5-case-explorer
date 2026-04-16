@@ -4,6 +4,7 @@ import type { FilterState } from '../data/filter';
 import { applyFilterWave, applyFilter } from '../scene/scene-state';
 import type { SceneObjects } from '../scene/scene-state';
 import type { CaseStudy, GroupMode } from '../data/types';
+import { loadQueryHistory, addQueryToHistory } from '../data/persistence';
 import { mountFilterPanel } from './filter-panel';
 
 export interface QueryBarDeps {
@@ -40,6 +41,16 @@ function updateReadout(deps: QueryBarDeps, readout: HTMLElement): void {
 }
 
 /**
+ * Render query history chips below the query input.
+ */
+function renderQueryHistory(historyContainer: HTMLElement): void {
+  const history = loadQueryHistory();
+  historyContainer.innerHTML = history
+    .map(q => `<button class="query-chip" data-query="${q.replace(/"/g, '&quot;')}">${q}</button>`)
+    .join('');
+}
+
+/**
  * Mount the query bar: wire input events, keyboard shortcuts, clear button, and live readout.
  * Assumes #queryInput, #queryReadout, #queryClear exist in the DOM.
  */
@@ -47,10 +58,16 @@ export function mountQueryBar(deps: QueryBarDeps): void {
   const input = document.getElementById('queryInput') as HTMLInputElement | null;
   const readout = document.getElementById('queryReadout') as HTMLElement | null;
   const clearBtn = document.getElementById('queryClear') as HTMLElement | null;
+  const historyContainer = document.getElementById('queryHistory') as HTMLElement | null;
   if (!input || !readout || !clearBtn) return;
 
   // Render initial readout (full field, nothing filtered)
   updateReadout(deps, readout);
+
+  // Render query history chips
+  if (historyContainer) {
+    renderQueryHistory(historyContainer);
+  }
 
   let waveTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -91,6 +108,9 @@ export function mountQueryBar(deps: QueryBarDeps): void {
       applyQuery(q, deps.filterState, deps.cases);
       updateReadout(deps, readout);
       triggerWave();
+      // Save to query history
+      addQueryToHistory(q);
+      if (historyContainer) renderQueryHistory(historyContainer);
     }
     if (e.key === 'Escape') {
       input.value = '';
@@ -114,6 +134,25 @@ export function mountQueryBar(deps: QueryBarDeps): void {
     deps.onFilterChange();
     input.focus();
   });
+
+  // ── Query history chips ───────────────────────────────────────────────────
+  if (historyContainer) {
+    historyContainer.addEventListener('click', (e) => {
+      const chip = (e.target as HTMLElement).closest<HTMLButtonElement>('.query-chip');
+      if (!chip) return;
+      const query = chip.getAttribute('data-query') ?? '';
+      input.value = query;
+      handleInput();
+      // Trigger wave animation
+      clearTimeout(waveTimer);
+      applyQuery(query, deps.filterState, deps.cases);
+      updateReadout(deps, readout);
+      triggerWave();
+      // Add to history if not already there
+      addQueryToHistory(query);
+      renderQueryHistory(historyContainer);
+    });
+  }
 
   // ── Advanced drawer ───────────────────────────────────────────────────────
   const toggleBtn = document.getElementById('queryAdvancedToggle');

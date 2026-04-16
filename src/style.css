@@ -287,6 +287,30 @@ body.constellation .stats{opacity:0;pointer-events:none}
   color:rgba(255,255,255,.8);
 }
 
+/* ── Query history chips ── */
+.query-history{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+  flex-wrap:wrap;
+}
+.query-chip{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  letter-spacing:.06em;
+  color:rgba(255,255,255,.35);
+  background:rgba(255,255,255,.06);
+  border:none;
+  border-radius:2px;
+  padding:3px 8px;
+  cursor:pointer;
+  transition:all .2s var(--ease);
+}
+.query-chip:hover{
+  color:rgba(255,255,255,.6);
+  background:rgba(255,255,255,.1);
+}
+
 /* ── Advanced drawer — progressive disclosure ── */
 .query-advanced-toggle{
   display:block;
