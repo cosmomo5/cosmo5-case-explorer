@@ -35,8 +35,20 @@ export function regroupScene(
   // ── Remove nuclei that no longer exist in the new grouping ────────────────
   for (const [key, mesh] of objects.nucleusMeshes.entries()) {
     if (!newNucleusOrbits[key]) {
-      if (mesh.userData.halo) scene.remove(mesh.userData.halo as THREE.Mesh);
+      // Kill any running GSAP tweens before disposal to release references
+      gsap.killTweensOf(mesh.position);
+      gsap.killTweensOf(mesh.material);
+      if (mesh.userData.halo) {
+        const halo = mesh.userData.halo as THREE.Mesh;
+        gsap.killTweensOf(halo.position);
+        gsap.killTweensOf(halo.material);
+        scene.remove(halo);
+        (halo.geometry as THREE.BufferGeometry).dispose();
+        (halo.material as THREE.Material).dispose();
+      }
       scene.remove(mesh);
+      (mesh.geometry as THREE.BufferGeometry).dispose();
+      (mesh.material as THREE.Material).dispose();
       objects.nucleusMeshes.delete(key);
 
       const label = objects.nucleusLabels.get(key);
@@ -86,9 +98,12 @@ export function regroupScene(
   for (const [key, nucOrbit] of Object.entries(newNucleusOrbits)) {
     const mesh = objects.nucleusMeshes.get(key)!;
     const newPos = nucleusPositionAt(nucOrbit, 0);
+    gsap.killTweensOf(mesh.position);
     gsap.to(mesh.position, { x: newPos.x, y: newPos.y, z: newPos.z, duration: 1.2, ease: 'power2.inOut' });
     if (mesh.userData.halo) {
-      gsap.to((mesh.userData.halo as THREE.Mesh).position, { x: newPos.x, y: newPos.y, z: newPos.z, duration: 1.2, ease: 'power2.inOut' });
+      const haloPos = (mesh.userData.halo as THREE.Mesh).position;
+      gsap.killTweensOf(haloPos);
+      gsap.to(haloPos, { x: newPos.x, y: newPos.y, z: newPos.z, duration: 1.2, ease: 'power2.inOut' });
     }
   }
 
@@ -108,6 +123,7 @@ export function regroupScene(
     const newPos = starPositionAt(newOrbit, 0);
 
     star.userData.starOrbit = newOrbit;
+    gsap.killTweensOf(star.position);
     gsap.to(star.position, { x: newPos.x, y: newPos.y, z: newPos.z, duration: 1.2, ease: 'power2.inOut' });
   }
 }

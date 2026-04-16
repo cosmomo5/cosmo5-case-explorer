@@ -69,6 +69,8 @@ export interface SceneObjects {
   _stagingDisposalTimeout: ReturnType<typeof setTimeout> | undefined;
   /** Optional camera-controls ref — set by main.ts after scene creation. Enables camera lean toward staging sphere (FILT-06). */
   controls?: CameraControls;
+  /** Optional camera ref — set by main.ts. Used for star flight animation calculations. */
+  camera?: THREE.PerspectiveCamera | THREE.OrthographicCamera;
 }
 
 // ── Star glow texture cache ───────────────────────────────────────────────────

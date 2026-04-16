@@ -69,11 +69,14 @@ export function computeNucleusOrbits(
   return result;
 }
 
-export function nucleusPositionAt(o: NucleusOrbitData, t: number): Vec3 {
+/**
+ * Pass `out` to reuse an existing object and avoid per-frame allocations.
+ */
+export function nucleusPositionAt(o: NucleusOrbitData, t: number, out?: Vec3): Vec3 {
   const a = o.phase + t * o.speed;
-  return {
-    x: o.orbitR * (o.orbitU.x * Math.cos(a) + o.orbitV.x * Math.sin(a)),
-    y: o.orbitR * (o.orbitU.y * Math.cos(a) + o.orbitV.y * Math.sin(a)),
-    z: o.orbitR * (o.orbitU.z * Math.cos(a) + o.orbitV.z * Math.sin(a)),
-  };
+  const r = out ?? { x: 0, y: 0, z: 0 };
+  r.x = o.orbitR * (o.orbitU.x * Math.cos(a) + o.orbitV.x * Math.sin(a));
+  r.y = o.orbitR * (o.orbitU.y * Math.cos(a) + o.orbitV.y * Math.sin(a));
+  r.z = o.orbitR * (o.orbitU.z * Math.cos(a) + o.orbitV.z * Math.sin(a));
+  return r;
 }

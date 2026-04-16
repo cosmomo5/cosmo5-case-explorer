@@ -71,19 +71,20 @@ export function computeStarOrbit(
 /**
  * Rodrigues' rotation formula: rotates basePos around _ax by angle `a`.
  * This keeps the star on the sphere surface as it drifts.
+ * Pass `out` to reuse an existing object and avoid per-frame allocations.
  */
-export function starPositionAt(orbit: StarOrbit, t: number): Vec3 {
+export function starPositionAt(orbit: StarOrbit, t: number, out?: Vec3): Vec3 {
   const a = orbit.phase + t * orbit.speed;
   const base = orbit.u;
   const ax = orbit._ax;
+  const o = out ?? { x: 0, y: 0, z: 0 };
 
   if (!ax) {
     // Fallback for any orbit without _ax (e.g. old data)
-    return {
-      x: orbit.orbitCenter.x + base.x * Math.cos(a) + orbit.v.x * Math.sin(a),
-      y: orbit.orbitCenter.y + base.y * Math.cos(a) + orbit.v.y * Math.sin(a),
-      z: orbit.orbitCenter.z + base.z * Math.cos(a) + orbit.v.z * Math.sin(a),
-    };
+    o.x = orbit.orbitCenter.x + base.x * Math.cos(a) + orbit.v.x * Math.sin(a);
+    o.y = orbit.orbitCenter.y + base.y * Math.cos(a) + orbit.v.y * Math.sin(a);
+    o.z = orbit.orbitCenter.z + base.z * Math.cos(a) + orbit.v.z * Math.sin(a);
+    return o;
   }
 
   // Rodrigues: base*cos(a) + (ax × base)*sin(a) + ax*(ax·base)*(1-cos(a))
@@ -94,9 +95,8 @@ export function starPositionAt(orbit: StarOrbit, t: number): Vec3 {
   const cy = ax.z * base.x - ax.x * base.z;
   const cz = ax.x * base.y - ax.y * base.x;
 
-  return {
-    x: orbit.orbitCenter.x + base.x * cosA + cx * sinA + ax.x * dot * (1 - cosA),
-    y: orbit.orbitCenter.y + base.y * cosA + cy * sinA + ax.y * dot * (1 - cosA),
-    z: orbit.orbitCenter.z + base.z * cosA + cz * sinA + ax.z * dot * (1 - cosA),
-  };
+  o.x = orbit.orbitCenter.x + base.x * cosA + cx * sinA + ax.x * dot * (1 - cosA);
+  o.y = orbit.orbitCenter.y + base.y * cosA + cy * sinA + ax.y * dot * (1 - cosA);
+  o.z = orbit.orbitCenter.z + base.z * cosA + cz * sinA + ax.z * dot * (1 - cosA);
+  return o;
 }

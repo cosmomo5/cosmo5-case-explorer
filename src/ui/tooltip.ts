@@ -39,10 +39,12 @@ export class Tooltip {
 export function projectToScreen(
   position: THREE.Vector3,
   camera: THREE.Camera,
+  containerWidth: number,
+  containerHeight: number,
 ): { x: number; y: number } {
   const v = position.clone().project(camera);
   return {
-    x: (v.x * 0.5 + 0.5) * innerWidth,
-    y: (-v.y * 0.5 + 0.5) * innerHeight,
+    x: (v.x * 0.5 + 0.5) * containerWidth,
+    y: (-v.y * 0.5 + 0.5) * containerHeight,
   };
 }
