@@ -28,10 +28,10 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 9 (Atmosphere) — 2 of 3 plans complete (09-01 Wave 0 stubs done, 09-02 implementation done)
+**Phase:** 9 (Atmosphere) — 1 of 3 plans complete
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
 **Status:** In progress
-**Last activity:** 2026-04-16 — 09-02 instrument-calibrating loader: LoaderController class, step-end CSS transitions, ONLINE gold, 400ms hold, reduced-motion skip. ATM-02 + ATM-04 complete. 201 tests pass.
+**Last activity:** 2026-04-16 — 09-01 CRT celestial graticule: crtGridTexture() + createGraticule() + starfield integration. ATM-01 complete. 207 tests passing.
 
 Progress: [██████░░░░] 56% of v3.2 plans (14/25)
 
