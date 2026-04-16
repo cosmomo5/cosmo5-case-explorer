@@ -38,27 +38,27 @@ function withSearchText(text: string | undefined): FilterState & { searchText?: 
 // The "without searchText" test passes now and must continue to pass after Plan 02.
 
 describe('matchesFilter — searchText extension (Plan 02)', () => {
-  it.skip('matchesFilter with searchText matching client returns true', () => {
+  it('matchesFilter with searchText matching client returns true', () => {
     const fs = withSearchText('acme');
     expect(matchesFilter(mockCase, fs)).toBe(true);
   });
 
-  it.skip('matchesFilter with searchText matching title returns true', () => {
+  it('matchesFilter with searchText matching title returns true', () => {
     const fs = withSearchText('growth');
     expect(matchesFilter(mockCase, fs)).toBe(true);
   });
 
-  it.skip('matchesFilter with searchText matching challenge returns true', () => {
+  it('matchesFilter with searchText matching challenge returns true', () => {
     const fs = withSearchText('retention');
     expect(matchesFilter(mockCase, fs)).toBe(true);
   });
 
-  it.skip('matchesFilter with searchText matching approach returns true', () => {
+  it('matchesFilter with searchText matching approach returns true', () => {
     const fs = withSearchText('email automation');
     expect(matchesFilter(mockCase, fs)).toBe(true);
   });
 
-  it.skip('matchesFilter with searchText not matching anything returns false', () => {
+  it('matchesFilter with searchText not matching anything returns false', () => {
     const fs = withSearchText('xyz123');
     expect(matchesFilter(mockCase, fs)).toBe(false);
   });
@@ -68,7 +68,7 @@ describe('matchesFilter — searchText extension (Plan 02)', () => {
     expect(matchesFilter(mockCase, fs)).toBe(true);
   });
 
-  it.skip('searchText matching is case-insensitive', () => {
+  it('searchText matching is case-insensitive', () => {
     const fs = withSearchText('ACME');
     expect(matchesFilter(mockCase, fs)).toBe(true);
   });

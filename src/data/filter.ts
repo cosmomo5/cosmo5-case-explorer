@@ -11,6 +11,7 @@ export interface FilterState {
   nucleusKeys: Set<string>;
   proofTypes: Set<ProofType>;
   impactBands: Set<ImpactScaleBand>;
+  searchText?: string;
   isActive(): boolean;
   without(dim: FilterDimension): FilterState;
 }
@@ -57,6 +58,12 @@ export function matchesFilter(c: CaseStudy, f: FilterState): boolean {
   }
   if (f.impactBands.size > 0) {
     if (!('impactScale' in c) || !f.impactBands.has((c as CaseStudy & { impactScale: { band: ImpactScaleBand } }).impactScale.band)) return false;
+  }
+  if (f.searchText) {
+    const q = f.searchText.toLowerCase();
+    const hit = [c.client, c.title, c.challenge ?? '', c.approach ?? '']
+      .some(s => s.toLowerCase().includes(q));
+    if (!hit) return false;
   }
   return true;
 }
