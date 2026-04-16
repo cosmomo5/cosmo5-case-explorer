@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createGraticule } from './graticule';
 
 export function createStarfield(canvas: HTMLCanvasElement): () => void {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -26,7 +27,7 @@ export function createStarfield(canvas: HTMLCanvasElement): () => void {
   const far = layer(1400, 1600, 0.9, 0xfff4dd);
   const mid = layer(500,  900,  1.4, 0xffdba4);
   const nr  = layer(120,  600,  2.6, 0xe8b15a);
-  scene.add(far, mid, nr);
+  scene.add(createGraticule(), far, mid, nr);
 
   let rafId: number;
   function tick(t: number) {

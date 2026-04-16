@@ -1,6 +1,24 @@
 // @vitest-environment jsdom
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import * as THREE from 'three';
+
+// jsdom doesn't implement getContext('2d') — stub it so our canvas-drawing code
+// can run without the `canvas` npm package.
+beforeAll(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (HTMLCanvasElement.prototype as any).getContext = function () {
+    return {
+      strokeStyle: '',
+      lineWidth: 1,
+      beginPath: () => {},
+      moveTo: () => {},
+      lineTo: () => {},
+      stroke: () => {},
+      arc: () => {},
+    };
+  };
+});
+
 import { crtGridTexture, createGraticule } from './graticule';
 
 describe('crtGridTexture', () => {
