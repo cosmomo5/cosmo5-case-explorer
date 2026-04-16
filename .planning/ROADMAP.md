@@ -19,7 +19,7 @@
 - [x] **Phase 8: Clean Substrate** — Remove orphaned DOM, isolate phyllotaxis for Comparison Mode, extend schema with imagery field, document branch strategy (completed 2026-04-14)
 - [x] **Phase 9: Atmosphere** — CRT graticule substrate, instrument-calibrating loader, corner wordmark (completed 2026-04-16)
 - [x] **Phase 10: Query Bar** — Central conversational input, keyword→dimension mapping, live field response, Advanced drawer fallback (1/5 plans complete — Wave 0 test stubs) (completed 2026-04-16)
-- [ ] **Phase 11: Reading Panel as Instrument** — Restructure header/body/impact as instrument readout, archive imagery integration, Fraunces italic deployment (2/3 plans complete)
+- [x] **Phase 11: Reading Panel as Instrument** — Restructure header/body/impact as instrument readout, archive imagery integration, Fraunces italic deployment (2/3 plans complete) (completed 2026-04-16)
 - [ ] **Phase 12: Reading List + Review Mode + Comparison Mode** — Rename, track redesign, star flight, localStorage persistence, Review Mode paginated reader, Comparison Mode adapted gather
 - [ ] **Phase 13: Hero Collapse** — Remove marketing banner + stats strip, verify wordmark adequate
 - [ ] **Phase 14: Edge States and Coverage** — Empty/no-match/error/narrow-viewport states, transition interrupts, a11y audit
@@ -76,7 +76,7 @@ Plans:
 **Goal:** Reading panel stops reading as marketing summary and becomes an observation of a completed case. Every metric, fact, and attribution rendered as instrument readout. Archive imagery integrated.
 **Depends on:** Phase 8 (schema extended). Not blocking on Phases 9–10 for scene work but final aesthetic check depends on atmosphere being present.
 **Requirements:** RP-01, RP-02, RP-03, RP-04, RP-05, RP-06, RP-07
-**Plans:** 2/3 plans complete
+**Plans:** 2/2 plans complete
 Plans:
 - [x] 11-01-PLAN.md — Header grid, imagery, body sections, metrics rows, button text (completed 2026-04-16)
 - [x] 11-02-PLAN.md — CSS styling (DM Mono, Fraunces, teal colors, grid spacing) (completed 2026-04-16)

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
 status: planning
-stopped_at: Completed 10-05-PLAN.md — Advanced drawer with filter panel integration. 239 tests passing.
-last_updated: "2026-04-16T14:09:10.779Z"
-last_activity: "2026-04-16 — 10-05: Advanced drawer implemented. hideModeSwitcher on mountFilterPanel, drawer DOM/CSS/ARIA, lazy-mount wiring in mountQueryBar. 239 tests passing, tsc clean."
+stopped_at: Completed 11-02-PLAN.md — Reading panel styled with instrument-readout CSS. 239 tests passing, tsc clean.
+last_updated: "2026-04-16T14:59:31.604Z"
+last_activity: "2026-04-16 — 11-02: Reading panel styled with instrument-readout CSS. Fraunces italic opsz 144 on title, DM Mono throughout, teal on metrics/sections, gold button with teal hover. 239 tests passing, tsc clean."
 progress:
   total_phases: 8
-  completed_phases: 3
-  total_plans: 11
-  completed_plans: 11
-  percent: 70
+  completed_phases: 4
+  total_plans: 13
+  completed_plans: 13
+  percent: 73
 ---
 
 # Project State
@@ -30,7 +30,7 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 **Phase:** 11 (Reading Panel as Instrument) — IN PROGRESS. Plans 11-01 and 11-02 complete.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Executing Phase 11 restructuring
+**Status:** Ready to plan
 **Last activity:** 2026-04-16 — 11-02: Reading panel styled with instrument-readout CSS. Fraunces italic opsz 144 on title, DM Mono throughout, teal on metrics/sections, gold button with teal hover. 239 tests passing, tsc clean.
 
 Progress: [███████░░░] 73% of v3.2 plans (23/30)
