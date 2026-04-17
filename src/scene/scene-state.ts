@@ -482,6 +482,12 @@ export function applyFilterWave(
   // 3. Staggered GSAP: ~600 ms total propagation
   const TOTAL_S = 0.6;
   const count = sorted.length;
+  // No-match state (P6-02): when the query is active but nothing matches,
+  // the whole field dims deeper than the normal non-match dim so the
+  // empty result reads as "no observations" rather than "active filter".
+  const isActive = filterState.isActive();
+  const anyMatch = sorted.some(s => matchesFilter(s.userData.caseStudy as CaseStudy, filterState));
+  const nonMatchOpacity = (isActive && !anyMatch) ? 0.08 : 0.12;
 
   sorted.forEach((star, i) => {
     const state = star.userData.starState as StarState | undefined;
@@ -490,7 +496,7 @@ export function applyFilterWave(
 
     const c = star.userData.caseStudy as CaseStudy;
     const matches = matchesFilter(c, filterState);
-    const targetOpacity = matches ? 0.85 : 0.12;
+    const targetOpacity = matches ? 0.85 : nonMatchOpacity;
 
     star.userData.starState = matches ? 'filterMatch' : 'filterDim';
 

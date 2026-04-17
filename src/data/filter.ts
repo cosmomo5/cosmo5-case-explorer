@@ -33,7 +33,8 @@ export function createFilterState(): FilterState {
     isActive() {
       return this.countries.size > 0 || this.services.size > 0 ||
              this.years.size > 0 || this.nucleusKeys.size > 0 ||
-             this.proofTypes.size > 0 || this.impactBands.size > 0;
+             this.proofTypes.size > 0 || this.impactBands.size > 0 ||
+             !!(this.searchText && this.searchText.length > 0);
     },
     without(dim: FilterDimension): FilterState {
       const copy = createFilterState();

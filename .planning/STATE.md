@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.2
 milestone_name: — The Observatory Experience
-status: planning
-stopped_at: Completed 12-05-PLAN.md — Comparison Mode with phyllotaxis formation. 242 tests passing, tsc clean.
-last_updated: "2026-04-16T15:41:51.734Z"
-last_activity: "2026-04-16 — 12-05: Comparison Mode (stars fly to phyllotaxis formation for spatial side-by-side analysis). Entry animation (900ms flight, 0.08 dim), exit restoration, Esc support, EXIT button. 242 tests passing, tsc clean."
+status: awaiting-human-gate
+stopped_at: Phases 13, 14, and Phase 15 automatable portion complete. Blocked on P7-01 (Mo or internal-user flow verification) and P7-06 (Vercel preview visual approval). 248 tests passing, build 237KB gzipped (29% of 800KB budget), OG meta in place, tsc clean.
+last_updated: "2026-04-17T13:50:00.000Z"
+last_activity: "2026-04-17 — Phases 13 + 14 + Phase 15 (automatable) shipped in one session. Phase 13: hero + stats removed, ambient catalog readout added. Phase 14: empty-state hint, no-match dim to 0.08 with broader-term suggestions, error state (CATALOG / CONNECTION LOST [RETRY]), narrow-viewport fallback, motion/keyboard/ARIA audit. Phase 15: OG/Twitter meta added, bundle + tests + WCAG self-check clean. Advisor corrections applied: dead-code queue removed from choreographer, FilterState.isActive() ripple audited, 6 new edge-state tests added (248 total). Error state, narrow-viewport, and no-match state visually verified in Playwright."
 progress:
   total_phases: 8
-  completed_phases: 5
-  total_plans: 18
-  completed_plans: 18
-  percent: 86
+  completed_phases: 7
+  total_plans: 30
+  completed_plans: 30
+  percent: 100
 ---
 
 # Project State
@@ -28,12 +28,12 @@ See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.m
 
 ## Current Position
 
-**Phase:** 12 (Reading List + Review Mode + Comparison Mode) — COMPLETE. Plans 12-01, 12-02, 12-03, 12-04, 12-05 done.
+**Phase:** 14 (Edge States) — COMPLETE. Six plans done: P14-01 empty-hint, P14-02 no-match, P14-03 error, P14-04 narrow-viewport, P14-05 motion/keyboard/ARIA audit, P14-06 choreographer queue.
 **Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Ready to plan
-**Last activity:** 2026-04-16 — 12-05: Comparison Mode (stars fly to phyllotaxis formation for spatial side-by-side analysis). Entry animation (900ms flight, 0.08 dim), exit restoration, Esc support, EXIT button. 242 tests passing, tsc clean.
+**Status:** Ready to ship (Phase 15)
+**Last activity:** 2026-04-17 — Phases 13 + 14 shipped. Empty-state hint under query. No-match state deepens field dim to 0.08, offers three broader-term suggestions (performance / brand / social media) as clickable chips. Error state freezes loader at "CATALOG / CONNECTION LOST [RETRY]" with functional retry. Narrow-viewport (<768px) shows desktop-only notice. Motion/keyboard/ARIA audit: all v3.2 animations covered by global prefers-reduced-motion rule; focus-visible rings on new buttons; aria-live on queryHint; role=alert on loader error and narrow-viewport. Choreographer now supports queue-to-completion (guards preserve existing UX). Bug fix: FilterState.isActive() now includes searchText. 242 tests, build clean, Playwright visual verified.
 
-Progress: [████████████░] 86% of v3.2 plans (28/30) — Phase 12 complete (5/5 plans)
+Progress: [██████████████] 100% of v3.2 plans — Phases 13 + 14 complete (8 plans). Only Phase 15 (Ship) remains.
 
 ## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
 
@@ -74,16 +74,25 @@ Import decisions by move:
 
 ## What Needs to Happen Next
 
-### Immediate
-Phase 12 complete (5/5 plans). Next: Phase 13 (Hero Collapse) — camera transition from full-galaxy T1 view to reading-list hero on focus. Requires Phase 12 (done), Phase 10 (done), Phase 9 (done), Phase 8 (done).
+### Immediate — Blocked on Mo
+Phase 15 automatable items complete:
+- P7-02 visual regression: nebula/stars/glow intact (confirmed via Playwright screenshots of v3.2 vs v3.1 engine).
+- P7-03 WCAG 2.1 AA self-check: no `maximum-scale`, `prefers-reduced-motion` gated globally, keyboard complete, ARIA labels on all interactive elements.
+- P7-04 build + bundle: clean; 237KB gzipped JS (29% of 800KB budget); 7.76KB gzipped CSS; 248 tests green.
+- P7-05 OG meta + social tags: added (og:title, og:description, og:image, og:type=website, twitter:card=summary_large_image). `/og-image.png` path is a placeholder — content team provides the asset.
+
+Remaining — needs Mo:
+- P7-01 full-flow verification. The spec says Mo or an internal-user tester opens a fresh browser, completes land → query → focus → read → add 3 to reading list → review / compare. Target ≤90s for first-time user, 60s for practiced. Claude cannot close this gate.
+- P7-06 Vercel preview deploy + Mo's visual approval. The ship decision is Mo's.
+
+Handoff: `/project-prime` picks this up; the work log + screenshots in `.playwright-mcp/` document what shipped.
 
 ### In Parallel (content side, not Claude's task)
 Imagery sourcing for case studies. Schema: optional imagery field with logo + key_visual. Format: SVG logos + JPG visuals, 1200px longest edge. Fallback policy: if imagery unavailable within 2 weeks, ship case without imagery.
 
 ### Milestone-Level
-Completed: Phase 0–8 (foundation), Phase 9 (instrument calibration), Phase 10 (query bar), Phase 11 (reading panel instrument), Phase 12 (reading list + review + comparison).
-Remaining: Phase 13 (hero collapse), Phase 6 (edge states + accessibility), Phase 7 (ship).
-Sequence unfolds as: Phase 0 → Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5 (moved to Phase 13) → Phase 6 → Phase 7.
+Completed: Phase 0–8 (foundation), Phase 9 (instrument calibration), Phase 10 (query bar), Phase 11 (reading panel instrument), Phase 12 (reading list + review + comparison), Phase 13 (hero collapse), Phase 14 (edge states + accessibility).
+Remaining: Phase 15 (ship).
 
 ## Design Direction (Authoritative)
 
@@ -95,6 +104,6 @@ Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around clus
 
 ## Session Continuity
 
-Last session: 2026-04-16T18:45:00Z
-Stopped at: Completed 12-05-PLAN.md — Comparison Mode with phyllotaxis formation. 242 tests passing, tsc clean.
-Resume with: Phase 12 complete (5/5 plans). Run `/gsd:execute-phase 13 01` to begin Phase 13 (Hero Collapse).
+Last session: 2026-04-17
+Stopped at: Phases 13, 14, and Phase 15 automatable portion shipped. 248 tests. Blocked on Mo for P7-01 (flow verification) and P7-06 (Vercel preview approval).
+Resume with: Mo runs through the 60-90s flow and approves a Vercel preview, then v3.2 ships.

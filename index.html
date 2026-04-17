@@ -3,9 +3,24 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="description" content="Cosmo5 — an interactive 3D observatory of case studies. Explore proof points across countries, services, and years."/>
+<meta name="description" content="Cosmo5 Observatory — a cosmos of proof, navigable as an atlas. Case studies across countries, services, and years, observed from a shared reading room."/>
 <meta name="theme-color" content="#0B0C10"/>
 <title>Cosmo5 — The Case Study Cosmos</title>
+
+<!-- Open Graph -->
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Cosmo5 Observatory"/>
+<meta property="og:description" content="A cosmos of proof, navigable as an atlas — observed, not advertised."/>
+<meta property="og:image" content="/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:site_name" content="Cosmo5"/>
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Cosmo5 Observatory"/>
+<meta name="twitter:description" content="A cosmos of proof, navigable as an atlas — observed, not advertised."/>
+<meta name="twitter:image" content="/og-image.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Noto+Sans:wght@300;400;500;600;900&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -37,18 +52,16 @@
   <span class="wm-sub">OBSERVATORY</span>
 </header>
 
-<div class="hero" id="hero">
-  <div class="eye">An Observatory</div>
-  <h1>A galaxy<br/>of <em>proof</em>.</h1>
-  <p>Each case a star. Each country a constellation. Click any lit territory to enter.</p>
-  <div class="hint">Drag · rotate &nbsp;<em>●</em>&nbsp; Click lit country</div>
-</div>
-
-<div class="stats" id="stats">
-  <div class="stat"><div class="n" id="s-c">—</div><div class="l">Case files</div></div>
-  <div class="stat"><div class="n" id="s-t">—</div><div class="l">Territories</div></div>
-  <div class="stat"><div class="n" id="s-s">—</div><div class="l">Services</div></div>
-  <div class="stat"><div class="n" id="s-y">—</div><div class="l">Year arc</div></div>
+<div class="catalog-readout" id="catalogReadout" aria-hidden="true">
+  <span class="cr-label">CATALOG</span>
+  <span class="cr-sep">/</span>
+  <span id="cr-cases">— CASES</span>
+  <span class="cr-sep">/</span>
+  <span id="cr-markets">— MARKETS</span>
+  <span class="cr-sep">/</span>
+  <span id="cr-services">— SERVICES</span>
+  <span class="cr-sep">/</span>
+  <span id="cr-years">—</span>
 </div>
 
 <div class="crumb" id="crumb">
@@ -128,6 +141,7 @@
     <span class="query-readout" id="queryReadout" aria-live="polite"></span>
     <button class="query-clear" id="queryClear" aria-label="Clear query">×</button>
   </div>
+  <div class="query-hint" id="queryHint" aria-live="polite"></div>
   <div class="query-history" id="queryHistory"></div>
   <button class="query-advanced-toggle" id="queryAdvancedToggle"
           aria-expanded="false" aria-controls="advancedDrawer">
@@ -182,12 +196,23 @@
 
 <button class="cm-exit" id="cmExit" aria-label="Exit comparison mode">EXIT COMPARISON</button>
 
+<div class="narrow-viewport-notice" role="alert">
+  <span class="nvn-label">OBSERVATORY</span>
+  <span class="nvn-body">Desktop-only — please open on a larger screen.</span>
+</div>
+
 <div class="loader" id="loader">
   <div class="loader-status">
     <span class="ls ls1">OBSERVATORY INITIALIZING</span>
     <span class="ls ls2">LOCATING CATALOG</span>
     <span class="ls ls3">CALIBRATING STARMAP</span>
     <span class="ls ls-online">ONLINE</span>
+  </div>
+  <div class="loader-error" id="loaderError" role="alert">
+    <span class="le-label">CATALOG</span>
+    <span class="le-sep">/</span>
+    <span class="le-msg">CONNECTION LOST</span>
+    <button class="le-retry" id="loaderRetry" type="button">[RETRY]</button>
   </div>
 </div>
 

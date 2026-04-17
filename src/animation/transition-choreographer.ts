@@ -49,6 +49,10 @@ export function createTransitionChoreographer(controls: CameraControls) {
     controls.enabled = true;
   }
 
+  // P6-04: never freeze, never flash-cut. Callers guard user input during
+  // in-flight transitions with `state.inProgress` (CAM-04 pattern at main.ts).
+  // Clicks during T1/T5 are dropped, the current transition runs to its end
+  // state — no mid-flight interruption is possible.
   function startT1(
     nucleusPosition: THREE.Vector3,
     faceOnDirection: THREE.Vector3,

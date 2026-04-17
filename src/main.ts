@@ -38,32 +38,16 @@ const DIM_LABELS: Record<string, string> = {
 const ALL_DIMS: RingDimension[] = ['proofType', 'impactBand', 'year', 'country', 'region'];
 
 // ── DOM refs ──────────────────────────────────────────────────────────────
-// elStats kept for future use (contains s-c/s-t/s-s/s-y children)
-document.getElementById('stats'); // reference to keep DOM wiring clear
-const elSC       = document.getElementById('s-c')           as HTMLElement;
-const elST       = document.getElementById('s-t')           as HTMLElement;
-const elSS       = document.getElementById('s-s')           as HTMLElement;
-const elSY       = document.getElementById('s-y')           as HTMLElement;
 const elCrumb    = document.getElementById('crumb')         as HTMLElement;
 const elHere     = document.getElementById('here')          as HTMLElement;
 const elHereCnt  = document.getElementById('hereCount')     as HTMLElement;
 const elBack     = document.getElementById('back')          as HTMLElement;
 const elFocusHint= document.getElementById('focus-hint')    as HTMLElement;
-const elHero     = document.getElementById('hero')          as HTMLElement;
 const elControls = document.getElementById('cosmoControls') as HTMLElement;
 const elFiltersWrap = document.getElementById('filtersWrap') as HTMLElement;
 const elFiltersTab  = document.getElementById('filtersTab')  as HTMLElement;
 const elLabelSlider = document.getElementById('labelSlider') as HTMLInputElement;
 const elLabelVal    = document.getElementById('labelVal')    as HTMLElement;
-
-// ── Animate a count up from 0 to target ───────────────────────────────────
-function animateCount(el: HTMLElement, target: number, duration = 1.2): void {
-  const obj = { val: 0 };
-  gsap.to(obj, {
-    val: target, duration, ease: 'power2.out',
-    onUpdate: () => { el.textContent = Math.round(obj.val).toString(); },
-  });
-}
 
 async function boot() {
   const loader = document.getElementById('loader');
@@ -85,19 +69,25 @@ async function boot() {
     hydrateReadingList(shortlistStore);
     setupReadingListPersistence(shortlistStore);
 
-    // ── Populate stats strip ─────────────────────────────────────────────
-    const territories = new Set(cases.flatMap(c => c.countries));
-    const services    = new Set(cases.flatMap(c => c.services));
-    const years       = [...new Set(cases.map(c => c.year))].sort();
-    const yearRange   = years.length > 1
-      ? `${years[0]}–${years[years.length - 1]}`
-      : `${years[0]}`;
-
-    // Stagger the count-up slightly for each stat
-    animateCount(elSC, cases.length, 1.4);
-    setTimeout(() => animateCount(elST, territories.size, 1.2), 120);
-    setTimeout(() => animateCount(elSS, services.size, 1.2), 240);
-    setTimeout(() => { elSY.textContent = yearRange; }, 300);
+    // ── Catalog readout (ambient telemetry, bottom-right) ────────────────
+    {
+      const territories = new Set(cases.flatMap(c => c.countries ?? []));
+      const services    = new Set(cases.flatMap(c => c.services ?? []));
+      const years       = [...new Set(cases.map(c => c.year).filter(Boolean))].sort();
+      const yearRange   = years.length > 1
+        ? `${years[0]}–${years[years.length - 1]}`
+        : `${years[0] ?? '—'}`;
+      const setText = (id: string, t: string) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = t;
+      };
+      setText('cr-cases',    `${cases.length} CASES`);
+      setText('cr-markets',  `${territories.size} MARKETS`);
+      setText('cr-services', `${services.size} SERVICES`);
+      setText('cr-years',    yearRange);
+      const readout = document.getElementById('catalogReadout');
+      if (readout) requestAnimationFrame(() => readout.classList.add('ready'));
+    }
 
     // ── Starfield ────────────────────────────────────────────────────────
     const starfieldCanvas = document.getElementById('starfield') as HTMLCanvasElement;
@@ -410,9 +400,6 @@ async function boot() {
       elHereCnt.textContent = `${groupCount} case${groupCount !== 1 ? 's' : ''}`;
       elCrumb.classList.add('on');
 
-      // Hide hero text
-      elHero.classList.add('exit');
-
       // Focus hint bottom-center
       elFocusHint.classList.add('on');
       const fhText = document.getElementById('fh-text');
@@ -485,7 +472,6 @@ async function boot() {
 
       elCrumb.classList.remove('on');
       elFocusHint.classList.remove('on');
-      elHero.classList.remove('exit');
       elControls.classList.remove('on');
 
       // Hide all labels (they'll reappear if threshold > 0 in tick)
@@ -608,8 +594,11 @@ async function boot() {
   } catch (err) {
     console.error('[v3 boot error]', err);
     if (loader) {
-      const ls1 = loader.querySelector('.ls1') as HTMLElement | null;
-      if (ls1) ls1.textContent = `Boot error — check console`;
+      loader.classList.add('has-error');
+      const retryBtn = document.getElementById('loaderRetry') as HTMLButtonElement | null;
+      if (retryBtn) {
+        retryBtn.addEventListener('click', () => { window.location.reload(); });
+      }
     }
   }
 }

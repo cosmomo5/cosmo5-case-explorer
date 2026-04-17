@@ -41,6 +41,48 @@ function updateReadout(deps: QueryBarDeps, readout: HTMLElement): void {
   readout.textContent = `${n} CASES · ${m} CLUSTERS`;
 }
 
+const EMPTY_HINT_HTML = 'Or explore the full catalog — click a cluster to enter.';
+const BROAD_SUGGESTIONS = ['performance', 'brand', 'social media'];
+
+function updateHint(
+  hint: HTMLElement,
+  query: string,
+  matchCount: number,
+  onSuggest: (term: string) => void,
+): void {
+  const q = query.trim();
+
+  if (q.length === 0) {
+    hint.innerHTML = EMPTY_HINT_HTML;
+    hint.classList.add('visible');
+    return;
+  }
+
+  if (matchCount === 0) {
+    const suggestions = BROAD_SUGGESTIONS
+      .filter(s => !q.toLowerCase().includes(s))
+      .slice(0, 3);
+    const safeQ = q.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const suggestHtml = suggestions
+      .map(s => `<button class="qh-suggest" data-suggest="${s}">${s}</button>`)
+      .join(', ');
+    hint.innerHTML = `No observations match <span class="qh-term">"${safeQ}"</span>. Try broader terms: ${suggestHtml}`;
+    hint.classList.add('visible');
+    // Wire suggestion clicks
+    hint.querySelectorAll<HTMLButtonElement>('.qh-suggest').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const term = btn.getAttribute('data-suggest') ?? '';
+        onSuggest(term);
+      });
+    });
+    return;
+  }
+
+  // Query has text and matches exist — clear the hint
+  hint.classList.remove('visible');
+  hint.innerHTML = '';
+}
+
 /**
  * Render query history chips below the query input.
  */
@@ -60,6 +102,7 @@ export function mountQueryBar(deps: QueryBarDeps): void {
   const readout = document.getElementById('queryReadout') as HTMLElement | null;
   const clearBtn = document.getElementById('queryClear') as HTMLElement | null;
   const historyContainer = document.getElementById('queryHistory') as HTMLElement | null;
+  const hint = document.getElementById('queryHint') as HTMLElement | null;
   if (!input || !readout || !clearBtn) return;
 
   // Render initial readout (full field, nothing filtered)
@@ -71,6 +114,31 @@ export function mountQueryBar(deps: QueryBarDeps): void {
   }
 
   let waveTimer: ReturnType<typeof setTimeout> | undefined;
+
+  function applySuggestion(term: string): void {
+    if (!input) return;
+    input.value = term;
+    clearBtn!.classList.toggle('visible', term.length > 0);
+    applyQuery(term, deps.filterState, deps.cases);
+    updateReadout(deps, readout!);
+    triggerWave();
+    if (hint) {
+      updateHint(hint, term, countMatches(deps.sceneObjects, deps.filterState), applySuggestion);
+    }
+  }
+
+  function refreshHint(): void {
+    if (!hint) return;
+    updateHint(
+      hint,
+      input!.value,
+      countMatches(deps.sceneObjects, deps.filterState),
+      applySuggestion,
+    );
+  }
+
+  // Initial hint (empty query → show empty prompt)
+  refreshHint();
 
   function triggerWave(): void {
     const q = deps.filterState.searchText ?? '';
@@ -93,6 +161,7 @@ export function mountQueryBar(deps: QueryBarDeps): void {
 
     // Immediate readout update
     updateReadout(deps, readout!);
+    refreshHint();
 
     // Debounced wave animation (80 ms)
     clearTimeout(waveTimer);
@@ -109,6 +178,7 @@ export function mountQueryBar(deps: QueryBarDeps): void {
       applyQuery(q, deps.filterState, deps.cases);
       updateReadout(deps, readout);
       triggerWave();
+      refreshHint();
       // Save to query history
       addQueryToHistory(q);
       if (historyContainer) renderQueryHistory(historyContainer);
@@ -149,6 +219,7 @@ export function mountQueryBar(deps: QueryBarDeps): void {
       applyQuery(query, deps.filterState, deps.cases);
       updateReadout(deps, readout);
       triggerWave();
+      refreshHint();
       // Add to history if not already there
       addQueryToHistory(query);
       renderQueryHistory(historyContainer);
