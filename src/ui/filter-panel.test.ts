@@ -151,8 +151,8 @@ describe('mountFilterPanel — chip dim/on states', () => {
     const usChip = Array.from(chips).find(c => (c as HTMLElement).dataset.value === 'US');
     expect(spainChip).not.toBeUndefined();
     expect(usChip).not.toBeUndefined();
-    expect(spainChip!.classList.contains('dim')).toBe(true);  // Spain=0 when years=2022
-    expect(usChip!.classList.contains('dim')).toBe(false);    // US=1 (e2 has US)
+    expect((spainChip as HTMLButtonElement).disabled).toBe(true);  // Spain=0 when years=2022
+    expect((usChip as HTMLButtonElement).disabled).toBe(false);    // US=1 (e2 has US)
   });
 
   it('chips in active filter set get class "on"', () => {

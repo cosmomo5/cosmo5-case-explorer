@@ -1,5 +1,3 @@
-console.log('[v3] main.ts module executing');
-
 import './style.css';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
@@ -23,6 +21,12 @@ import { ShortlistTrack } from './ui/shortlist-track';
 import { mountReviewMode } from './ui/review-mode';
 import { LoaderController } from './ui/loader';
 import { ComparisonMode } from './scene/comparison-mode';
+
+// Module-scope scratch vectors — reused in the tick loop, zero allocations in the hot path
+const _camRightScratch = new THREE.Vector3();
+const _ouScratch       = new THREE.Vector3();
+const _ovScratch       = new THREE.Vector3();
+const _ringLabelPt     = new THREE.Vector3();
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.globalTimeline.timeScale(0);
@@ -121,7 +125,15 @@ async function boot() {
         const c = caseById.get(caseId);
         if (c && sceneObjects.focusedKey) readingPanel.open(c, sceneObjects.focusedKey);
       },
-      (caseId) => caseById.get(caseId)?.client ?? caseId,
+      (caseId) => {
+        const c = caseById.get(caseId);
+        if (!c) return undefined;
+        return {
+          client: c.client,
+          sector: c.services[0] ?? '—',
+          metric: c.metrics[0]?.value ?? '—',
+        };
+      },
       sceneObjects,
     );
     void shortlistTrack; // consumed by ShortlistStore subscription internally
@@ -236,15 +248,14 @@ async function boot() {
             ? sceneObjects.nucleusOrbits[sceneObjects.focusedKey]
             : null;
           if (focusedOrbit) {
-            // Camera right axis in world space
-            const camRight = new THREE.Vector3();
-            camRight.setFromMatrixColumn(camera.matrixWorld, 0);
+            // Camera right axis in world space — reuse scratch, no allocation
+            _camRightScratch.setFromMatrixColumn(camera.matrixWorld, 0);
 
-            // Project camRight onto the orbit plane (spanned by orbitU and orbitV)
-            const ou = new THREE.Vector3(focusedOrbit.orbitU.x, focusedOrbit.orbitU.y, focusedOrbit.orbitU.z);
-            const ov = new THREE.Vector3(focusedOrbit.orbitV.x, focusedOrbit.orbitV.y, focusedOrbit.orbitV.z);
-            const cosA = camRight.dot(ou);
-            const cosB = camRight.dot(ov);
+            // Project _camRightScratch onto the orbit plane (spanned by orbitU and orbitV)
+            _ouScratch.set(focusedOrbit.orbitU.x, focusedOrbit.orbitU.y, focusedOrbit.orbitU.z);
+            _ovScratch.set(focusedOrbit.orbitV.x, focusedOrbit.orbitV.y, focusedOrbit.orbitV.z);
+            const cosA = _camRightScratch.dot(_ouScratch);
+            const cosB = _camRightScratch.dot(_ovScratch);
             const projLen = Math.sqrt(cosA * cosA + cosB * cosB);
             // Normalized direction within the plane that most aligns with camera right
             const dirCos = projLen > 0.001 ? cosA / projLen : 1;
@@ -253,12 +264,12 @@ async function boot() {
             for (let li = 0; li < sceneObjects.ringLabelEls.length; li++) {
               const labelEl = sceneObjects.ringLabelEls[li];
               const radius = parseFloat(labelEl.dataset.ringRadius ?? '0');
-              const pt = new THREE.Vector3(
-                focusedNucleus.position.x + radius * (ou.x * dirCos + ov.x * dirSin),
-                focusedNucleus.position.y + radius * (ou.y * dirCos + ov.y * dirSin),
-                focusedNucleus.position.z + radius * (ou.z * dirCos + ov.z * dirSin),
+              _ringLabelPt.set(
+                focusedNucleus.position.x + radius * (_ouScratch.x * dirCos + _ovScratch.x * dirSin),
+                focusedNucleus.position.y + radius * (_ouScratch.y * dirCos + _ovScratch.y * dirSin),
+                focusedNucleus.position.z + radius * (_ouScratch.z * dirCos + _ovScratch.z * dirSin),
               );
-              const s = projectToScreen(pt, camera, sceneContainer.clientWidth, sceneContainer.clientHeight);
+              const s = projectToScreen(_ringLabelPt, camera, sceneContainer.clientWidth, sceneContainer.clientHeight);
               labelEl.style.left = `${s.x + 6}px`;
               labelEl.style.top = `${s.y - 10}px`;
             }
@@ -508,13 +519,20 @@ async function boot() {
 
       // Arrow keys: if reading panel is open, cycle cases on the current ring
       if (readingPanel.isOpen() && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
-        // Extract cases on the current ring, sorted by ringIndex then angleOffset
+        // Build id→ringOrbit map O(n) first, then sort O(n log n) — avoids O(n²) find-in-comparator
+        const ringOrbitById = new Map<string, { ringIndex: number; angleOffset: number }>();
+        for (const s of sceneObjects.starMeshes) {
+          if (s.userData.ringOrbit != null) {
+            const id = (s.userData.caseStudy as CaseStudy)?.id;
+            if (id) ringOrbitById.set(id, s.userData.ringOrbit);
+          }
+        }
         const ringCases = sceneObjects.starMeshes
           .filter(s => s.userData.ringOrbit != null)
           .map(s => s.userData.caseStudy as CaseStudy)
           .sort((a, b) => {
-            const ra = sceneObjects.starMeshes.find(s => (s.userData.caseStudy as CaseStudy)?.id === a.id)?.userData.ringOrbit;
-            const rb = sceneObjects.starMeshes.find(s => (s.userData.caseStudy as CaseStudy)?.id === b.id)?.userData.ringOrbit;
+            const ra = ringOrbitById.get(a.id);
+            const rb = ringOrbitById.get(b.id);
             if (!ra || !rb) return 0;
             if (ra.ringIndex !== rb.ringIndex) return ra.ringIndex - rb.ringIndex;
             return ra.angleOffset - rb.angleOffset;
@@ -603,7 +621,4 @@ async function boot() {
   }
 }
 
-console.log('[v3] about to call boot()');
-boot()
-  .then(() => console.log('[v3] boot() resolved'))
-  .catch(e => console.error('[v3] boot() rejected', e));
+boot().catch(e => console.error('[boot error]', e));

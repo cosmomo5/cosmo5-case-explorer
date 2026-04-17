@@ -6,6 +6,12 @@ export interface ShortlistTrackSceneObjects {
   starMeshes: THREE.Mesh[];
 }
 
+export interface ShortlistCardData {
+  client: string;
+  sector: string;
+  metric: string;
+}
+
 /**
  * ShortlistTrack — renders shortlisted cases as chips in the bottom track zone.
  *
@@ -14,7 +20,7 @@ export interface ShortlistTrackSceneObjects {
  */
 export class ShortlistTrack {
   private readonly container: HTMLElement;
-  private readonly getCaseLabel: (caseId: string) => string;
+  private readonly getCase: (caseId: string) => ShortlistCardData | undefined;
   private readonly store: ShortlistStore;
   private readonly sceneObjects?: ShortlistTrackSceneObjects;
   private readonly unsubscribe: () => void;
@@ -23,13 +29,13 @@ export class ShortlistTrack {
     container: HTMLElement,
     store: ShortlistStore,
     onSelect: (caseId: string) => void,
-    getCaseLabel?: (caseId: string) => string,
+    getCase?: (caseId: string) => ShortlistCardData | undefined,
     sceneObjects?: ShortlistTrackSceneObjects,
   ) {
     this.container = container;
     // onSelect is used by parent but not needed here since rendering is subscription-based
     void onSelect;
-    this.getCaseLabel = getCaseLabel ?? ((id) => id);
+    this.getCase = getCase ?? ((id) => ({ client: id, sector: '—', metric: '—' }));
     this.store = store;
     this.sceneObjects = sceneObjects;
 
@@ -67,18 +73,21 @@ export class ShortlistTrack {
       card.className = 'rl-card';
       card.setAttribute('data-case-id', entry.caseId);
 
-      // Get case data (pass through container dataset or use getCaseLabel)
-      const label = this.getCaseLabel(entry.caseId);
+      // Get case data
+      const data = this.getCase(entry.caseId);
+      const client = data?.client ?? entry.caseId;
+      const sector = data?.sector ?? '—';
+      const metric = data?.metric ?? '—';
 
       // Format the timestamp
       const addedTime = this.getAddedAtTimestamp(entry.caseId);
       const timeStr = addedTime ? this.formatTimeAgo(addedTime) : 'just now';
 
-      // Build card content: client, sector (placeholder), metric (placeholder), timestamp, remove button
+      // Build card content: client, sector, metric, timestamp, remove button
       card.innerHTML = `
-        <span class="rl-client">${label}</span>
-        <span class="rl-sector">—</span>
-        <span class="rl-metric">—</span>
+        <span class="rl-client">${client}</span>
+        <span class="rl-sector">${sector}</span>
+        <span class="rl-metric">${metric}</span>
         <span class="rl-added">${timeStr}</span>
         <button class="rl-remove" aria-label="Remove from reading list" data-case-id="${entry.caseId}">×</button>
       `;

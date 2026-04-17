@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import type { CaseStudy } from '../data/types';
 
+// Module-scope scratch — avoids one Vector3 allocation per label per frame
+const _projectScratch = new THREE.Vector3();
+
 const NUCLEUS_COLORS_HEX: Record<string, string> = {
   'Media':               '#5ecfc0',
   'Performance':         '#e8b15a',
@@ -42,9 +45,9 @@ export function projectToScreen(
   containerWidth: number,
   containerHeight: number,
 ): { x: number; y: number } {
-  const v = position.clone().project(camera);
+  _projectScratch.copy(position).project(camera);
   return {
-    x: (v.x * 0.5 + 0.5) * containerWidth,
-    y: (-v.y * 0.5 + 0.5) * containerHeight,
+    x: (_projectScratch.x * 0.5 + 0.5) * containerWidth,
+    y: (-_projectScratch.y * 0.5 + 0.5) * containerHeight,
   };
 }
