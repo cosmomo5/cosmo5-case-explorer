@@ -25,6 +25,7 @@ import { LoaderController } from './ui/loader';
 import { ComparisonMode } from './scene/comparison-mode';
 import { createPlanet, PLANET_RADIUS } from './scene/planet';
 import { gatherStarsToPlanet } from './scene/planetary-gather';
+import { mountObservatoryHeader } from './ui/observatory-header';
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.globalTimeline.timeScale(0);
@@ -54,6 +55,11 @@ const elLabelVal    = document.getElementById('labelVal')    as HTMLElement;
 async function boot() {
   const loader = document.getElementById('loader');
   const loaderCtrl = loader ? new LoaderController(loader) : null;
+
+  // ── Phase 16-03: latch body.planetary at boot — chrome-hide CSS fires
+  // immediately, before any UI module mounts. Removed in the final beat of
+  // choreographPlanetaryToGlobal (transition-choreographer.ts, Task 7).
+  document.body.classList.add('planetary');
 
   try {
     const resp = await fetch('/cases.json');
@@ -90,6 +96,9 @@ async function boot() {
       const readout = document.getElementById('catalogReadout');
       if (readout) requestAnimationFrame(() => readout.classList.add('ready'));
     }
+
+    // ── Phase 16-03: persistent observatory header (top strip) ─────────
+    mountObservatoryHeader(cases.length, viewState);
 
     // ── Starfield ────────────────────────────────────────────────────────
     const starfieldCanvas = document.getElementById('starfield') as HTMLCanvasElement;
