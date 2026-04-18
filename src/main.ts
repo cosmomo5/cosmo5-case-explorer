@@ -26,6 +26,7 @@ import { ComparisonMode } from './scene/comparison-mode';
 import { createPlanet, PLANET_RADIUS } from './scene/planet';
 import { gatherStarsToPlanet } from './scene/planetary-gather';
 import { mountObservatoryHeader } from './ui/observatory-header';
+import { mountCalibrationOverture, type CalibrationOvertureHandle } from './ui/calibration-overture';
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.globalTimeline.timeScale(0);
@@ -125,6 +126,12 @@ async function boot() {
     // that state until viewState transitions planetary → global.
     const planetGroup = createPlanet(scene);
     gatherStarsToPlanet(sceneObjects, { x: 0, y: 0, z: 0 }, PLANET_RADIUS);
+
+    // ── Phase 16-03: mount calibration overture (Acts I + II) ──────────
+    // Starts immediately; Task 6's skippable handler consumes overtureHandle.cancel().
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const overtureHandle: CalibrationOvertureHandle = mountCalibrationOverture({ planet: planetGroup });
+    void overtureHandle; // suppress noUnusedLocals — Task 6 replaces this with a real reference
 
     // ── ReadingPanel (wired to layoutController, viewState, shortlistStore) ──
     const readingPanel = new ReadingPanel(layoutController, viewState, shortlistStore, sceneObjects);

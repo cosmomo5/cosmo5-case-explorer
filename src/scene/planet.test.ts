@@ -28,12 +28,12 @@ describe('createPlanet', () => {
     expect(geom.parameters.radius).toBe(PLANET_RING_RADIUS);
   });
 
-  it('sphere material is transparent and fully opaque at creation', () => {
+  it('sphere material is transparent and fully transparent at creation (phase 16-03 — overture fades it in)', () => {
     const scene = new THREE.Scene();
     const planet = createPlanet(scene);
     const mat = planet.sphere.material as THREE.MeshStandardMaterial;
     expect(mat.transparent).toBe(true);
-    expect(mat.opacity).toBe(1);
+    expect(mat.opacity).toBe(0);
   });
 
   it('group has an identifying name', () => {

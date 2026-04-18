@@ -22,7 +22,9 @@ export function createPlanet(scene: THREE.Scene): PlanetGroup {
     roughness: 0.65,
     metalness: 0.2,
     transparent: true,
-    opacity: 1,
+    // Phase 16-03: start invisible — calibration overture's Act II fades the
+    // sphere + ring in as the scan-line crosses viewport center (~2.7s).
+    opacity: 0,
   });
   const sphere = new THREE.Mesh(sphereGeo, sphereMat);
   group.add(sphere);
@@ -31,7 +33,8 @@ export function createPlanet(scene: THREE.Scene): PlanetGroup {
   const ringMat = new THREE.MeshBasicMaterial({
     color: TEAL,
     transparent: true,
-    opacity: 0.12,
+    // Phase 16-03: ring also fades in from 0 during Act II (target 0.12).
+    opacity: 0,
   });
   const ring = new THREE.Mesh(ringGeo, ringMat);
   ring.rotation.x = Math.PI / 2 - (18 * Math.PI / 180);
