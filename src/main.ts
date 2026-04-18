@@ -214,6 +214,13 @@ async function boot() {
     // ── Label opacity control ────────────────────────────────────────────
     let labelThreshold = 0; // 0 = auto (show on hover only), 100 = all visible
 
+    // Phase 16-03: set to true at the end of choreographPlanetaryToGlobal.
+    // Until true, the tick loop leaves labels alone (they start hidden).
+    // After true, labels respect the existing show-if-threshold-or-focused rule.
+    let overtureComplete = false;
+    // Dev-only: expose for Playwright DOM probes. Remove after milestone.
+    (window as any).__overtureComplete = () => overtureComplete;
+
     elLabelSlider.addEventListener('input', () => {
       labelThreshold = parseInt(elLabelSlider.value);
       elLabelVal.textContent = labelThreshold === 0 ? 'Auto'
@@ -235,7 +242,7 @@ async function boot() {
         div.style.transform = `translate(${screen.x + 14}px, ${screen.y - 14}px)`;
         // Show/hide based on threshold
         const isFocused = sceneObjects.focusedKey === key;
-        const showLabel = labelThreshold > 0 || isFocused;
+        const showLabel = overtureComplete || labelThreshold > 0 || isFocused;
         if (showLabel && !div.classList.contains('show')) div.classList.add('show');
         if (!showLabel && div.classList.contains('show') && !isFocused) div.classList.remove('show');
       }
