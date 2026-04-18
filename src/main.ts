@@ -211,9 +211,14 @@ async function boot() {
       sceneObjects.mode = (next.kind === 'global' || next.kind === 'planetary') ? 'global' : 'focused';
       sceneObjects.focusedKey = next.kind === 'constellation' ? next.nucleusKey : null;
 
-      // Planetary → global: run the overture choreography.
+      // Planetary → global: run the overture choreography. The onComplete
+      // callback (Phase 16-03) sets overtureComplete=true at the final beat
+      // so the tick loop stops stripping .show off the cluster labels the
+      // choreographer just revealed.
       if (prev.kind === 'planetary' && next.kind === 'global') {
-        choreographer.choreographPlanetaryToGlobal(sceneObjects, planetGroup);
+        choreographer.choreographPlanetaryToGlobal(sceneObjects, planetGroup, {
+          onComplete: () => { overtureComplete = true; },
+        });
       }
     });
 

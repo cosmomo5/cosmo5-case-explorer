@@ -3,11 +3,22 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import type { SceneObjects } from '../scene/scene-state';
 import { disposePlanet, type PlanetGroup } from '../scene/planet';
-import { releaseStarsToHomes } from '../scene/planetary-gather';
+import { releaseStarsToHomes, snapStarsToHomes } from '../scene/planetary-gather';
 
 export interface TransitionState {
   inProgress: boolean;
   currentCtx: gsap.Context | null;
+}
+
+/** Phase 16-03: caller-supplied callback fired once in the final beat. */
+export interface PlanetaryToGlobalOptions {
+  /**
+   * Invoked exactly once after (5) label reveal, (6) planetaryActive unlatch,
+   * and body.planetary class removal. main.ts uses this to set its
+   * `overtureComplete = true` so the tick loop stops stripping `.show` off
+   * the labels we just added.
+   */
+  onComplete?: () => void;
 }
 
 /** GSAP proxy pattern: tween a plain object, apply to camera-controls via setLookAt */
@@ -107,6 +118,7 @@ export function createTransitionChoreographer(controls: CameraControls) {
   function choreographPlanetaryToGlobal(
     objects: SceneObjects,
     planet: PlanetGroup,
+    options?: PlanetaryToGlobalOptions,
   ): Promise<void> {
     const prefersReduced = typeof window !== 'undefined'
       && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -120,10 +132,17 @@ export function createTransitionChoreographer(controls: CameraControls) {
       ease: 'power1.out',
     });
 
-    // (2) Release stars after a 0.2s lead
-    gsap.delayedCall(0.2 * s, () => {
-      releaseStarsToHomes(objects);
-    });
+    // (2) Release stars. Reduced-motion honors 16-CONTEXT.md line 123:
+    // 'Act IV reduces to 0.5s fade-swap (no migration motion)'. Under
+    // reduced-motion we SKIP the star-migration tweens and snap each star
+    // synchronously to its orbital home. No gsap.to on star.position.
+    if (prefersReduced) {
+      snapStarsToHomes(objects);
+    } else {
+      gsap.delayedCall(0.2 * s, () => {
+        releaseStarsToHomes(objects);
+      });
+    }
 
     // (3) Ring fade
     gsap.to(planet.ring.material as THREE.MeshBasicMaterial, {
@@ -150,6 +169,16 @@ export function createTransitionChoreographer(controls: CameraControls) {
       for (const [, div] of objects.nucleusLabels.entries()) {
         div.classList.add('show');
       }
+      // (6) Final beat — unlatch Gap 1 + Gap 2 atomically:
+      //   - scene geometry gate off (nucleus meshes + halos resume rendering)
+      //   - body.planetary class off (CSS fades global chrome back in)
+      //   - caller callback fires (main.ts sets overtureComplete = true so the
+      //     tick loop stops stripping .show off the labels we just added).
+      objects.planetaryActive = false;
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('planetary');
+      }
+      options?.onComplete?.();
     });
   }
 

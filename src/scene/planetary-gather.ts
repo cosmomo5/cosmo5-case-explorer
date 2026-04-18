@@ -50,6 +50,29 @@ export function gatherStarsToPlanet(
 }
 
 /**
+ * Phase 16-03 reduced-motion variant. Snaps every planetary-target star to
+ * its orbital home synchronously — no tween, no delay. Used by
+ * choreographPlanetaryToGlobal's reduced-motion branch per 16-CONTEXT.md
+ * (Act IV = fade-swap only; no spatial migration). Home position is derived
+ * via `starPositionAt(orbit, 0)` directly from userData.starOrbit — NOT from
+ * userData.planetaryReleaseTarget (which may not be set in test fixtures).
+ */
+export function snapStarsToHomes(objects: SceneObjects): void {
+  for (const star of objects.starMeshes) {
+    if (!star.userData.isPlanetaryTarget) continue;
+    const orbit = star.userData.starOrbit as StarOrbit | undefined;
+    if (!orbit) {
+      star.userData.isPlanetaryTarget = false;
+      continue;
+    }
+    const home = starPositionAt(orbit, 0);
+    star.position.set(home.x, home.y, home.z);
+    star.userData.isPlanetaryTarget = false;
+    delete star.userData.planetaryReleaseTarget;
+  }
+}
+
+/**
  * Tween every planetary-target star from its current surface position to its
  * orbital home. Clears the flag on completion so tickOrbits resumes control.
  * Respects prefers-reduced-motion (0.2s instead of 1.2s).

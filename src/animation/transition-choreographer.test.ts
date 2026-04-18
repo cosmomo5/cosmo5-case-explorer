@@ -1,9 +1,15 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as THREE from 'three';
 
 // Capture onComplete callbacks so tests can trigger them manually
 let capturedOnComplete: (() => void) | undefined;
+/**
+ * When true, gsap.to auto-invokes onComplete synchronously.
+ * When false (default), onComplete is captured and must be fired manually via
+ * `capturedOnComplete?.()` — matches the original 6-test behavior.
+ */
+let AUTO_FIRE_COMPLETE = false;
 
 vi.mock('gsap', () => ({
   gsap: {
@@ -12,9 +18,17 @@ vi.mock('gsap', () => ({
       return { revert: vi.fn() };
     }),
     to: vi.fn((_target: unknown, vars: Record<string, unknown>) => {
-      capturedOnComplete = vars.onComplete as (() => void) | undefined;
+      const onComplete = vars.onComplete as (() => void) | undefined;
+      capturedOnComplete = onComplete;
+      if (AUTO_FIRE_COMPLETE) onComplete?.();
       return { kill: vi.fn() };
     }),
+    set: vi.fn(),
+    delayedCall: vi.fn((_delay: number, cb: () => void) => {
+      if (AUTO_FIRE_COMPLETE) cb();
+      return { kill: vi.fn() };
+    }),
+    killTweensOf: vi.fn(),
   },
 }));
 
@@ -84,4 +98,137 @@ describe('TransitionChoreographer', () => {
     expect(ch.state.inProgress).toBe(true);
     expect(controls.enabled).toBe(false);
   });
+});
+
+// ── Phase 16-03: choreographPlanetaryToGlobal — final beat tests ─────────────
+
+import { createPlanet } from '../scene/planet';
+import { starPositionAt } from '../scene/orbitals/star-orbit';
+import { createTransitionChoreographer as createChoreographer } from './transition-choreographer';
+
+describe('choreographPlanetaryToGlobal — final beat (phase 16-03)', () => {
+  let controls: CameraControls;
+
+  beforeEach(() => {
+    // Auto-fire onComplete + delayedCall so Promises resolve synchronously
+    AUTO_FIRE_COMPLETE = true;
+    capturedOnComplete = undefined;
+    document.body.className = '';
+    document.body.classList.add('planetary');
+    controls = new CameraControls(new THREE.PerspectiveCamera(), document.createElement('div'));
+    // jsdom doesn't implement matchMedia; default to full-motion unless a test overrides.
+    if (!window.matchMedia) {
+      (window as any).matchMedia = (q: string) => ({
+        matches: false,
+        media: q,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      });
+    }
+  });
+
+  afterEach(() => {
+    AUTO_FIRE_COMPLETE = false;
+  });
+
+  function makeFixture() {
+    const scene = new THREE.Scene();
+    const planet = createPlanet(scene);
+
+    const labelDivs = ['a', 'b', 'c'].map((k) => {
+      const div = document.createElement('div');
+      div.className = 'cl';
+      return [k, div] as const;
+    });
+    const nucleusLabels = new Map<string, HTMLDivElement>(labelDivs);
+
+    const sceneObjects: any = {
+      scene,
+      camera: new THREE.PerspectiveCamera(),
+      controls,
+      starMeshes: [],
+      nucleusMeshes: new Map(),
+      nucleusLabels,
+      planetaryActive: true,
+    };
+
+    const choreographer = createChoreographer(controls);
+    return { sceneObjects, planet, choreographer, labelDivs };
+  }
+
+  it('sets sceneObjects.planetaryActive to false on resolve', async () => {
+    const { sceneObjects, planet, choreographer } = makeFixture();
+    await choreographer.choreographPlanetaryToGlobal(sceneObjects, planet);
+    expect(sceneObjects.planetaryActive).toBe(false);
+  }, 10000);
+
+  it('removes "planetary" class from document.body on resolve', async () => {
+    const { sceneObjects, planet, choreographer } = makeFixture();
+    await choreographer.choreographPlanetaryToGlobal(sceneObjects, planet);
+    expect(document.body.classList.contains('planetary')).toBe(false);
+  }, 10000);
+
+  it('invokes options.onComplete exactly once', async () => {
+    const { sceneObjects, planet, choreographer } = makeFixture();
+    const onComplete = vi.fn();
+    await choreographer.choreographPlanetaryToGlobal(sceneObjects, planet, { onComplete });
+    expect(onComplete).toHaveBeenCalledTimes(1);
+  }, 10000);
+
+  it('still adds .show to every nucleus label (16-02 regression guard)', async () => {
+    const { sceneObjects, planet, choreographer, labelDivs } = makeFixture();
+    await choreographer.choreographPlanetaryToGlobal(sceneObjects, planet);
+    for (const [, div] of labelDivs) {
+      expect(div.classList.contains('show')).toBe(true);
+    }
+  }, 10000);
+
+  it('works with no options argument (back-compat)', async () => {
+    const { sceneObjects, planet, choreographer } = makeFixture();
+    await expect(
+      choreographer.choreographPlanetaryToGlobal(sceneObjects, planet, undefined as any),
+    ).resolves.toBeUndefined();
+  }, 10000);
+
+  it('under prefers-reduced-motion, does NOT run star-migration tweens (locked decision: Act IV = fade-swap only)', async () => {
+    const origMM = window.matchMedia;
+    (window as any).matchMedia = (q: string) => ({
+      matches: q.includes('reduce'),
+      media: q,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    });
+    try {
+      const { sceneObjects, planet, choreographer } = makeFixture();
+      // StarOrbit shape per src/data/types.ts:39. Home = starPositionAt(orbit, 0)
+      // which reduces to orbitCenter + u when phase=0 and speed=0.
+      const mockOrbit = {
+        caseStudy: { id: 'fake', client: 'fake' } as any,
+        nucleusKey: 'fake',
+        orbitCenter: { x: 1, y: 2, z: 3 },
+        u: { x: 4, y: 5, z: 6 },
+        v: { x: 0, y: 0, z: 0 },
+        r: 1,
+        phase: 0,
+        speed: 0,
+        _ax: { x: 1, y: 0, z: 0 },
+      };
+      const star = new THREE.Mesh();
+      star.position.set(50, 50, 50);
+      star.userData.isPlanetaryTarget = true;
+      star.userData.starOrbit = mockOrbit;
+      sceneObjects.starMeshes.push(star);
+      const expectedHome = starPositionAt(mockOrbit, 0);
+      const p = choreographer.choreographPlanetaryToGlobal(sceneObjects, planet);
+      // Synchronous snap: star position is home BEFORE the promise resolves
+      expect(star.position.x).toBeCloseTo(expectedHome.x, 5);
+      expect(star.position.y).toBeCloseTo(expectedHome.y, 5);
+      expect(star.position.z).toBeCloseTo(expectedHome.z, 5);
+      // Star's isPlanetaryTarget is cleared synchronously by snapStarsToHomes
+      expect(star.userData.isPlanetaryTarget).toBe(false);
+      await p;
+    } finally {
+      (window as any).matchMedia = origMM;
+    }
+  }, 10000);
 });
