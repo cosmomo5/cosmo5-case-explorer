@@ -1,9 +1,11 @@
 export type ViewState =
+  | { kind: 'planetary' }
   | { kind: 'global' }
   | { kind: 'constellation'; nucleusKey: string }
   | { kind: 'reading'; nucleusKey: string; caseId: string };
 
 export type ViewEvent =
+  | { type: 'ENTER_FIELD' }
   | { type: 'ENTER_CONSTELLATION'; nucleusKey: string }
   | { type: 'EXIT_CONSTELLATION' }
   | { type: 'OPEN_READING'; caseId: string }
@@ -18,14 +20,19 @@ export interface ViewStateMachine {
 }
 
 export function createViewStateMachine(initial?: ViewState): ViewStateMachine {
-  let current: ViewState = initial ?? { kind: 'global' };
+  let current: ViewState = initial ?? { kind: 'planetary' };
   const listeners = new Set<ViewStateListener>();
 
   function dispatch(event: ViewEvent): void {
     const prev = current;
     let next: ViewState;
 
-    if (event.type === 'OPEN_READING') {
+    if (event.type === 'ENTER_FIELD') {
+      if (current.kind !== 'planetary') {
+        throw new Error(`Cannot ENTER_FIELD from "${current.kind}"`);
+      }
+      next = { kind: 'global' };
+    } else if (event.type === 'OPEN_READING') {
       if (current.kind !== 'constellation') {
         throw new Error(`Cannot OPEN_READING from "${current.kind}"`);
       }
