@@ -1,6 +1,9 @@
 import CameraControls from 'camera-controls';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
+import type { SceneObjects } from '../scene/scene-state';
+import { disposePlanet, type PlanetGroup } from '../scene/planet';
+import { releaseStarsToHomes } from '../scene/planetary-gather';
 
 export interface TransitionState {
   inProgress: boolean;
@@ -89,5 +92,66 @@ export function createTransitionChoreographer(controls: CameraControls) {
     });
   }
 
-  return { state, startT1, startT5, cancel };
+  /**
+   * Planetary → global transition. Sequences:
+   *   (1) Dim planet core (emissive + opacity)                @ 0.0–0.4s
+   *   (2) Release stars from planet surface to their orbital homes @ 0.2–1.4s
+   *   (3) Fade planet ring out                                 @ 0.4–1.0s
+   *   (4) Fade planet sphere to 0                              @ 1.0–1.6s
+   *   (5) Dispose planet + reveal cluster labels               @ 1.6s
+   *
+   * prefers-reduced-motion compresses everything to ~0.4s via a scale factor.
+   * Returns a Promise resolved when the planet has been disposed and labels
+   * have been revealed.
+   */
+  function choreographPlanetaryToGlobal(
+    objects: SceneObjects,
+    planet: PlanetGroup,
+  ): Promise<void> {
+    const prefersReduced = typeof window !== 'undefined'
+      && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const s = prefersReduced ? 0.33 : 1.0;
+
+    // (1) Dim planet core
+    gsap.to(planet.sphere.material as THREE.MeshStandardMaterial, {
+      emissiveIntensity: 0.02,
+      opacity: 0.35,
+      duration: 0.4 * s,
+      ease: 'power1.out',
+    });
+
+    // (2) Release stars after a 0.2s lead
+    gsap.delayedCall(0.2 * s, () => {
+      releaseStarsToHomes(objects);
+    });
+
+    // (3) Ring fade
+    gsap.to(planet.ring.material as THREE.MeshBasicMaterial, {
+      opacity: 0,
+      duration: 0.6 * s,
+      ease: 'power1.out',
+      delay: 0.4 * s,
+    });
+
+    // (4) Planet sphere fade to 0 starting at t=1.0s
+    const fadePromise = new Promise<void>((resolve) => {
+      gsap.to(planet.sphere.material as THREE.MeshStandardMaterial, {
+        opacity: 0,
+        duration: 0.6 * s,
+        delay: 1.0 * s,
+        ease: 'power1.in',
+        onComplete: () => resolve(),
+      });
+    });
+
+    return fadePromise.then(() => {
+      // (5) Dispose + reveal cluster labels
+      disposePlanet(planet, objects.scene);
+      for (const [, div] of objects.nucleusLabels.entries()) {
+        div.classList.add('show');
+      }
+    });
+  }
+
+  return { state, startT1, startT5, cancel, choreographPlanetaryToGlobal };
 }

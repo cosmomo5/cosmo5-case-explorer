@@ -9,6 +9,10 @@
     "plan_check": true,
     "verifier": true,
     "nyquist_validation": true,
+    "tdd_mode": true,
     "_auto_chain_active": false
+  },
+  "hooks": {
+    "community": true
   }
 }

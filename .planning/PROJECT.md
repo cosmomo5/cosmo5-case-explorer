@@ -14,7 +14,17 @@ A Three.js observatory for 116 marketing intelligence case studies. The Cosmo5 s
 
 "Cosmos" names the space. "Navigable as an atlas" names the method. "Observed, not advertised" names the epistemic stance — rules out marketing-summary register, feature-card grids, celebratory metric typography.
 
-## Current Milestone: v3.2 The Observatory Experience
+## Current Milestone: v3.3 Resolve the Observatory
+
+**Goal:** UI/UX polish pass. v3.2 shipped the feature set; none of the moves are resolved in actual use. v3.3 fixes position, hierarchy, consistency, and scene legibility so the 60–90s internal flow lands. Not a feature milestone — polish, removal, repositioning. Two exploratory brainstorm spikes (planetary overture, text-input-drives-stars) remain uncommitted until Mo selects a direction inside each phase.
+
+**Source specification:** `.planning/MILESTONE-v3.3.md`
+
+**Refactor posture:** After v3.3, not before. Several planned changes are deletions; refactoring code we are removing is wasted work. Option preserved for a v3.4 "Tighten" milestone.
+
+**Imagery (P2-D):** Deferred. Schema hook preserved; visual treatment waits for content team.
+
+## Previous Milestone: v3.2 The Observatory Experience (shipped 2026-04-17)
 
 **Goal:** Migrate the 2026-04-12 design direction (Kunumi query-driven navigation + BYLD analog-era precision + Cosmo5 observatory foundation) into the v3.1 phase-1c codebase. Reframe for internal team use with persistent state across sessions, two distinct study surfaces (Review Mode for sequential immersion, Comparison Mode for simultaneous spatial comparison), and clean substrate with imagery integration.
 
@@ -46,20 +56,35 @@ A Three.js observatory for 116 marketing intelligence case studies. The Cosmo5 s
 - ✓ CSS token system (teal/gold semantics, no purple, single --ease) — v3.1 foundation
 - ✓ Typography stack (DM Mono, Noto Sans 900, Fraunces loaded) — v3.1 foundation
 
-### Active (v3.2 — see MILESTONE-v3.2.md for full breakdown)
+### Active (v3.3 — see MILESTONE-v3.3.md for full breakdown)
 
-- [ ] Clean substrate: remove orphaned v1/v2 DOM; preserve phyllotaxis for Comparison Mode
-- [ ] CRT graticule + instrument-calibrating loader on first paint
-- [ ] Query bar with keyword→dimension mapping + live field response
-- [ ] Advanced drawer (filter fallback for power users)
-- [ ] Reading panel as instrument readout with archive imagery integration
-- [ ] Reading List rename + persistence + Review Mode + Comparison Mode
-- [ ] Star flight animation (orbit→track on add, track→orbit on remove, orbit→formation on compare)
-- [ ] Hero collapse — remove marketing banner on land
-- [ ] Welcome-back state on return visit
-- [ ] Query history chips
-- [ ] Full edge state coverage
-- [ ] Imagery schema + integration (parallel content project)
+- [ ] Phase 16: Planetary overture (brainstorm spike — initial view, transition to clusters)
+- [ ] Phase 17: Star labels always-on + label-click nav
+- [ ] Phase 18: Unified left column (query-bar folds into filter-panel)
+- [ ] Phase 19: Text-input-drives-stars behavior (brainstorm spike)
+- [ ] Phase 20: Gather as explicit staging action (filter stays silent)
+- [ ] Phase 21: Reading panel → right-side drawer (~380px)
+- [ ] Phase 22: Contextual bottom-right panel (view-scoped controls)
+- [ ] Phase 23: Star motion + dim/highlight polish (astrophotographic timing)
+- [ ] Phase 24: Theme + token audit (coral replaced, opacity names)
+- [ ] Phase 25: Font + size audit + overlap regression sweep
+- [ ] Phase 26: Removals (gathered button, depth-per-year, label slider, old shortcuts, unused graticule)
+- [ ] Phase 27: Final QA + Vercel ship gate (closes v3.2 P7-01 + P7-06)
+
+### Completed (v3.2 — shipped 2026-04-17)
+
+- [x] Clean substrate: remove orphaned v1/v2 DOM; preserve phyllotaxis for Comparison Mode
+- [x] CRT graticule + instrument-calibrating loader on first paint
+- [x] Query bar with keyword→dimension mapping + live field response
+- [x] Advanced drawer (filter fallback for power users)
+- [x] Reading panel as instrument readout with archive imagery integration
+- [x] Reading List rename + persistence + Review Mode + Comparison Mode
+- [x] Star flight animation (orbit→track on add, track→orbit on remove, orbit→formation on compare)
+- [x] Hero collapse — remove marketing banner on land
+- [x] Welcome-back state on return visit
+- [x] Query history chips
+- [x] Full edge state coverage
+- [~] Imagery schema (in place) + integration (deferred to content project, not v3.3)
 
 ### Out of Scope (v3.2)
 
@@ -103,6 +128,9 @@ A Three.js observatory for 116 marketing intelligence case studies. The Cosmo5 s
 | Minimal point nucleus (not rendered sphere) | Stars are content; nucleus is anchor. 3D from rings + depth, not nucleus volume | ✓ Validated v3.1 |
 | Camera-based flattening (not geometry change) | Rings were always circular; camera rotates to face them. Conceptually honest | ✓ Validated v3.1 |
 | Returns ~20% slower than entries | Expansion feels larger than compression. Psychological asymmetry | ✓ Validated v3.1 |
+| v3.3 is polish, not features | v3.2 moves are all present but none are resolved in use. Polish pass before the 60–90s flow lands | ✓ Opened 2026-04-17 |
+| Refactor after v3.3, not before | Several v3.3 changes are deletions; refactoring code being removed is wasted work | ✓ 2026-04-17 |
+| Imagery deferred from v3.3 | Schema hook preserved; integration waits for content team delivery | ✓ 2026-04-17 |
 
 ---
-*Last updated: 2026-04-14 after milestone v3.2 definition (primary user reframed, 5 open questions answered, MILESTONE-v3.2.md finalized)*
+*Last updated: 2026-04-17 — v3.2 shipped (Phases 13–15), v3.3 "Resolve the Observatory" opened (Phases 16–27, MILESTONE-v3.3.md finalized)*

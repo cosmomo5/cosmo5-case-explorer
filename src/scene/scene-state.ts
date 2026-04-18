@@ -279,7 +279,7 @@ export function tickOrbits(
   const inFocused = objects.mode === 'focused';
   const hasHighlight = objects.highlightedRingValue !== null;
   for (const star of starMeshes) {
-    if (star.userData.isStagingTarget) continue; // GSAP controls staging stars
+    if (star.userData.isStagingTarget || star.userData.isPlanetaryTarget) continue; // GSAP controls staging / planetary stars
     const ringOrbit = star.userData.ringOrbit as RingOrbit | undefined;
     if (inFocused && ringOrbit) {
       // Ring orbit path

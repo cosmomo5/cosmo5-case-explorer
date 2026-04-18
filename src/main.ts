@@ -23,6 +23,8 @@ import { ShortlistTrack } from './ui/shortlist-track';
 import { mountReviewMode } from './ui/review-mode';
 import { LoaderController } from './ui/loader';
 import { ComparisonMode } from './scene/comparison-mode';
+import { createPlanet, PLANET_RADIUS } from './scene/planet';
+import { gatherStarsToPlanet } from './scene/planetary-gather';
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.globalTimeline.timeScale(0);
@@ -109,6 +111,12 @@ async function boot() {
     sceneObjects.scene = scene;
     loaderCtrl?.advance('SCENE');
 
+    // ── Planetary overture (Plan 16-02) ─────────────────────────────────
+    // Create planet at origin, gather all case-stars onto its surface, hold
+    // that state until viewState transitions planetary → global.
+    const planetGroup = createPlanet(scene);
+    gatherStarsToPlanet(sceneObjects, { x: 0, y: 0, z: 0 }, PLANET_RADIUS);
+
     // ── ReadingPanel (wired to layoutController, viewState, shortlistStore) ──
     const readingPanel = new ReadingPanel(layoutController, viewState, shortlistStore, sceneObjects);
 
@@ -182,9 +190,17 @@ async function boot() {
     });
 
     // ── Sync ViewState → SceneObjects.mode for backward compatibility ───
-    viewState.subscribe((next) => {
-      sceneObjects.mode = next.kind === 'global' ? 'global' : 'focused';
+    // planetary and global both render the scene's global orbital layout. The
+    // distinction between them is owned by the overture overlay (Plan 16-03),
+    // not by SceneObjects.mode. Only constellation/reading map to 'focused'.
+    viewState.subscribe((next, prev) => {
+      sceneObjects.mode = (next.kind === 'global' || next.kind === 'planetary') ? 'global' : 'focused';
       sceneObjects.focusedKey = next.kind === 'constellation' ? next.nucleusKey : null;
+
+      // Planetary → global: run the overture choreography.
+      if (prev.kind === 'planetary' && next.kind === 'global') {
+        choreographer.choreographPlanetaryToGlobal(sceneObjects, planetGroup);
+      }
     });
 
     // ── Filter panel (inside filters sidebar) ───────────────────────────
@@ -590,6 +606,19 @@ async function boot() {
       loaderCtrl.advance('ONLINE');
       setTimeout(() => loaderCtrl.done(), 400);
     }
+
+    // ── TEMPORARY (Plan 16-02): click anywhere commits planetary → global.
+    // Plan 16-03 replaces this with the calibration overture and proper
+    // gesture handling (click / Enter / Space on the overture surface).
+    const commitPlanetary = () => {
+      if (viewState.getState().kind === 'planetary') {
+        viewState.dispatch({ type: 'ENTER_FIELD' });
+      }
+    };
+    document.addEventListener('click', commitPlanetary);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') commitPlanetary();
+    });
 
   } catch (err) {
     console.error('[v3 boot error]', err);

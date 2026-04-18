@@ -1,29 +1,52 @@
 # Roadmap: Case Study Explorer
 
-## Active Milestone: v3.2 — The Observatory Experience
+## Active Milestone: v3.3 — Resolve the Observatory
 
-**Aesthetic premise:** *"A cosmos of proof, navigable as an atlas — observed, not advertised."*
+**Aesthetic premise:** *"A cosmos of proof, navigable as an atlas — observed, not advertised."* (unchanged from v3.2)
 
-**Goal:** Migrate the 2026-04-12 design direction (Kunumi query-driven navigation + BYLD analog-era precision + Cosmo5 observatory foundation) into the v3.1 phase-1c codebase. Reframe for internal team use with persistent state across sessions, two distinct study surfaces (Review Mode, Comparison Mode), and clean substrate with imagery integration.
+**Goal:** UI/UX polish pass. v3.2 shipped the feature set; in actual use the moves are present but unresolved. v3.3 fixes position, hierarchy, consistency, and scene legibility so the 60–90s internal flow lands. Not a feature milestone. Two phases are exploratory brainstorm spikes (planetary overture, text-input-drives-stars).
+
+**Source:** `.planning/MILESTONE-v3.3.md`
+
+**Primary user:** Internal Cosmo5 strategy/sales team (unchanged).
+
+**Refactor posture:** After v3.3, not before (reasoning in MILESTONE-v3.3.md).
+
+**Imagery (P2-D):** Deferred. Schema hook preserved.
+
+### v3.3 Phases
+
+**Phase Numbering:**
+- Integer phases (16–27): Planned milestone work
+- Decimal phases: Urgent insertions only (via `/gsd:insert-phase`)
+
+- [ ] **Phase 16: Planetary Overture** *(brainstorm spike)* — Initial planet-like view with cases gathered around/within, click/scroll transitions into cluster layout. Visual companion mockups → Mo selects → execute.
+- [ ] **Phase 17: Star Labels Always-On + Label-Click Nav** — Reinstate `.sl` visibility at low opacity by default; label click triggers ENTER_CONSTELLATION.
+- [ ] **Phase 18: Unified Left Column** — `query-bar.ts` folds into `filter-panel.ts`. One pane, two input modes (keyword + facet), same result set.
+- [ ] **Phase 19: Text-Input-Drives-Stars** *(brainstorm spike)* — Stars respond dynamically to typing (motion / brightness / reformation). Visual companion mockups → Mo selects → execute.
+- [ ] **Phase 20: Gather as Staging Action** — Filter narrows silently; Gather click stages. Remove "highlight filtered across all views."
+- [ ] **Phase 21: Reading Panel → Right Drawer** — Geometry change to ≈380px right drawer. No overlap with selection surface.
+- [ ] **Phase 22: Contextual Bottom-Right Panel** — View-scoped controls. Depth-per-year removed.
+- [ ] **Phase 23: Star Motion + Dim/Highlight Polish** — `transition-choreographer.ts` + `star-flight.ts` tuned to astrophotographic timing. Single `--ease` preserved.
+- [ ] **Phase 24: Theme + Token Audit** *(Kimi dispatch)* — Coral staging sphere replaced or named; ad-hoc opacities named (`--dim-matched`, `--dim-unmatched`, `--ghost`, `--glow`).
+- [ ] **Phase 25: Font + Size Audit + Overlap Regression** *(Kimi dispatch)* — Font families correct across all DOM; scale tightened to 4–5 sizes; viewport sweep at 1280×800, 1440×900, 1920×1080, 2560×1440.
+- [ ] **Phase 26: Removals** *(Kimi dispatch)* — Gathered button, depth-per-year, old shortcuts, unused graticule, label slider.
+- [ ] **Phase 27: Final QA + Ship Gate** — Full 60–90s flow; Vercel preview; closes v3.2 P7-01 + P7-06.
+
+---
+
+## Previous Milestone: v3.2 — The Observatory Experience (shipped 2026-04-17)
 
 **Source:** `.planning/MILESTONE-v3.2.md`
 
-**Primary user:** Internal Cosmo5 strategy/sales team.
-
-### v3.2 Phases
-
-**Phase Numbering:**
-- Integer phases (8–15): Planned milestone work
-- Decimal phases: Urgent insertions only (created via `/gsd:insert-phase`)
-
 - [x] **Phase 8: Clean Substrate** — Remove orphaned DOM, isolate phyllotaxis for Comparison Mode, extend schema with imagery field, document branch strategy (completed 2026-04-14)
 - [x] **Phase 9: Atmosphere** — CRT graticule substrate, instrument-calibrating loader, corner wordmark (completed 2026-04-16)
-- [x] **Phase 10: Query Bar** — Central conversational input, keyword→dimension mapping, live field response, Advanced drawer fallback (1/5 plans complete — Wave 0 test stubs) (completed 2026-04-16)
-- [x] **Phase 11: Reading Panel as Instrument** — Restructure header/body/impact as instrument readout, archive imagery integration, Fraunces italic deployment (2/3 plans complete) (completed 2026-04-16)
-- [x] **Phase 12: Reading List + Review Mode + Comparison Mode** — Rename, track redesign, star flight, localStorage persistence, Review Mode paginated reader, Comparison Mode adapted gather (2/5 plans complete) (2026-04-16) (completed 2026-04-16)
-- [ ] **Phase 13: Hero Collapse** — Remove marketing banner + stats strip, verify wordmark adequate
-- [ ] **Phase 14: Edge States and Coverage** — Empty/no-match/error/narrow-viewport states, transition interrupts, a11y audit
-- [ ] **Phase 15: Ship** — Full-flow verification, visual regression check, WCAG 2.1 AA, Lighthouse, OG tags, Vercel deploy, Mo approval
+- [x] **Phase 10: Query Bar** — Central conversational input, keyword→dimension mapping, live field response, Advanced drawer fallback (completed 2026-04-16)
+- [x] **Phase 11: Reading Panel as Instrument** — Restructure header/body/impact as instrument readout, archive imagery integration, Fraunces italic deployment (completed 2026-04-16)
+- [x] **Phase 12: Reading List + Review Mode + Comparison Mode** — Rename, track redesign, star flight, localStorage persistence, Review Mode paginated reader, Comparison Mode adapted gather (completed 2026-04-16)
+- [x] **Phase 13: Hero Collapse** — Marketing banner + stats strip removed, ambient catalog readout added (completed 2026-04-17)
+- [x] **Phase 14: Edge States and Coverage** — Empty/no-match/error/narrow-viewport states, transition interrupts, a11y audit (completed 2026-04-17)
+- [~] **Phase 15: Ship** — Automatable portion complete; P7-01 (flow verification) + P7-06 (Vercel approval) carried forward to v3.3 Phase 27.
 
 ### Phase Details
 
