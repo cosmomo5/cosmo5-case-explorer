@@ -65,6 +65,12 @@ export interface SceneObjects {
   highlightedRingValue: string | null;
   currentRingDimension: RingDimension | null;
   _ringWasHighlighted: boolean;
+  /**
+   * Phase 16-03: true while the overture owns the viewport. When true, the
+   * tick loop hides nucleus meshes and halos so the planet has the frame to
+   * itself. Flipped to false by choreographPlanetaryToGlobal's final beat.
+   */
+  planetaryActive?: boolean;
   /** Timeout ID for delayed staging sphere disposal — prevents race when filter is re-applied within 700ms of clearing */
   _stagingDisposalTimeout: ReturnType<typeof setTimeout> | undefined;
   /** Optional camera-controls ref — set by main.ts after scene creation. Enables camera lean toward staging sphere (FILT-06). */
@@ -212,6 +218,9 @@ export function buildOrbitalScene(
     currentRingDimension: null,
     _ringWasHighlighted: false,
     _stagingDisposalTimeout: undefined,
+    // Phase 16-03: boot in planetary-overture mode — overture owns the viewport
+    // until choreographPlanetaryToGlobal's final beat flips this to false.
+    planetaryActive: true,
   };
 }
 
@@ -240,11 +249,22 @@ export function tickOrbits(
   const { nucleusMeshes, nucleusOrbits, starMeshes, filterState } = objects;
   const prefersReduced = matchesReducedMotion();
 
+  // Phase 16-03: while the overture owns the viewport, hide nucleus meshes +
+  // halos and skip their per-frame tick updates. This is Gap 1's scene-geometry
+  // closure — the planet has the frame to itself during Acts I–IV. The flag is
+  // flipped off in choreographPlanetaryToGlobal's final beat.
+  const planetaryHidden = objects.planetaryActive === true;
+
   // Update nucleus positions (outer orbital)
   for (const [key, nucOrbit] of Object.entries(nucleusOrbits)) {
+    const mesh = nucleusMeshes.get(key)!;
+    // Visibility gate fires regardless of focused/global mode.
+    mesh.visible = !planetaryHidden;
+    const haloObj = mesh.userData.halo as THREE.Object3D | undefined;
+    if (haloObj) haloObj.visible = !planetaryHidden;
+    if (planetaryHidden) continue;
     // Skip focused nucleus — let it stay where focusSphere positioned it
     if (objects.mode === 'focused' && key === objects.focusedKey) continue;
-    const mesh = nucleusMeshes.get(key)!;
     const pos = nucleusPositionAt(nucOrbit, prefersReduced ? 0 : t, _nucPosScratch);
     mesh.position.set(pos.x, pos.y, pos.z);
     if (mesh.userData.halo) (mesh.userData.halo as THREE.Mesh).position.copy(mesh.position);

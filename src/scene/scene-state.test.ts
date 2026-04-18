@@ -15,6 +15,7 @@ vi.mock('gsap', () => ({
 import {
   applyFilter,
   syncShortlistToStarState,
+  tickOrbits,
   type SceneObjects,
 } from './scene-state';
 import type { EnrichedCaseStudy } from '../data/enrich';
@@ -321,5 +322,172 @@ describe('syncShortlistToStarState', () => {
     syncShortlistToStarState(objects, entries('c'));
 
     expect(starFor('c').userData.starState).toBe('selected');
+  });
+});
+
+// ── planetaryActive gate (phase 16-03, Gap 1 scene-geometry closure) ─────────
+
+/**
+ * Build a global-mode SceneObjects with a single nucleus that has a halo attached,
+ * plus a small number of stars orbiting it. Mirrors the production buildOrbitalScene
+ * shape closely enough for the tick-loop gate to be exercised.
+ */
+function makeGlobalSceneWithHalo(cases: EnrichedCaseStudy[]): {
+  sceneObjects: SceneObjects;
+  camera: THREE.PerspectiveCamera;
+  halo: THREE.Mesh;
+} {
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera();
+
+  const nucleusMeshes = new Map<string, THREE.Mesh>();
+
+  const nucGeo = new THREE.SphereGeometry(6, 4, 4);
+  const nucMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const nucMesh = new THREE.Mesh(nucGeo, nucMat);
+  nucMesh.position.set(10, 20, 30);
+
+  // Attach a halo (matches buildOrbitalScene's pattern — mesh.userData.halo)
+  const haloGeo = new THREE.SphereGeometry(20, 8, 8);
+  const haloMat = new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.06,
+    side: THREE.BackSide,
+  });
+  const halo = new THREE.Mesh(haloGeo, haloMat);
+  halo.position.copy(nucMesh.position);
+  scene.add(halo);
+
+  nucMesh.userData = {
+    key: 'Media',
+    isNucleus: true,
+    homePos: nucMesh.position.clone(),
+    halo,
+  };
+  scene.add(nucMesh);
+  nucleusMeshes.set('Media', nucMesh);
+
+  // A single nucleus orbit (position is static since speed=0 and phase=0).
+  const nucleusOrbits: Record<string, any> = {
+    Media: {
+      key: 'Media',
+      orbitR: 200,
+      orbitU: { x: 1, y: 0, z: 0 },
+      orbitV: { x: 0, y: 1, z: 0 },
+      phase: 0,
+      speed: 0,
+      cases,
+      homePos: { x: 10, y: 20, z: 30 },
+    },
+  };
+
+  const starMeshes: THREE.Mesh[] = cases.map((c) => {
+    const sGeo = new THREE.SphereGeometry(2.5, 4, 4);
+    const sMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.85,
+    });
+    const star = new THREE.Mesh(sGeo, sMat);
+    star.position.set(50, 0, 0);
+    star.userData = {
+      caseStudy: c,
+      starOrbit: {
+        nucleusKey: 'Media',
+        orbitCenter: { x: 10, y: 20, z: 30 },
+        u: { x: 1, y: 0, z: 0 },
+        v: { x: 0, y: 1, z: 0 },
+        r: 10,
+        phase: 0,
+        speed: 0,
+        _ax: { x: 1, y: 0, z: 0 },
+      },
+      isFiltered: false,
+      isStagingTarget: false,
+      isPlanetaryTarget: false,
+      originalColor: 0xffffff,
+    };
+    scene.add(star);
+    return star;
+  });
+
+  const sceneObjects: SceneObjects = {
+    scene,
+    nucleusMeshes,
+    nucleusLabels: new Map(),
+    starMeshes,
+    starOrbits: [],
+    nucleusOrbits,
+    filterState: createFilterState(),
+    mode: 'global',
+    focusedKey: null,
+    groupMode: 'vertical',
+    ringLineMeshes: [],
+    ringLineValues: [],
+    ringLabelEls: [],
+    highlightedRingValue: null,
+    currentRingDimension: null,
+    _ringWasHighlighted: false,
+    _stagingDisposalTimeout: undefined,
+  };
+
+  return { sceneObjects, camera, halo };
+}
+
+describe('planetaryActive gate', () => {
+  const c1 = makeCase('p1');
+  const c2 = makeCase('p2');
+
+  beforeEach(() => {
+    // jsdom doesn't implement matchMedia; tickOrbits calls it via matchesReducedMotion
+    if (!window.matchMedia) {
+      (window as any).matchMedia = (q: string) => ({
+        matches: false,
+        media: q,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      });
+    }
+  });
+
+  it('hides every nucleus mesh when planetaryActive is true', () => {
+    const { sceneObjects, camera } = makeGlobalSceneWithHalo([c1, c2]);
+    sceneObjects.planetaryActive = true;
+    tickOrbits(sceneObjects, 0, camera);
+    for (const [, mesh] of sceneObjects.nucleusMeshes.entries()) {
+      expect(mesh.visible).toBe(false);
+    }
+  });
+
+  it('hides every nucleus halo when planetaryActive is true', () => {
+    const { sceneObjects, camera } = makeGlobalSceneWithHalo([c1, c2]);
+    sceneObjects.planetaryActive = true;
+    tickOrbits(sceneObjects, 0, camera);
+    for (const [, mesh] of sceneObjects.nucleusMeshes.entries()) {
+      const halo = mesh.userData.halo as THREE.Object3D | undefined;
+      if (halo) expect(halo.visible).toBe(false);
+    }
+  });
+
+  it('restores nucleus + halo visibility when planetaryActive is false', () => {
+    const { sceneObjects, camera } = makeGlobalSceneWithHalo([c1, c2]);
+    sceneObjects.planetaryActive = false;
+    tickOrbits(sceneObjects, 0, camera);
+    for (const [, mesh] of sceneObjects.nucleusMeshes.entries()) {
+      expect(mesh.visible).toBe(true);
+      const halo = mesh.userData.halo as THREE.Object3D | undefined;
+      if (halo) expect(halo.visible).toBe(true);
+    }
+  });
+
+  it('does not interfere with isPlanetaryTarget star-position gate', () => {
+    const { sceneObjects, camera } = makeGlobalSceneWithHalo([c1, c2]);
+    sceneObjects.planetaryActive = true;
+    const star = sceneObjects.starMeshes[0];
+    star.userData.isPlanetaryTarget = true;
+    const before = star.position.clone();
+    tickOrbits(sceneObjects, 1000, camera);
+    expect(star.position.equals(before)).toBe(true);
   });
 });
