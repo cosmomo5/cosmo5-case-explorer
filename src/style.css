@@ -1485,4 +1485,154 @@ body.constellation #track-zone {
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
+
+  /* Phase 16-03 reduced-motion: overture collapses to static reveal */
+  .calibration-overture .co-status-line { transition: none; }
+  .calibration-overture .co-scan { display: none; }
+  .calibration-overture .co-reticle { transition: none; }
+  /* Hint is static in reduced-motion — no pulse */
+  .calibration-overture.hint-on .co-hint { animation: none; }
+}
+
+/* ── Phase 16-03: planetary state chrome-hide ─────────────────────── */
+/* While body.planetary is set, the observatory owns the viewport.
+   Only #observatory-header and the 3D scene render. All other global
+   chrome is hidden. The class is removed at the final beat of
+   choreographPlanetaryToGlobal, at which point CSS transitions
+   (0.4s opacity) fade the chrome back in. */
+
+body.planetary header.wordmark-corner,
+body.planetary #catalogReadout,
+body.planetary #crumb,
+body.planetary #filtersWrap,
+body.planetary #queryWrap,
+body.planetary #homeBtn,
+body.planetary #cosmoControls,
+body.planetary #gatherList {
+  /* Hidden via opacity + pointer-events + visibility (NOT display:none) so
+     the 0.4s opacity transition declared below can animate them back in
+     when body.planetary is removed. display:none cannot transition. */
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* Smooth fade-in of chrome after body.planetary is removed.
+   Applied to the elements above. visibility transitions with 0 duration
+   so pointer-events + visibility snap back immediately on class removal,
+   while opacity animates over 0.4s. */
+header.wordmark-corner,
+#catalogReadout,
+#crumb,
+#filtersWrap,
+#queryWrap,
+#homeBtn,
+#cosmoControls,
+#gatherList {
+  transition: opacity 0.4s var(--ease);
+}
+
+/* ── Observatory header (persistent top strip during all states) ── */
+#observatory-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 24px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(94, 207, 192, 0.72);   /* teal 0.72 */
+  background: linear-gradient(180deg, rgba(11, 12, 16, 0.85) 0%, rgba(11, 12, 16, 0) 100%);
+  z-index: 50;
+  pointer-events: none;
+}
+#observatory-header .oh-sep { color: rgba(255, 255, 255, 0.18); }
+#observatory-header .oh-status { color: var(--gold); }       /* gold = nav/active */
+
+/* ── Calibration overture (Acts I + II) ───────────────────────────── */
+.calibration-overture {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 18px;
+}
+.calibration-overture .co-reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(94, 207, 192, 0.18);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+.calibration-overture.reticle-on .co-reticle { opacity: 1; }
+.calibration-overture .co-status {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(94, 207, 192, 0.9);
+}
+.calibration-overture .co-status-line {
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+.calibration-overture .co-status-line.show { opacity: 1; }
+.calibration-overture .co-status-line.done::before { content: "✓ "; color: var(--teal); }
+.calibration-overture .co-scan {
+  position: fixed;
+  top: -8%;
+  left: -5%;
+  width: 110%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(94, 207, 192, 0.8) 50%, transparent 100%);
+  transform: rotate(2deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.calibration-overture .co-hint {
+  position: absolute;
+  top: 62%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(94, 207, 192, 0.55);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+/* Act III hint "pulses subtly" per 16-CONTEXT.md. hint-on adds the entry
+   fade AND the infinite pulse. Pulse is opacity-only (no transform) to
+   avoid jitter against the planet center. */
+@keyframes hintPulse {
+  0%   { opacity: 0.55; }
+  50%  { opacity: 0.85; }
+  100% { opacity: 0.55; }
+}
+.calibration-overture.hint-on .co-hint {
+  opacity: 1;
+  animation: hintPulse 2.4s var(--ease) infinite;
 }
