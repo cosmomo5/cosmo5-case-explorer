@@ -1,109 +1,114 @@
 ---
 gsd_state_version: 1.0
-milestone: v3.2
-milestone_name: — The Observatory Experience
-status: awaiting-human-gate
-stopped_at: Phases 13, 14, and Phase 15 automatable portion complete. Blocked on P7-01 (Mo or internal-user flow verification) and P7-06 (Vercel preview visual approval). 248 tests passing, build 237KB gzipped (29% of 800KB budget), OG meta in place, tsc clean.
-last_updated: "2026-04-17T13:50:00.000Z"
-last_activity: "2026-04-17 — Phases 13 + 14 + Phase 15 (automatable) shipped in one session. Phase 13: hero + stats removed, ambient catalog readout added. Phase 14: empty-state hint, no-match dim to 0.08 with broader-term suggestions, error state (CATALOG / CONNECTION LOST [RETRY]), narrow-viewport fallback, motion/keyboard/ARIA audit. Phase 15: OG/Twitter meta added, bundle + tests + WCAG self-check clean. Advisor corrections applied: dead-code queue removed from choreographer, FilterState.isActive() ripple audited, 6 new edge-state tests added (248 total). Error state, narrow-viewport, and no-match state visually verified in Playwright."
+milestone: v3.3
+milestone_name: — Resolve the Observatory
+status: phase-16-executed-verified-pending-playwright-uat
+stopped_at: "2026-04-18 late — /gsd-execute-phase 16 completed. 16-01 + 16-02 committed retroactively from uncommitted working tree (da6bd3d, 4ea66e6). 16-03 executed via gsd-executor: 8 commits (a2ad68b → 1a649a1) landing calibration overture + observatory header + skippable + reduced-motion + Gap 1 closure (body.planetary chrome-hide + scene-geometry gate) + Gap 2 closure (overtureComplete flag). gsd-verifier returned PASS-WITH-CONDITIONS: 29/29 code-level must_haves honored, all 12 PO-* requirements traced to implementation. Automated gates green: 285/285 tests, tsc --noEmit clean, build 239.01 KB gzipped (10.99 KB headroom under 250 KB budget). Outstanding: Playwright visual UAT (chrome-hidden-at-boot probe, 7 .cl.show post-reverse-gather probe, tests 3 + 4 previously blocked, full sequence smoke, reduced-motion smoke, skippable smoke). Next action: /gsd-verify-work re-runs 16-UAT.md gates via Playwright MCP → Windows Chrome; if green, /gsd-transition 16 → /gsd-plan-phase 17."
+last_updated: "2026-04-18T22:30:00.000Z"
+last_activity: "2026-04-18 late — Phase 16 fully executed. Branch truth corrected (working tree is on `draft`, not `phase-1c` as previous STATE.md claimed — no action taken on branch itself; phase-1c line below in Branch Strategy is legacy from v3.2 and no longer applies to v3.3 work). 11 commits added to draft: 2 retroactive (16-01 state machine, 16-02 planet mesh + choreograph with 2 known gaps captured in SUMMARY) + 8 net-new from gsd-executor for 16-03 + 1 plan-docs commit. Code-level verification via gsd-verifier: PASS-WITH-CONDITIONS. 16-UAT.md now has one visual UAT pass left to run via Playwright MCP before transition."
 progress:
-  total_phases: 8
-  completed_phases: 7
-  total_plans: 30
-  completed_plans: 30
-  percent: 100
+  total_phases: 12
+  completed_phases: 1
+  total_plans: 3
+  completed_plans: 3
+  percent: 17
 ---
 
 # Project State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-04-13) and `.planning/MILESTONE-v3.2.md` (finalized 2026-04-14).
+See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` (finalized 2026-04-17), `.planning/MILESTONE-v3.2.md` (predecessor, shipped 2026-04-17).
 
-**Core value (revised 2026-04-14):** A considered internal place where the Cosmo5 strategy/sales team builds, returns to, and studies their mental library of proof. A showcase of the agency's accomplishments that the team itself inhabits across sessions. Closer to a museum's study room than a pitch deck.
+**Core value (unchanged from v3.2):** A considered internal place where the Cosmo5 strategy/sales team builds, returns to, and studies their mental library of proof. A showcase of the agency's accomplishments that the team itself inhabits across sessions. Closer to a museum's study room than a pitch deck.
 
-**Aesthetic premise:** *"A cosmos of proof, navigable as an atlas — observed, not advertised."*
+**Aesthetic premise (unchanged):** *"A cosmos of proof, navigable as an atlas — observed, not advertised."*
 
-**Current focus (v3.2):** The Observatory Experience. Migrate the 2026-04-12 direction note moves (Kunumi query-driven navigation + BYLD analog-era precision + Cosmo5 observatory foundation) into the v3.1 phase-1c codebase, reframed for internal use with localStorage persistence, Review Mode (sequential deep reading), and Comparison Mode (adapted gather mechanic for simultaneous spatial comparison of the reading list).
+**Current focus (v3.3):** Resolve the Observatory. UI/UX polish pass. v3.2 shipped the moves but none are resolved in actual use. v3.3 fixes position, hierarchy, consistency, and scene legibility so the 60–90s internal flow lands. Not a feature milestone — polish, removal, repositioning.
 
 ## Current Position
 
-**Phase:** 14 (Edge States) — COMPLETE. Six plans done: P14-01 empty-hint, P14-02 no-match, P14-03 error, P14-04 narrow-viewport, P14-05 motion/keyboard/ARIA audit, P14-06 choreographer queue.
-**Milestone:** v3.2 in progress. MILESTONE-v3.2.md is the source-of-truth reference.
-**Status:** Ready to ship (Phase 15)
-**Last activity:** 2026-04-17 — Phases 13 + 14 shipped. Empty-state hint under query. No-match state deepens field dim to 0.08, offers three broader-term suggestions (performance / brand / social media) as clickable chips. Error state freezes loader at "CATALOG / CONNECTION LOST [RETRY]" with functional retry. Narrow-viewport (<768px) shows desktop-only notice. Motion/keyboard/ARIA audit: all v3.2 animations covered by global prefers-reduced-motion rule; focus-visible rings on new buttons; aria-live on queryHint; role=alert on loader error and narrow-viewport. Choreographer now supports queue-to-completion (guards preserve existing UX). Bug fix: FilterState.isActive() now includes searchText. 242 tests, build clean, Playwright visual verified.
+**Phase:** 16 (Planetary Overture) — ALL PLANS COMMITTED. 16-01, 16-02, 16-03 all have SUMMARY.md; gsd-verifier returned PASS-WITH-CONDITIONS. Only Playwright visual UAT remains.
+**Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth.
+**Status:** Code complete for Phase 16. Code-level verification PASS via VERIFICATION.md (29/29 must_haves, all 12 PO-* requirements traced). Automated gates green: 285/285 tests, tsc --noEmit clean, build 239.01 KB gzipped. Outstanding: one Playwright visual UAT pass (16-UAT.md gates — chrome-hidden-at-boot probe, 7 `.cl.show` post-reverse-gather probe, tests 3 + 4 previously blocked, full sequence smoke, reduced-motion smoke, skippable smoke) before `/gsd-transition 16`.
+**Branch:** `draft` (previous STATE.md claimed `phase-1c` — that was legacy from v3.2 and no longer describes reality; v3.3 phase 16 work landed on `draft`).
+**Last activity:** 2026-04-18 late — /gsd-execute-phase 16 end-to-end. 11 commits added to draft (da6bd3d → 1a649a1). See commit log for the plan-by-plan breakdown. VERIFICATION.md at .planning/phases/16-planetary-overture/VERIFICATION.md.
 
-Progress: [██████████████] 100% of v3.2 plans — Phases 13 + 14 complete (8 plans). Only Phase 15 (Ship) remains.
+Progress: [██░░░░░░░░░░] Phase 16 of 12 complete (code-level); v3.3 ~17%. Visual UAT still pending — do NOT `/gsd-transition 16` until it passes.
 
-## Decisions Locked In 2026-04-14 (Q1–Q5 resolutions)
+## Decisions Locked In 2026-04-17 (v3.3 opening)
 
-- **Q1 — Premise:** *"A cosmos of proof, navigable as an atlas — observed, not advertised."*
-- **Q2 — Branch strategy:** phase-1c canonical. Hybrid approach: consult `draft/v3-starmap` as spec, rewrite in phase-1c. Guardrail: import v3-starmap moves only if phase-1c re-implementation improves on or matches them.
-- **Q3 — Terminal action:** REFRAMED. Primary user = internal team, not prospect. No Compile/Share. Instead: Review Mode (sequential paginated reader) + localStorage persistence (reading list, query history, recently viewed). Welcome-back state on return.
-- **Q4 — Imagery:** Commissioned as parallel content project. Schema extended with optional `imagery?: { logo, key_visual }`. Assets land in `public/case-imagery/<case-slug>/`. Permission-false cases suppress imagery, show `[CONFIDENTIAL]` readout.
-- **Q5 — Gather:** NOT retired. Adapted to Comparison Mode for reading list (≥3 items). Phyllotaxis formation at center, other stars dim heavily, spatial simultaneous view of curated set. Complements Review Mode (sequential) vs Comparison (simultaneous).
+- **v3.3 premise:** The moves are all present; none of them are resolved. Polish before the flow can land.
+- **Refactor posture:** After v3.3, not before. Several v3.3 changes are deletions (gathered button, depth-per-year, label slider, possibly graticule). Refactoring code being removed is wasted work. v3.4 "Tighten" option preserved but not committed.
+- **Imagery (P2-D):** Deferred from v3.3. Schema hook (`imagery?: { logo, key_visual }`) preserved. Visual integration waits for content team.
+- **Two brainstorm spikes:** Phase 16 (planetary overture) and Phase 19 (text-input-drives-stars) are uncommitted. Visual companion, 2–3 mockups, Mo selects, then execute inside the phase. If Mo rejects all options, phase can be deferred without disturbing the rest.
+- **Kimi dispatch:** Phases 24, 25, 26 (mechanical: token audit, font audit, removals). Design-impacting phases (16, 21, 23) stay in Claude with `design-review-apparatus` at Stage 6.
+- **Cross-phase invariant:** No two panels occupy the same spatial region. Verified at every phase gate from 18 onward, not just the phase's own surface.
 
-## Branch Strategy (locked 2026-04-14, Q2 resolution)
+## Branch Strategy
 
-phase-1c is canonical. draft/v3-starmap is specification-only.
+**Current reality (2026-04-18):** v3.3 phase-16 work landed on `draft` (11 commits). The earlier "phase-1c remains canonical" claim was v3.2 legacy — v3.3 picked up on `draft` by default and no rebase was done. Revisit branch consolidation before milestone close (phase 27).
 
-Each v3.2 plan that imports a v3-starmap move names:
-- What v3-starmap did (with commit SHA reference)
-- What phase-1c will do (adapted implementation)
-- Whether this improves or contorts phase-1c
+## Carried-Forward Gates from v3.2
 
-Guardrail: if phase-1c contorts to match v3-starmap's shape, stop and design fresh.
-
-Import decisions by move:
-- Query input + keyword mapping → import as spec (Phase 10)
-- CRT radial grid substrate → import as spec (Phase 9)
-- Instrument-calibrating loader → import as spec (Phase 9)
-- Phyllotaxis geometry → import as spec (Phase 8, for Phase 12 use)
-- Affinity clustering → skip (concentric supersedes)
-- Phyllotaxis gather as filter-trigger → skip (adapted for Comparison Mode in Phase 12)
-
-## Blockers and Contingencies
-
-**Content-imagery project (Q4) needs:**
-- Named owner on Cosmo5 content side (blocker/unblocker reference for Phase 3 plans).
-- Delivery cadence: batched 20/week preferred (enables progressive Phase 3 integration) vs all-at-once.
-- Format confirmation: SVG logos + JPG key visuals, 1200px longest edge.
-- Fallback policy: if imagery can't be sourced for a case within 2 weeks, that case ships without imagery rather than blocking the phase.
-
-**Nothing blocks Phase 0.**
+- **P7-01 full-flow verification:** 60–90s first-time flow (land → query → focus → read → add 3 to reading list → review / compare). Closed at v3.3 Phase 27.
+- **P7-06 Vercel preview approval:** Closed at v3.3 Phase 27 after all phases ship.
 
 ## What Needs to Happen Next
 
-### Immediate — Blocked on Mo
-Phase 15 automatable items complete:
-- P7-02 visual regression: nebula/stars/glow intact (confirmed via Playwright screenshots of v3.2 vs v3.1 engine).
-- P7-03 WCAG 2.1 AA self-check: no `maximum-scale`, `prefers-reduced-motion` gated globally, keyboard complete, ARIA labels on all interactive elements.
-- P7-04 build + bundle: clean; 237KB gzipped JS (29% of 800KB budget); 7.76KB gzipped CSS; 248 tests green.
-- P7-05 OG meta + social tags: added (og:title, og:description, og:image, og:type=website, twitter:card=summary_large_image). `/og-image.png` path is a placeholder — content team provides the asset.
+### Immediate — Next Session
 
-Remaining — needs Mo:
-- P7-01 full-flow verification. The spec says Mo or an internal-user tester opens a fresh browser, completes land → query → focus → read → add 3 to reading list → review / compare. Target ≤90s for first-time user, 60s for practiced. Claude cannot close this gate.
-- P7-06 Vercel preview deploy + Mo's visual approval. The ship decision is Mo's.
+Phase 16 is code-complete and code-verified. The only remaining gate is visual UAT via Playwright MCP → Windows Chrome.
 
-Handoff: `/project-prime` picks this up; the work log + screenshots in `.playwright-mcp/` document what shipped.
+**Step 0 (blocking) — UA probe.** First call: `mcp__plugin_playwright_playwright__browser_navigate` to `about:blank`, then `browser_evaluate` `() => ({ ua: navigator.userAgent, platform: navigator.platform })`. Pass: `ua` contains `Windows NT`, `platform === 'Win32'`. Fail: anything `Linux`/`X11` → stop, don't drive UAT.
 
-### In Parallel (content side, not Claude's task)
-Imagery sourcing for case studies. Schema: optional imagery field with logo + key_visual. Format: SVG logos + JPG visuals, 1200px longest edge. Fallback policy: if imagery unavailable within 2 weeks, ship case without imagery.
+**Step 1 — visual UAT.** `/gsd-verify-work` re-runs the 16-UAT.md gates:
+- (a) **At boot**, `.wordmark-corner`, `#queryWrap`, `#catalogReadout`, `#crumb`, `#filtersWrap`, `#cosmoControls`, `#homeBtn`, `#gatherList` all invisible per `getBoundingClientRect` / computed `opacity: 0`. Observatory header + calibration overture visible.
+- (b) **Acts I + II play.** Reticle + 4 DM Mono status lines fade in on schedule (0.3 / 0.9 / 1.5 / 2.1s). Scan-line sweep at 2.4s. Planet fades in at ~2.7s. Hint line at 3.5s.
+- (c) **Skippable.** Click / Enter / Space on the overture commits ENTER_FIELD; input/textarea targets ignored.
+- (d) **After reverse-gather**, exactly 7 `.cl` divs carry `.show` class (tick loop no longer strips them — overtureComplete flag verified).
+- (e) **Tests 3 (global parity) + 4 (reduced-motion ≤0.5s)** previously blocked, should now run and pass.
+- (f) **Planet scale.** Per 2026-04-18 decision: revisit only if the planet still reads undersized after the chrome hide reclaims the frame.
 
-### Milestone-Level
-Completed: Phase 0–8 (foundation), Phase 9 (instrument calibration), Phase 10 (query bar), Phase 11 (reading panel instrument), Phase 12 (reading list + review + comparison), Phase 13 (hero collapse), Phase 14 (edge states + accessibility).
-Remaining: Phase 15 (ship).
+**Step 2 — transition.** If UAT green: `/gsd-transition 16` → `/gsd-plan-phase 17`. If UAT red: capture failing gates, plan 16-04 (or 16.x decimal insert) to close.
 
-## Design Direction (Authoritative)
+**Scale punt (still in force):** planet scale / camera framing NOT addressed in Phase 16. Will be evaluated post-UAT.
 
-`/mnt/c/Users/moham/Documents/Thales/design/reviews/cosmo5-case-explorer/2026-04-12-direction-note.md`. Three references: Kunumi (structure), BYLD (register), Cosmo5 (foundation). v3.2 is the execution, reframed for internal use.
+### Process notes
 
-## v3.1 Context (Previous Milestone — Completed 2026-04-14)
+- **Playwright-from-Windows path (CORRECTED AGAIN 2026-04-18 evening — this one is verified).** The working path is the `playwright@claude-plugins-official` plugin, still enabled in `~/.claude/settings.json`. Its `.mcp.json` was hand-patched at `~/.claude/plugins/cache/claude-plugins-official/playwright/unknown/.mcp.json` to launch via Windows cmd.exe: `{ "command": "/mnt/c/Windows/System32/cmd.exe", "args": ["/c", "npx", "@playwright/mcp@latest"] }`. That routes the MCP server process through a Windows shell so Playwright picks up Windows Chrome. Tools surface as `mcp__plugin_playwright_playwright__browser_*`. Verified 2026-04-18 evening: `navigator.userAgent === 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ... Chrome/147.0.0.0'`, `navigator.platform === 'Win32'`. The earlier claim in this STATE.md that the plugin was disabled and a separate `Thales/.mcp.json` server was registered turned out to be wrong (the sanctioned server never registered; the plugin edit 7 minutes later is what actually worked). The plugin's patched `.mcp.json` is in the plugin cache and will be overwritten if the plugin updates — re-apply after any plugin reinstall. See memory note: `~/.claude/projects/-mnt-c-Users-moham-Documents-Thales-work-technical/memory/playwright_mcp_windows_fix.md`.
+- **Allowlist.** `~/.claude/settings.json` permissions allowlist covers `mcp__playwright__*` (sanctioned path, unused) but not `mcp__plugin_playwright_playwright__*` (working path). Calls are permitted under auto mode; update the allowlist to match reality if auto mode is off and prompts get noisy.
+- **Always verify before driving.** First call in any session that will drive UAT: `mcp__plugin_playwright_playwright__browser_navigate` to `about:blank`, then `browser_evaluate` UA probe. Pass: `ua` contains `Windows NT`, `platform === 'Win32'`. Fail: anything `Linux`/`X11` → stop, don't drive UAT. Don't assume Windows-Chrome is live just because tools are registered.
+- **GSD rhythm:** UAT runs via `/gsd-verify-work` → gap discovery → UAT.md. No ad-hoc inline execution inside an active GSD phase.
 
-Nine phases (0–7 + 6.5). Spatial engine: concentric orbital layout around cluster nuclei, camera-based T1/T5 transitions, ring-dimension switcher (proofType/impactBand/year/country/region), split canvas (constellation + bottom track), reading panel (command-bridge layout), shortlist track, visual warmth (star glow sprites, twinkle animation, blue-indigo nebula), accessibility audit (prefers-reduced-motion, no maximum-scale). 190 tests passing. Build clean.
+Mockups reviewed: `.superpowers/brainstorm/632869-1776450920/content/index.html` (A+C combo selected).
+
+### Milestone Arc (v3.3)
+
+12 phases (16–27). Each = one commit surface, verification gate before next. Executed via `/gsd-execute-phase`. Design-impacting phases (16, 21, 23) in Claude; mechanical phases (24, 25, 26) dispatched to Kimi.
+
+See MILESTONE-v3.3.md for the phase table, critical files, reuse opportunities, and milestone close criteria.
+
+## Design Direction (Authoritative, unchanged)
+
+`/mnt/c/Users/moham/Documents/Thales/design/reviews/cosmo5-case-explorer/2026-04-12-direction-note.md`. Three references: Kunumi (structure), BYLD (register), Cosmo5 (foundation). v3.3 is polish of the v3.2 execution — no new direction, resolution of existing moves.
+
+## v3.2 Context (Predecessor — Completed 2026-04-17)
+
+Phases 8–15. Shipped: clean substrate, CRT graticule + calibrating loader, query bar + keyword mapping, reading panel as instrument, reading list + Review Mode + Comparison Mode, hero collapse, edge states, accessibility audit. 248 tests passing. Build 237KB gzipped (29% of budget). OG meta in place. See MILESTONE-v3.2.md.
 
 ## Session Continuity
 
-Last session: 2026-04-17
-Stopped at: Phases 13, 14, and Phase 15 automatable portion shipped. 248 tests. Blocked on Mo for P7-01 (flow verification) and P7-06 (Vercel preview approval).
-Resume with: Mo runs through the 60-90s flow and approves a Vercel preview, then v3.2 ships.
+Last session: 2026-04-18 late (/gsd-execute-phase 16 end-to-end)
+Stopped at: Phase 16 code-complete + code-verified. 16-01 + 16-02 committed retroactively from the uncommitted working tree (16-01: `da6bd3d`; 16-02: `4ea66e6` — SUMMARY.md written this session, marked `shipped-with-known-gaps` since the 2 UAT gaps were deferred to 16-03 rather than shipped resolved). 16-03 executed via gsd-executor: 8 commits `a2ad68b` → `4d8ccdb` (plus plan-docs `1a649a1`) landing calibration overture, observatory header, skippable handler, reduced-motion variant, Gap 1 closure (body.planetary chrome-hide CSS + planetaryActive scene gate), Gap 2 closure (overtureComplete flag + tick-loop widened condition). gsd-verifier returned PASS-WITH-CONDITIONS (29/29 must_haves honored, all 12 PO-* requirements traced); VERIFICATION.md at .planning/phases/16-planetary-overture/VERIFICATION.md. Automated gates green: 285/285 tests, `tsc --noEmit` clean, build 239.01 KB gzipped (10.99 KB headroom). Feedback memories unchanged and still apply:
+- `memory/feedback_playwright-wsl-prohibited.md`
+- `memory/feedback_use-gsd-for-structured-work.md`
+- `memory/playwright_mcp_windows_fix.md` (authoritative on the Playwright MCP config)
+
+Session before (2026-04-18 evening): Phase 16 gap-closure planning prep. 16-CONTEXT.md updated with three explicit additions to 16-03 (hide chrome, gate geometry, overtureComplete flag). Root causes confirmed via file reads. Stopped before plan authoring.
+
+Session before that (2026-04-18 afternoon): QA workflow repair / Playwright MCP path correction. Authoritative fix captured in memory note.
+
+Session before that (2026-04-18 morning): Phase 16 UAT run — surfaced the two gaps that 16-03 has now closed (code-level). Visual re-run pending.
+
+Resume with: `/gsd-verify-work` (re-run 16-UAT.md gates against latest build via Playwright MCP → Windows Chrome). After UAT green: `/gsd-transition 16` → `/gsd-plan-phase 17`. If UAT red: capture failing gates, plan 16.x decimal insert to close.
