@@ -128,10 +128,8 @@ async function boot() {
     gatherStarsToPlanet(sceneObjects, { x: 0, y: 0, z: 0 }, PLANET_RADIUS);
 
     // ── Phase 16-03: mount calibration overture (Acts I + II) ──────────
-    // Starts immediately; Task 6's skippable handler consumes overtureHandle.cancel().
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // Starts immediately; the skippable handler below consumes overtureHandle.cancel().
     const overtureHandle: CalibrationOvertureHandle = mountCalibrationOverture({ planet: planetGroup });
-    void overtureHandle; // suppress noUnusedLocals — Task 6 replaces this with a real reference
 
     // ── ReadingPanel (wired to layoutController, viewState, shortlistStore) ──
     const readingPanel = new ReadingPanel(layoutController, viewState, shortlistStore, sceneObjects);
@@ -630,17 +628,24 @@ async function boot() {
       setTimeout(() => loaderCtrl.done(), 400);
     }
 
-    // ── TEMPORARY (Plan 16-02): click anywhere commits planetary → global.
-    // Plan 16-03 replaces this with the calibration overture and proper
-    // gesture handling (click / Enter / Space on the overture surface).
-    const commitPlanetary = () => {
-      if (viewState.getState().kind === 'planetary') {
-        viewState.dispatch({ type: 'ENTER_FIELD' });
+    // ── Phase 16-03: skippable — click / Enter / Space during planetary ──
+    // Cancels the calibration overture and dispatches ENTER_FIELD. Once
+    // viewState is no longer planetary, this handler is a no-op; second
+    // gestures do nothing.
+    const commitPlanetary = (ev?: Event) => {
+      if (viewState.getState().kind !== 'planetary') return;
+      if (ev instanceof KeyboardEvent) {
+        const tgt = ev.target as HTMLElement | null;
+        const tag = tgt?.tagName?.toLowerCase();
+        if (tag === 'input' || tag === 'textarea') return;
+        if (ev.key === ' ') ev.preventDefault();
       }
+      overtureHandle.cancel();
+      viewState.dispatch({ type: 'ENTER_FIELD' });
     };
     document.addEventListener('click', commitPlanetary);
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') commitPlanetary();
+      if (e.key === 'Enter' || e.key === ' ') commitPlanetary(e);
     });
 
   } catch (err) {
