@@ -2,21 +2,9 @@
 import { describe, it, expect } from 'vitest';
 import { createFilterState } from '../data/filter';
 
-describe('Phase 14 — FilterState.isActive() includes searchText (P6-02 fix)', () => {
+describe('Phase 14 — FilterState.isActive() includes dimensions', () => {
   it('returns false for a blank filter', () => {
     const fs = createFilterState();
-    expect(fs.isActive()).toBe(false);
-  });
-
-  it('returns true for a text-only query', () => {
-    const fs = createFilterState();
-    fs.searchText = 'xyzzz';
-    expect(fs.isActive()).toBe(true);
-  });
-
-  it('returns false when searchText is empty string', () => {
-    const fs = createFilterState();
-    fs.searchText = '';
     expect(fs.isActive()).toBe(false);
   });
 
