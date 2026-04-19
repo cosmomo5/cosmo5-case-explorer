@@ -246,8 +246,11 @@ async function boot() {
             // appeared in focused mode). Slider must always be accessible once
             // the overture is complete.
             elControls.classList.add('on');
-            // Phase 18: unified column visible (collapsed-to-tab in global)
+            // Phase 18 (D-02): unified column becomes visible post-overture,
+            // collapsed-to-tab in global. Auto-expands on ENTER_CONSTELLATION
+            // via the viewState listener below.
             elFiltersWrap.classList.add('on');
+            elFiltersWrap.classList.add('collapsed');
           },
         });
       }
@@ -280,11 +283,6 @@ async function boot() {
         elFiltersWrap.classList.add('collapsed');
       }
     });
-
-    // Set initial collapsed state in global view (D-02)
-    if (elFiltersWrap && viewState.getState().kind === 'global') {
-      elFiltersWrap.classList.add('collapsed');
-    }
 
     // ── Label opacity control ────────────────────────────────────────────
     let labelThreshold = 0; // 0 = auto (show on hover only), 100 = all visible
