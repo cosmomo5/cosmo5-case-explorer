@@ -16,7 +16,6 @@ import { hydrateReadingList, setupReadingListPersistence } from './data/persiste
 import { createLayoutController } from './layout/layout-controller';
 import { createTransitionChoreographer } from './animation/transition-choreographer';
 import { mountFilterPanel } from './ui/filter-panel';
-import { mountQueryBar, showWelcomeBack } from './ui/query-bar';
 import { regroupScene } from './scene/regroup';
 import { Tooltip, projectToScreen } from './ui/tooltip';
 import { ReadingPanel } from './ui/reading-panel';
