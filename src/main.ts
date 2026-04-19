@@ -679,21 +679,7 @@ async function boot() {
       elFiltersWrap.classList.toggle('collapsed');
     });
 
-    // ── Query bar (primary inquiry surface) ─────────────────────────────
-    mountQueryBar({
-      sceneObjects,
-      filterState: sceneObjects.filterState,
-      cases,
-      onFilterChange: () => { /* label sync handled by tick loop */ },
-      onGroupModeChange: (newMode) => { regroupScene(sceneObjects, newMode, scene); },
-      onExitFocus: () => { exitFocus(); },
-    });
 
-    // ── Show welcome-back message if reading list has entries ──────────────
-    const queryReadout = document.getElementById('queryReadout') as HTMLElement | null;
-    if (queryReadout) {
-      showWelcomeBack(shortlistStore, queryReadout);
-    }
 
     // ── Dismiss loader ────────────────────────────────────────────────────
     if (loaderCtrl) {
