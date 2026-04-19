@@ -471,35 +471,6 @@ body.gather-on .cl{opacity:0 !important;pointer-events:none !important;
   font-family:'DM Mono',monospace;font-size:11px;color:#5ecfc0;
   margin-bottom:12px;letter-spacing:.5px;text-transform:uppercase}
 
-/* ── Query history chips ── */
-.query-history{
-  display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;padding:0 4px}
-.query-chip{
-  padding:4px 10px;font-family:'DM Mono',monospace;font-size:10px;
-  color:#5ecfc0;background:rgba(94,207,192,.08);
-  border:1px solid rgba(94,207,192,.2);border-radius:2px;cursor:pointer;
-  transition:background .15s,border-color .15s;user-select:none}
-.query-chip:hover{
-  background:rgba(94,207,192,.15);border-color:rgba(94,207,192,.4)}
-.query-chip:active{
-  background:rgba(94,207,192,.25)}
-
-/* ── Query hint messages (empty + no-match states) ── */
-.query-hint{
-  font-family:'DM Mono',monospace;font-size:10px;
-  color:rgba(255,255,255,.45);margin-top:8px;margin-bottom:12px;
-  line-height:1.4;min-height:0;opacity:0;transition:opacity .2s;pointer-events:none}
-.query-hint.visible{
-  opacity:1;pointer-events:auto}
-.query-hint .qh-term{
-  color:#e8b15a;font-weight:500}
-.query-hint .qh-suggest{
-  display:inline;padding:0;margin:0 2px;
-  font-family:'DM Mono',monospace;font-size:10px;color:#5ecfc0;
-  background:none;border:none;cursor:pointer;text-decoration:underline;
-  text-decoration-color:rgba(94,207,192,.4);transition:text-decoration-color .15s}
-.query-hint .qh-suggest:hover{
-  text-decoration-color:#5ecfc0}
 .f-stat b{font-family:'Noto Sans',sans-serif;font-size:18px;font-weight:900;
   color:var(--teal);letter-spacing:-.02em}
 /* ── Staging section ── */
