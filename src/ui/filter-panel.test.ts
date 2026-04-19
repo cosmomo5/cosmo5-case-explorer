@@ -3,7 +3,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mountFilterPanel } from './filter-panel';
 import { createFilterState } from '../data/filter';
 import type { SceneObjects } from '../scene/scene-state';
-import type { GroupMode } from '../data/types';
 import { ProofType } from '../data/proof-type';
 import type { EnrichedCaseStudy } from '../data/enrich';
 
