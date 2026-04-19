@@ -1,10 +1,11 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mountFilterPanel } from './filter-panel';
+import { mountFilterPanel, determineGatherButtonState } from './filter-panel';
 import { createFilterState } from '../data/filter';
 import type { SceneObjects } from '../scene/scene-state';
 import { ProofType } from '../data/proof-type';
 import type { EnrichedCaseStudy } from '../data/enrich';
+import { STAGING_KEY } from '../scene/staging';
 
 // ── Minimal fixtures ──────────────────────────────────────────────────────────
 
@@ -223,5 +224,131 @@ describe('mountFilterPanel — focused mode', () => {
     expect(modeRow).toBeNull();
     const backBtn = container.querySelector('#filtersBack');
     expect(backBtn).not.toBeNull();
+  });
+});
+
+// ── Gather button: determineGatherButtonState unit tests ─────────────────────
+
+describe('determineGatherButtonState — unit', () => {
+  it('returns "disabled" when filter is inactive and no sphere', () => {
+    const obj = makeObjects(); // no filter active, no sphere
+    expect(determineGatherButtonState(obj)).toBe('disabled');
+  });
+
+  it('returns "disabled" when filter active but no cases match', () => {
+    const obj = makeObjects();
+    // Filter on a country that no case has
+    obj.filterState.countries.add('Zimbabwe');
+    expect(determineGatherButtonState(obj)).toBe('disabled');
+  });
+
+  it('returns "armed" when filter active with matched cases and no sphere', () => {
+    const obj = makeObjects();
+    obj.filterState.countries.add('Spain'); // e1 matches
+    expect(determineGatherButtonState(obj)).toBe('armed');
+  });
+
+  it('returns "staged-current" when matched count equals staged count', () => {
+    const obj = makeObjects();
+    obj.filterState.countries.add('Spain'); // 1 match (e1)
+    // Plant a fake staging sphere with exactly 1 case
+    obj.nucleusMeshes.set(STAGING_KEY, {} as any);
+    obj.nucleusOrbits[STAGING_KEY] = {
+      key: STAGING_KEY,
+      orbitU: { x: 1, y: 0, z: 0 } as any,
+      orbitV: { x: 0, y: 1, z: 0 } as any,
+      orbitR: 50,
+      phase: 0,
+      speed: 0,
+      cases: [e1], // same 1 case
+    };
+    expect(determineGatherButtonState(obj)).toBe('staged-current');
+  });
+
+  it('returns "staged-drifted" when matched count differs from staged count', () => {
+    const obj = makeObjects();
+    obj.filterState.countries.add('Spain'); // 1 match (e1)
+    obj.nucleusMeshes.set(STAGING_KEY, {} as any);
+    obj.nucleusOrbits[STAGING_KEY] = {
+      key: STAGING_KEY,
+      orbitU: { x: 1, y: 0, z: 0 } as any,
+      orbitV: { x: 0, y: 1, z: 0 } as any,
+      orbitR: 50,
+      phase: 0,
+      speed: 0,
+      cases: [e1, e2], // 2 staged, 1 matched — drifted
+    };
+    expect(determineGatherButtonState(obj)).toBe('staged-drifted');
+  });
+
+  it('returns "stranded" when sphere exists but filter is cleared (fixed ordering)', () => {
+    // This is the critical test that verifies the stranded check precedes disabled check.
+    // With the broken ordering (disabled first), this would return "disabled" instead of "stranded".
+    const obj = makeObjects(); // filter is INACTIVE
+    obj.nucleusMeshes.set(STAGING_KEY, {} as any);
+    obj.nucleusOrbits[STAGING_KEY] = {
+      key: STAGING_KEY,
+      orbitU: { x: 1, y: 0, z: 0 } as any,
+      orbitV: { x: 0, y: 1, z: 0 } as any,
+      orbitR: 50,
+      phase: 0,
+      speed: 0,
+      cases: [e1],
+    };
+    expect(determineGatherButtonState(obj)).toBe('stranded');
+  });
+});
+
+// ── Gather button: integration tests via mountFilterPanel ─────────────────────
+
+describe('mountFilterPanel — Gather button rendering', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  it('renders disabled gather button when no filter is active', () => {
+    const container = makeContainer();
+    const objects = makeObjects();
+    mountFilterPanel(container, objects, vi.fn());
+    const btn = container.querySelector('.gather-button') as HTMLButtonElement | null;
+    expect(btn).not.toBeNull();
+    expect(btn!.disabled).toBe(true);
+    expect(btn!.classList.contains('disabled')).toBe(true);
+    expect(btn!.textContent?.trim()).toBe('GATHER');
+  });
+
+  it('renders armed gather button when filter is active and no sphere', () => {
+    const container = makeContainer();
+    const objects = makeObjects();
+    objects.filterState.countries.add('Spain');
+    mountFilterPanel(container, objects, vi.fn());
+    const btn = container.querySelector('.gather-button') as HTMLButtonElement | null;
+    expect(btn).not.toBeNull();
+    expect(btn!.disabled).toBe(false);
+    expect(btn!.classList.contains('armed')).toBe(true);
+    expect(btn!.dataset.gatherAction).toBe('gather');
+    expect(btn!.textContent?.trim()).toBe('GATHER');
+  });
+
+  it('renders stranded gather button (DISMISS) when sphere exists but filter cleared', () => {
+    const container = makeContainer();
+    const objects = makeObjects();
+    // No active filter but sphere exists
+    objects.nucleusMeshes.set(STAGING_KEY, {} as any);
+    objects.nucleusOrbits[STAGING_KEY] = {
+      key: STAGING_KEY,
+      orbitU: { x: 1, y: 0, z: 0 } as any,
+      orbitV: { x: 0, y: 1, z: 0 } as any,
+      orbitR: 50,
+      phase: 0,
+      speed: 0,
+      cases: [e1],
+    };
+    mountFilterPanel(container, objects, vi.fn());
+    const btn = container.querySelector('.gather-button') as HTMLButtonElement | null;
+    expect(btn).not.toBeNull();
+    expect(btn!.classList.contains('stranded')).toBe(true);
+    expect(btn!.dataset.gatherAction).toBe('dismiss');
+    expect(btn!.textContent?.trim()).toBe('DISMISS');
   });
 });

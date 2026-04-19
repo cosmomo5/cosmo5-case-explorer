@@ -18,9 +18,12 @@ const DIM_LABELS: Record<FilterDimension, string> = {
   nucleusKeys: 'Vertical',
 };
 
-/** Collect all enriched cases from nucleusOrbits (covers both global and focused modes). */
+/** Collect all enriched cases from nucleusOrbits (covers both global and focused modes).
+ *  Excludes STAGING_KEY orbit — staging is a view subset, not an additional case source. */
 function getAllCases(obj: SceneObjects): EnrichedCaseStudy[] {
-  return Object.values(obj.nucleusOrbits).flatMap(n => n.cases) as EnrichedCaseStudy[];
+  return Object.entries(obj.nucleusOrbits)
+    .filter(([key]) => key !== STAGING_KEY)
+    .flatMap(([, n]) => n.cases) as EnrichedCaseStudy[];
 }
 
 /** Collect the values for a given dimension from all cases. */
