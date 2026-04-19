@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-18-code-complete-uat-pending
-stopped_at: "Phase 18 (Unified Left Column) code-complete. 6 plans × 3 waves executed via gsd-executor worktrees: Wave 1 (18-01 HTML/CSS cleanup 498390e→d222307, 18-02 new unified-column CSS d0df2a3→8f3fea5). Wave 2 (18-03 filter-panel.ts absorbs input/readout/history/hint 97cc81f→8156f56, 18-04 main.ts caller updates + auto-expand listener 5483bea→5b08ede). Wave 3 (18-05 delete query-bar.ts 2052108→7e313b8, 18-06 split tests unified-column.test.ts + delete dead query-bar.test.ts b697609→b8dff3f). Post-execution cleanup 1267706 drops dead clusters-count.test.ts + Wave-2 backward-compat branch in mountFilterPanel. Post-verify D-02 fix e8fe08f hoists .collapsed class add from dead boot-time check (initial viewState is 'planetary', not 'global') into the overture-complete callback — found via Playwright UAT probe. gsd-verifier passed 13/13 must-haves + all 8 QRY-IDs at commit 718deaf (pre-D-02 fix, code-level PASS; subsequent hotfix was not re-verified). Automated gates green: 303/303 tests, tsc clean, build 239.37 KB gzipped (-0.43 from baseline 239.80). Visual UAT for D-01 (overture hide) confirmed via Playwright; D-02 (collapsed global post-fix), D-03 (visible focused), D-04 (visible during reading), D-05 (auto-expand on ENTER_CONSTELLATION) deferred to Mo's Windows Chrome session. Feedback memories unchanged and still apply:"
-last_updated: "2026-04-19T21:00:00.000Z"
+status: phase-18-uat-complete-ready-to-transition
+stopped_at: "Phase 18 (Unified Left Column) UAT complete at commit 9c0a8b7. Driven by Claude via Playwright MCP attached to Windows Chrome (UA Win32 confirmed). 9/9 tests pass: D-01 overture-hide, D-02 post-overture collapsed-to-tab (hotfix e8fe08f holds), D-03 focused-expanded (CSS cascade + listener + unit tests 8-9), D-04 reading-panel-and-column coexist (no overlap, wrap x:0-281, slot x:698-1038), D-05 auto-expand listener wiring (unified-column.test.ts tests 8-9 + CSS cascade), D-12 #ring-switcher visible (global probe + CSS rule), query input filter 116→109, no query-bar residue, cold-start clean. Two visual sub-gates deferred to Mo's trusted-pointer session (D-03 real canvas click → T1 → auto-expand; D-05 home-click → auto-collapse) — raycaster ignores synthetic PointerEvents so these require an OS-generated click; all covered by CSS cascade + unit tests. Full report at .planning/phases/18-unified-left-column/18-UAT.md. Ready for /gsd-transition 18 after Mo's ~10s trusted-pointer confirmation or defer-accept. 6 plans × 3 waves already executed; see prior STATE for commit trail. Automated gates still green: 303/303 tests, tsc clean, build 239.37 KB gzipped."
+last_updated: "2026-04-19T19:50:00.000Z"
 last_activity: 2026-04-19
 progress:
   total_phases: 17
@@ -63,20 +63,28 @@ Progress: [███░░░░░░░░░] Phases 16–18 of 12 complete. 
 
 ### Immediate — Next Session
 
-Phase 18 is code-complete and code-verified (13/13 must-haves + all 8 QRY-IDs, 303/303 tests, build clean, bundle 239.37 kB gzipped). One deferred gate remains: visual UAT for D-02..D-05 on Mo's Windows Chrome. D-01 was confirmed via WSL-side Playwright probe before the MCP session ended.
+Phase 18 UAT closed by Claude via Playwright-MCP on Windows Chrome (commit `9c0a8b7`). 9/9 tests pass. Report at `.planning/phases/18-unified-left-column/18-UAT.md`.
 
-**Step 0 (blocking) — UA probe.** Per `memory/playwright_mcp_windows_fix.md`: first call is `mcp__plugin_playwright_playwright__browser_navigate` to `about:blank`, then `browser_evaluate` `() => ({ ua: navigator.userAgent, platform: navigator.platform })`. Pass: `ua` contains `Windows NT`, `platform === 'Win32'`. Fail: stop, don't drive UAT. (Verified working this session; dev server at localhost:5173.)
+**All automated gates:**
 
-**Step 1 — visual UAT gates (Phase 18):**
+- (D-01) **Overture hides column:** `.filters-wrap` display:none, opacity:0, visibility:hidden. ✓ Confirmed 2026-04-19.
+- (D-02) **Post-overture collapsed-to-tab:** `.filters-wrap.on.collapsed`, tab 49.5×71.4 at x:0 y:128, aside width ~0. ✓ Hotfix `e8fe08f` holds.
+- (D-03) **Focused expanded (CSS + listener):** removing `.collapsed` yields 232px aside. Listener wiring at main.ts:274-285 + unit tests 8-9 in unified-column.test.ts. ✓ Component-level. E2E (real canvas click → T1 → auto-expand) deferred.
+- (D-04) **Reading panel + column coexist:** slot open → 340px at x:698; wrap stays visible at x:0-281. No overlap. ✓
+- (D-05) **Auto-expand/collapse wiring:** ✓ Component + CSS. E2E (home-click → auto-collapse) deferred.
+- (D-12) **#ring-switcher both views:** Visible in global (294×12). CSS rule only hides in .comparison-active. ✓
+- **Query input + no query-bar residue:** 116→109 on `ai`; 0 query-bar selectors; sole input inside .filters-wrap. ✓
 
-- (D-01) **During overture (body.planetary):** `.filters-wrap` has `display:none`, `opacity:0`, `visibility:hidden`. `.on` and `.collapsed` classes BOTH absent. ✓ Confirmed 2026-04-19 (pre-overture state).
-- (D-02) **Post-overture, global view:** `.filters-wrap` has `.on` AND `.collapsed` classes. Only the `.filters-tab` (49×71px at x:0, y:128) is visible; the 232px `aside.filters` is collapsed to zero-width via the existing `.filters-wrap.collapsed .filters{width:0}` rule. PENDING post-hotfix (commit `e8fe08f`).
-- (D-03) **Focused constellation view:** click a cluster nucleus → after T1 transition, `.filters-wrap` has `.on` and NO `.collapsed`. The 232px column is expanded; focus-back button `← {focusedKey}` visible in column head. PENDING.
-- (D-04) **Reading panel open:** click a label or star → reading panel slides in from right. `.filters-wrap` still visible in its current state (expanded in constellation, or collapsed-to-tab if reading from global). PENDING.
-- (D-05) **Auto-expand transitions:** ENTER_CONSTELLATION removes `.collapsed` (auto-expand); EXIT_CONSTELLATION (home button / escape) re-adds `.collapsed`. PENDING.
-- (D-12) **Grouping switcher post-overture:** `#ring-switcher` visible in both global and constellation (not constellation-only). ✓ Confirmed 2026-04-19.
+**Two visual E2E sub-gates remain (need trusted pointer):**
 
-**Step 2 — transition.** If UAT green: `/gsd-transition 18` to close Phase 18 properly (the `/gsd-phase complete 18` already ran but with the v3.3-roadmap quirk — `next_phase: null` is wrong; Phase 19 is next). Then `/gsd-discuss-phase 19`. If UAT red: capture failing gates, plan 18-07 decimal insert or hotfix against `main.ts`.
+1. Click a nucleus in global → T1 transition runs → column auto-expands to 232px with `◂ Filter` in the tab.
+2. Home button (⌂) or Escape from focused → column auto-collapses back to 49.5px tab.
+
+Raycaster ignores synthetic PointerEvents (isTrusted=false), so Claude cannot drive these from Playwright-MCP evaluate-based clicks. ~10 seconds of Mo's interactive clicking closes them.
+
+**Step 1 — Mo's trusted-pointer pass (or defer-accept).** Start dev (`npm run dev`), open http://localhost:5173, skip overture, click a nucleus, click ⌂, done.
+
+**Step 2 — transition.** `/gsd-transition 18` (v3.3-roadmap quirk: prior `/gsd-phase complete 18` set `next_phase: null`; Phase 19 is actually next). Then `/gsd-discuss-phase 19`.
 
 ### Process notes
 
