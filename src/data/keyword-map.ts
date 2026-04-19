@@ -108,11 +108,9 @@ export function applyQuery(q: string, fs: FilterState, cases: CaseStudy[]): void
 
   if (!norm) return; // empty query = clear all
 
-  let anyHintMatched = false;
   for (const hint of KEYWORD_HINTS) {
     if (hint.keywords.some(kw => norm.includes(kw))) {
       hint.apply(fs, cases);
-      anyHintMatched = true;
     }
   }
 }
