@@ -44,7 +44,7 @@ Separate filter mutation from scene reaction. After this phase:
 - **D-03 three states.**
   - **Disabled** — no filters active OR filtered set is empty. Ghosted, non-clickable. Small hint in readout area: `— CASES` or `0 CASES — REFINE`.
   - **Armed** — filters active, set ≥ 1. Gold hairline. Click → stages.
-  - **Staged** — sphere currently exists. Label updates (e.g., `GATHERED · N` or equivalent — planner refines phrasing). Click → re-gathers with current filter (overwrites sphere).
+  - **Staged** — sphere currently exists. See D-12 for the staged-current vs. staged-drifted label split and D-13 for the stranded (filter-cleared-while-sphere-present) state. Click behavior depends on substate: staged-current → no-op or subtle pulse; staged-drifted → re-gather with current filter (overwrites sphere); stranded → dispose sphere.
 - **D-06 empty-filter + zero-match Gather are forbidden.** Button disabled in both cases. No dead-press UI.
 
 ### Filter ↔ staging relationship
@@ -71,6 +71,16 @@ Separate filter mutation from scene reaction. After this phase:
 ### View-state gating
 
 - **D-10 Gather present in `global` + `constellation` only.** Absent from DOM in `planetary` and `reading` views. Follows the same hide-per-view pattern as the Phase 22 (merged into Phase 17) contextual bottom-right panel. Not disabled-but-visible — fully removed from the DOM in those view-states to avoid visual noise in the overture and reading registers.
+
+### Staged-state signalling & edge cases (added 2026-04-19 post-advisor)
+
+- **D-12 stale-sphere signal.** When sphere is staged and filter subsequently changes (matched set diverges from what the sphere represents), the button surfaces the drift via **label change**:
+  - Current (filter matches staged set exactly): `GATHERED · N`
+  - Drifted (filter changed since gather): `RE-GATHER · N→M` where N is current staged count and M is the new matched count.
+  - **Why label-only, not scene treatment:** the whole phase is about "silent scene." Putting a dim/border on the sphere to indicate staleness would reintroduce the filter-drives-scene coupling through a side door. The button is the signalling surface; the scene stays quiet.
+  - **Why not accept the ambiguity:** users who don't notice the drift would click away thinking their filter is staged when it isn't. That defeats the point.
+- **D-13 filter cleared to empty while sphere present.** **Sphere stays** (consistent with D-04 pure-manual decoupling). Button transitions to a new fourth state, **stranded**: label reads `DISMISS` (or equivalent), clicking disposes the sphere and returns button to disabled. Rationale: auto-dispose would be an exception to D-04 and would surprise users ("I cleared a filter and the scene jumped"). Silent scene wins; the button provides the explicit dismiss action. Button states become: disabled / armed / staged-current / staged-drifted / stranded (5 states, not 3 — revision to D-03).
+- **D-14 `applyFilterWave` disposition preference.** **Rewire, don't delete.** The distance-sorted stagger is load-bearing for Phase 23's star-motion polish — re-inventing it there would be wasted work. Rewire the wave as the gather traversal animation (stars travel to the sphere in a distance-sorted wave, not to a dim-opacity target). Planner still owns the plan split, but this resolves the "rewire vs delete" fork in advance.
 
 ### Claude's Discretion
 
@@ -158,7 +168,7 @@ Separate filter mutation from scene reaction. After this phase:
 
 - **Dead-code residue risk.** If `applyFilterWave` is left partially gutted ("remove the dim writes, keep the wave timing for future use"), it becomes a mystery function. Plan 20-C must resolve it either way.
 - **Test-suite shift is nontrivial.** The scout estimate says ~4 test files are affected. Expect some test count reduction as filter-causes-staging tests collapse; expect some additions for the new button behavior. Net may be flat.
-- **Stale sphere + empty filter.** If user clears all filters while sphere is present, the sphere represents a now-empty filter. Pure-manual says sphere stays until next Gather click; planner should verify via Playwright that this is not visually incoherent. If it is, either (a) auto-dispose on filter-empty (exception to D-04), or (b) the button transitions to a "DISMISS" affordance. Flag for planner's UAT pass.
+- **Stale sphere + empty filter.** RESOLVED by D-13: sphere stays, button transitions to `stranded` state with `DISMISS` label. Planner still verifies via Playwright that the dismiss action disposes cleanly and that the scene doesn't flicker.
 - **Wave timing in gather.** If the new gather animation reuses `applyFilterWave`'s distance-sorted stagger, the stars still travel in a wave — but now toward the sphere, not toward a dim-opacity target. Verify this reads as "gathering" rather than the old "highlighting." Phase 23 polish can tune; Phase 20 needs it to be at-least-not-wrong.
 
 </code_context>
@@ -180,7 +190,7 @@ Separate filter mutation from scene reaction. After this phase:
 - **Dead UI stub removal** — `#gatherList`, `#gatherStage`, right-side "gathered button". Phase 26 (Removals, Kimi dispatch).
 - **Keyboard shortcut for Gather** — Phase 27 keyboard-path audit.
 - **Readout copy refinement** (e.g., `0 CASES — REFINE` vs. alternatives) — tune during execution; not a discussion blocker.
-- **Auto-dispose on filter-empty** — flagged as a Playwright-time decision for the planner (see "Stale sphere + empty filter" in Risk & Gotchas). If it needs to become a real decision, captured as a CHECKPOINT during execution rather than blocking here.
+- **Auto-dispose on filter-empty** — RESOLVED by D-13 (sphere stays, button becomes `DISMISS`). No longer deferred.
 
 </deferred>
 

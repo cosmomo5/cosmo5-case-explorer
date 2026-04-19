@@ -134,10 +134,29 @@ Confidence-low or rollback-expensive decisions: surface immediately, don't bury 
 **Rollback cost:** trivial. CONTEXT.md is markdown; any decision can be revised before `/gsd-plan-phase`. No code touched yet.
 
 **Flagged for planner:**
-- Stale-sphere-with-empty-filter edge case (Risk & Gotchas section). Playwright-time call during execution.
-- Plan split (2 vs. 3) depends on `applyFilterWave` disposition — planner decides based on scope.
+- Plan split (2 vs. 3) depends on `applyFilterWave` disposition — planner decides based on scope. D-14 sets the direction (rewire).
 - Gather animation reading as "gathering" vs. "highlighting" — acceptable-but-tunable for Phase 20; polish in Phase 23.
 
 **Surfaced to Mo:** this response + CONTEXT.md. Entry logged for audit.
+
+---
+
+### 2026-04-19 — [Phase 20] Post-advisor spec patches (D-12, D-13, D-14)
+
+**Context:** advisor() flagged two gaps in the initial Phase 20 context that were spec calls mislabeled as planner-scope, plus a preference call on `applyFilterWave`. Patched before planning so the planner doesn't bounce them back.
+
+**Gap 1 resolved — D-12 stale-sphere signalling.** When sphere is staged and filter changes, the user needs a signal. Scene must stay silent (that's the whole phase). So the *button* signals drift via label: `GATHERED · N` when current, `RE-GATHER · N→M` when drifted. Rationale: putting a dim/border on the sphere would reintroduce the filter-drives-scene coupling. Accepting the ambiguity would leave users clicking away with a stale set.
+
+**Gap 2 resolved — D-13 filter-cleared-while-sphere-present.** Sphere stays (consistent with D-04 pure-manual). Button transitions to a fifth state `stranded` with `DISMISS` label; clicking disposes. Rationale: auto-dispose would surprise users ("I cleared a filter and the scene jumped"). Button state count revised from 3 to 5: disabled / armed / staged-current / staged-drifted / stranded.
+
+**Preference stated — D-14 applyFilterWave direction.** Rewire (not delete). The distance-sorted stagger is load-bearing for Phase 23 star-motion polish; re-inventing it in Phase 23 would be wasted work. Planner still owns plan split but starts with "rewire the wave as gather traversal" as the default.
+
+**Advisor-suggested workflow check:** the workflow's auto-advance step only fires with `--chain` or `--auto` flags. Mo's "don't stop /go" applied to the *discussion* (don't interrogate with AskUserQuestion menus); it wasn't a `--chain` invocation. Default behavior (surface CONTEXT.md and stop for Mo's review before planning) is correct. Not auto-firing `/gsd-plan-phase 20`.
+
+**Confidence:** high on all three patches. Each closes a real gap an implementing agent would have hit.
+**Rollback cost:** trivial. CONTEXT.md is text.
+**Surfaced to Mo:** next response (handoff).
+
+<!-- Append new entries below this line -->
 
 <!-- Append new entries below this line -->
