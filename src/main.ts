@@ -268,6 +268,19 @@ async function boot() {
       () => { /* label sync handled by tick loop */ }
     );
 
+    // ── Auto-expand unified column on ENTER_CONSTELLATION (D-05) ────────
+    viewState.subscribe((next, prev, event) => {
+      if (!elFiltersWrap) return;
+
+      if (event?.type === 'ENTER_CONSTELLATION') {
+        // Entering focused constellation — remove collapsed state to auto-expand
+        elFiltersWrap.classList.remove('collapsed');
+      } else if (event?.type === 'EXIT_CONSTELLATION') {
+        // Returning to global — re-collapse
+        elFiltersWrap.classList.add('collapsed');
+      }
+    });
+
     // ── Label opacity control ────────────────────────────────────────────
     let labelThreshold = 0; // 0 = auto (show on hover only), 100 = all visible
 
