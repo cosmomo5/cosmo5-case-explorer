@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-20-complete-awaiting-uat
-stopped_at: "Phase 20 (Gather as Staging Action) shipped. 3 plans executed sequentially on draft (gsd-sdk unavailable forced no-worktree mode). 11 commits 73ca850 → 1007a18. Wave 1A 20-01 gutted applyFilter to pure state mutation + removed StarState.filterMatch/filterDim + rewired applyFilterWave per D-14. Wave 1B 20-02 TDD'd gather() entry point in staging.ts (RED e21d914 → GREEN 8a37c57 → REFACTOR 71172a1). Wave 2 20-03 wired 5-state Gather button + body-class view-state gating. Verifier passed 18/18 must-haves, status=human_needed; tests 301/301, tsc clean. HUMAN-UAT.md persisted with 8 pending items — deferred until end of v3.3 per user directive 'continue, we'll check after all phases are done'. Verifier commit 34af85a. UAT artifact commit 1007a18. Next: Phase 21 (Reading Panel → Right Drawer)."
-last_updated: "2026-04-20T00:35:00.000Z"
+status: phase-21-blocked-wiring-gap-discovered
+stopped_at: "Phase 21 discuss-phase halted before CONTEXT.md written. Probed live draft HEAD (4da7943) via Playwright-MCP and found two things: (1) reading-panel drawer geometry is already correct — 340px right-anchored, zero overlap with track-zone/labels/canvas at 1280×800, 1440×900, 1920×1080, 2560×1440. Flex-sibling layout resolves overlap by construction. Milestone's 'reading panel → right drawer' goal is already satisfied by the Phase 11+17+20 layout; Phase 21 collapses to a 340→380 width token + regression gate, if that. (2) LOAD-BEARING WIRING BUG discovered: `.cl` cluster label divs in global view have cursor:pointer, pointer-events:auto, but zero click handler (regroup.ts:88). Only 3D nucleus meshes are raycastable. Visible label cards promise interactivity the JS never wired → this is the root of Mo's 'can't zoom into a constellation / feels disjointed' complaint. enterFocus() at main.ts:511 is only reached via 3D canvas click on the nucleus mesh. Nothing committed this session. Pending decision before resuming: (A) insert Phase 20.1 via /gsd-insert-phase to wire .cl→enterFocus, or (B) run DOM-overlay audit sweep first to find all promised-but-unwired interactivity, then decide phase shape. Mo paused to pick A vs B next session. Dev server was running on 5173 for the probe — Claude should stop it on resume. Phase 20's HUMAN-UAT (8 items) still deferred per 'continue, we'll check after all phases are done'."
+last_updated: "2026-04-20T01:15:00.000Z"
 last_activity: 2026-04-20
 progress:
   total_phases: 17
@@ -28,8 +28,9 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 
 ## Current Position
 
-Phase: 20 (Gather as Staging Action) — **complete, awaiting HUMAN-UAT (deferred to end of v3.3)**
-Plans: 3/3 shipped (20-01, 20-02, 20-03). Verifier 18/18 must-haves, tests 301/301. UAT 8 items pending in `20-HUMAN-UAT.md`. Next command: `/gsd-discuss-phase 21`
+Phase: 21 (Reading Panel → Right Drawer) — **discuss-phase started, HALTED before CONTEXT.md due to wiring-gap discovery**
+Plans: none yet. Dev-server probe + visual audit revealed that (a) drawer geometry is already correct and (b) `.cl` cluster labels are unwired. **Do NOT resume with `/gsd-discuss-phase 21` blindly** — first pick A (insert Phase 20.1 for `.cl`→enterFocus wiring) or B (DOM-overlay audit sweep first). See Session Continuity → 2026-04-20 entry for details.
+Previous: Phase 20 shipped 2026-04-20 — 3/3 plans, verifier 18/18, tests 301/301, HUMAN-UAT 8 items deferred.
 **CONTEXT.md:** 14 decisions D-01..D-14 locked (autonomous discuss-phase).
 **UI-SPEC.md:** approved by gsd-ui-checker 6/6 dimensions.
 **RESEARCH.md + VALIDATION.md:** generated via `--research` re-run; Nyquist gate satisfied.
@@ -117,9 +118,45 @@ Phases 8–15. Shipped: clean substrate, CRT graticule + calibrating loader, que
 
 ## Session Continuity
 
-Last session: 2026-04-19T21:17:57.765Z
+Last session: 2026-04-20 (Phase 21 discuss-phase halted mid-flight)
 
-Stopped at: Phase 20 (Gather as Staging Action) planned. 3 plans + RESEARCH + VALIDATION approved by plan-checker 11/11 dimensions. Commits: a1ad94b (plans) + eb384a5 (D-14 metadata patch) + 551d17f (research+validation). Ready to execute.
+**Stopped at:** Phase 21 discuss-phase started via `/gsd-next`. Before writing CONTEXT.md, ran live Playwright-MCP probe on draft HEAD `4da7943` across 4 viewports (1280×800, 1440×900, 1920×1080, 2560×1440). Results changed the phase shape.
+
+**Measured findings (reading state, all viewports):**
+- `#reading-panel-slot` renders as 340px right-anchored drawer, `border-left:1px solid gold`.
+- Flex-sibling layout: `#scene-container`, `#track-zone`, `#divider-line`, `.sl`, `.cl` all flex-shrink by exactly the drawer width.
+- **Zero overlap with selection surface** at every viewport. Milestone v3.3 §3 "reading panel → right drawer" already satisfied by Phase 11+17+20 combined layout.
+- Phase 21 collapses to at most a 340→380 width token + regression-gate — not a rebuild.
+
+**Load-bearing wiring bug discovered (blocks v3.3 flow, not just Phase 21):**
+- `.cl` cluster label divs (`src/scene/regroup.ts:88`) have `cursor:pointer` + `pointer-events:auto` in CSS (`src/style.css:99`) but **zero click handler** in JS.
+- Only 3D nucleus meshes are raycastable — `enterFocus()` at `src/main.ts:511` is only reached via 3D canvas click on the translucent sphere.
+- The visible label card promises interactivity the JS never wired. This is the root of Mo's "can't zoom into a constellation / feels disjointed / lack of reading panel" complaints.
+- Phase 17 wired `.sl` (star label) clicks but not `.cl` (cluster label) clicks. Gap in that phase.
+
+**Pending decision (Mo paused to pick next session):**
+- **A.** Insert Phase 20.1 via `/gsd-insert-phase` for the `.cl`→enterFocus wiring. Single plan. Closes the user-facing disjointedness before continuing.
+- **B.** Run a DOM-overlay audit sweep first — find every promised-but-unwired interactive element across the overlay (`.cl`, `.sl`, gather button states, cosmoControls, etc.) before sizing the phase.
+
+**Recommendation at pause:** B. The memory note on `createViewStateMachine() defaults to 'planetary'` already flags a class of dead-handler bugs; one sweep is cheaper than multiple decimal inserts.
+
+**Infrastructure notes for resume:**
+- Dev server was started this session on `localhost:5173` (background task `b7stfiusq`). Stop it before the next session or it'll still be running: `pkill -f "vite"` or leave — no persistent side effect.
+- Playwright-MCP Windows-Chrome path confirmed working: UA `Chrome/147.0.0.0`, platform `Win32`. Use `mcp__plugin_playwright_playwright__*` per memory.
+- `gsd-sdk init.phase-op 21` returned `phase_found: false` (the v3.3 roadmap-grep quirk from `memory/gsd_tools_v33_roadmap_grep.md`). Workflow proceeded manually — no STATE corruption this time, just skipped the init-blocked early-exit.
+
+**No commits this session.** Only STATE.md is modified. `git status` shows only this file.
+
+**Resume path (session N+1):**
+1. Read this block.
+2. Pick A or B.
+3. If A: `/gsd-insert-phase 20.1` (title: "Wire cluster-label click → enterFocus"), then discuss → plan → execute.
+4. If B: dispatch an investigation (haiku subagent or inline grep) across `src/ui/`, `src/scene/`, `index.html` for all `[pointer-events:auto]` + `[cursor:pointer]` elements lacking JS listeners; then decide phase shape from findings.
+5. Phase 21 itself is nearly empty. After the wiring gap is closed, Phase 21 is a 2-line width-token commit + manual visual check, or fold into Phase 25 (overlap + font audit, Kimi).
+
+---
+
+**Previous session:** 2026-04-19T21:17:57.765Z — Phase 20 (Gather as Staging Action) planned. 3 plans + RESEARCH + VALIDATION approved by plan-checker 11/11 dimensions. Commits: a1ad94b (plans) + eb384a5 (D-14 metadata patch) + 551d17f (research+validation). Executed 2026-04-20: 11 commits 73ca850 → 1007a18, verifier 18/18 must-haves, tests 301/301, HUMAN-UAT 8 items deferred.
 
 - `memory/feedback_playwright-wsl-prohibited.md`
 - `memory/feedback_use-gsd-for-structured-work.md`
