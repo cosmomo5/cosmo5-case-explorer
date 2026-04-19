@@ -3,16 +3,27 @@
   "granularity": "standard",
   "parallelization": true,
   "commit_docs": true,
-  "model_profile": "balanced",
+  "model_profile": "budget",
   "workflow": {
     "research": true,
     "plan_check": true,
     "verifier": true,
+    "auto_advance": true,
     "nyquist_validation": true,
+    "ui_phase": true,
+    "ui_safety_gate": true,
+    "ai_integration_phase": true,
+    "skip_discuss": false,
+    "research_before_questions": false,
+    "use_worktrees": true,
     "tdd_mode": true,
     "_auto_chain_active": false
   },
+  "git": {
+    "branching_strategy": "none"
+  },
   "hooks": {
-    "community": true
+    "community": true,
+    "context_warnings": true
   }
 }
