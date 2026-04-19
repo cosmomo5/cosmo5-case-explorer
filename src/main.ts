@@ -269,7 +269,7 @@ async function boot() {
     );
 
     // ── Auto-expand unified column on ENTER_CONSTELLATION (D-05) ────────
-    viewState.subscribe((next, prev, event) => {
+    viewState.subscribe((_next, _prev, event) => {
       if (!elFiltersWrap) return;
 
       if (event?.type === 'ENTER_CONSTELLATION') {
