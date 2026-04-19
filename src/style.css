@@ -471,6 +471,65 @@ body.gather-on .cl{opacity:0 !important;pointer-events:none !important;
   font-family:'DM Mono',monospace;font-size:11px;color:#5ecfc0;
   margin-bottom:12px;letter-spacing:.5px;text-transform:uppercase}
 
+/* ── Gather button (Phase 20) ── */
+.gather-button {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  margin: 16px 0 8px 0;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  cursor: pointer;
+  transition: border-color 150ms ease-out, color 150ms ease-out, opacity 150ms ease-out;
+}
+.gather-button:hover:not(:disabled):not(.staged-current) {
+  opacity: 1.0;
+}
+.gather-button:disabled,
+.gather-button.disabled {
+  border-color: var(--teal);
+  color: var(--teal);
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.gather-button.staged-drifted {
+  opacity: 0.85;
+}
+.gather-button.staged-drifted:hover {
+  opacity: 0.95;
+}
+.gather-button.stranded {
+  border-color: var(--teal);
+  color: var(--teal);
+  opacity: 0.6;
+  cursor: pointer;
+}
+.gather-button.stranded:hover {
+  opacity: 0.75;
+}
+.gather-button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.gather-button:focus:not(:focus-visible) {
+  outline: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gather-button { transition: none; }
+}
+body.planetary .gather-button,
+body.reading .gather-button {
+  display: none !important;
+}
+
 .f-stat b{font-family:'Noto Sans',sans-serif;font-size:18px;font-weight:900;
   color:var(--teal);letter-spacing:-.02em}
 /* ── Staging section ── */
