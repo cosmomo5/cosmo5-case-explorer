@@ -701,7 +701,7 @@ async function boot() {
     }
 
     // ── Filter tab toggle ─────────────────────────────────────────────────
-    // .on is added by enterConstellation (line 369); no need to add it on boot
+    // .on is added at overture-complete; tab toggle controls collapsed state
     elFiltersTab.addEventListener('click', () => {
       elFiltersWrap.classList.toggle('collapsed');
     });
