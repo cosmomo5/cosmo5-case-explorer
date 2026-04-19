@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-20-ui-spec-approved-ready-to-plan
-stopped_at: "Phase 20 (Gather as Staging Action) UI-SPEC approved by gsd-ui-checker 6/6 dimensions at commit c050245. 5-state Gather button contract: disabled-no-filter / disabled-zero-match / armed / staged-current (inert) / staged-drifted / stranded. Uses only existing project tokens (--gold, --teal, DM Mono, single --ease). Hairline register per BYLD canon. No new color tokens, no third-party components. 20 machine-verifiable assertions for planner/executor/checker downstream. Non-blocking flag deferred to planner: view-state gating can be CSS body-class (requires adding body.reading toggle) or JS conditional render — planner picks based on existing-pattern consistency. Previous: Phase 20 CONTEXT.md (14 decisions) committed 0fc8501."
+status: phase-20-planned-ready-to-execute
+stopped_at: "Phase 20 (Gather as Staging Action) planned. 3 plans + RESEARCH + VALIDATION approved by plan-checker 11/11 dimensions on re-verification. Commits: a1ad94b (initial plans) + eb384a5 (D-14 metadata patch + planner hygiene log) + 551d17f (research + validation). Plan split: Wave 1A 20-01 (gut filter-to-scene coupling + remove StarState.filterMatch/filterDim + rewire applyFilterWave as gather traversal per D-14); Wave 1B 20-02 (TDD gather() entry point); Wave 2 20-03 (5-state Gather button, view-state gating via body-class Option A, autonomous:false because Playwright UAT is required from Mo's Windows Chrome). Test count target 280-305 (baseline 287 ±15); bundle envelope 237-239.5 KB gzipped. Hygiene notes logged: gsd-planner used --no-verify and staged out-of-scope config.json newline drift with a1ad94b (no active hooks so nothing actually bypassed; counter-instruction saved to memory for future planner briefs). Ready to execute."
 last_updated: "2026-04-19T21:30:00.000Z"
 last_activity: 2026-04-19
 progress:
   total_phases: 17
   completed_phases: 11
-  total_plans: 49
+  total_plans: 52
   completed_plans: 40
-  percent: 82
+  percent: 77
 ---
 
 # Project State
@@ -28,20 +28,23 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 
 ## Current Position
 
-Phase: 20 (Gather as Staging Action) — context + UI-SPEC ready, ready to plan
-Plan: Not started — next command: `/gsd-plan-phase 20`
-**UI-SPEC approved 2026-04-19 by gsd-ui-checker (6/6 dimensions passed).** See `.planning/phases/20-gather-as-staging-action/20-UI-SPEC.md` for the locked visual/interaction contract.
+Phase: 20 (Gather as Staging Action) — **planned, ready to execute**
+Plans: 3/3 created (20-01 Wave 1A, 20-02 Wave 1B TDD, 20-03 Wave 2 non-autonomous). Next command: `/gsd-execute-phase 20`
+**CONTEXT.md:** 14 decisions D-01..D-14 locked (autonomous discuss-phase).
+**UI-SPEC.md:** approved by gsd-ui-checker 6/6 dimensions.
+**RESEARCH.md + VALIDATION.md:** generated via `--research` re-run; Nyquist gate satisfied.
+**Plans approved by gsd-plan-checker 11/11 dimensions on re-verification.**
 **Phase 19 category (closed):** feature/removal. Repurposed 2026-04-19 from brainstorm spike (text-input-drives-stars) after Mo chose filter-panel-only at intake. 3/3 plans shipped in 2 waves. Tests 287/287, build 237.32 KB gzipped (-2.05 KB). Original spike preserved as SEED-001.
 **Phase 18 category (closed):** feature — query-bar/filter-panel merge. 9/9 UAT tests pass; two E2E sub-gates deferred to Mo's trusted-pointer session.
 **Phase 17 category (closed):** polish (primary) + feature sliver.
 **Phase 20 category (confirmed 2026-04-19 discuss-phase):** feature (decouple) + removal (highlight-across-views). 11 decisions D-01..D-11 captured autonomously per Mo's directive. Primary edit surfaces: `src/scene/scene-state.ts` `applyFilter` L408-478 + tick-loop L356-372 (gut both); `src/scene/staging.ts` (new `gather()` entry point composing existing lifecycle primitives); `src/ui/filter-panel.ts` (new 3-state Gather button); `src/data/star-state.ts` (remove `filterMatch`/`filterDim` enum values). Plan split 2-3 decided by planner based on `applyFilterWave` disposition.
 **Constraint set (project-wide):** `DESIGN-STATE.md` (project root).
 **Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth. 4 of 12 phases shipped (16, 17, 18, 19); 8 remaining (20-27).
-**Status:** Phase 20 context gathered autonomously; ready to plan.
+**Status:** Phase 20 planned; all pre-flight gates (CONTEXT + UI-SPEC + RESEARCH + VALIDATION + plan-checker) green. Ready to execute.
 **Branch:** `draft` — all v3.3 work landed here. Revisit branch consolidation before milestone close (Phase 27).
 **Last activity:** 2026-04-19
 
-Progress: [████░░░░░░░░] v3.3: 4/12 phases shipped (33%). Phase 20 context gathered, plan next.
+Progress: [████░░░░░░░░] v3.3: 4/12 phases shipped (33%). Phase 20 planned; execute next.
 
 ## Decisions Locked In 2026-04-17 (v3.3 opening)
 
@@ -87,7 +90,7 @@ Two visual E2E sub-gates still need Mo's trusted-pointer pass (raycaster ignores
 
 Covered at CSS + listener + unit-test level. Not blocking Phase 20 either.
 
-**Start Phase 20 planning with:** `/gsd-plan-phase 20`
+**Start Phase 20 execution with:** `/gsd-execute-phase 20` (auto_advance:true will chain into execute if triggered via --chain; manual invocation just runs execute-phase once)
 
 ### Process notes
 
@@ -114,9 +117,9 @@ Phases 8–15. Shipped: clean substrate, CRT graticule + calibrating loader, que
 
 ## Session Continuity
 
-Last session: 2026-04-19T20:48:04.958Z
+Last session: 2026-04-19T21:17:57.765Z
 
-Stopped at: Phase 20 UI-SPEC approved 6/6 dimensions. Ready to plan.
+Stopped at: Phase 20 (Gather as Staging Action) planned. 3 plans + RESEARCH + VALIDATION approved by plan-checker 11/11 dimensions. Commits: a1ad94b (plans) + eb384a5 (D-14 metadata patch) + 551d17f (research+validation). Ready to execute.
 
 - `memory/feedback_playwright-wsl-prohibited.md`
 - `memory/feedback_use-gsd-for-structured-work.md`
