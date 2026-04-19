@@ -6,6 +6,7 @@ import { computeChipCounts, FILTER_DIMENSIONS } from '../data/filter-counts';
 import { applyFilter, clearFilter } from '../scene/scene-state';
 import { matchesFilter } from '../data/filter';
 import type { EnrichedCaseStudy } from '../data/enrich';
+import { gather, disposeStagingNucleus, STAGING_KEY } from '../scene/staging';
 
 // Human-readable labels per dimension
 const DIM_LABELS: Record<FilterDimension, string> = {
@@ -62,6 +63,47 @@ function isValueActive(obj: SceneObjects, dim: FilterDimension, value: string): 
 /** Count how many cases match the current filter. */
 function countMatches(obj: SceneObjects, allCases: EnrichedCaseStudy[]): number {
   return allCases.filter(c => matchesFilter(c, obj.filterState)).length;
+}
+
+export type GatherButtonState = 'disabled' | 'armed' | 'staged-current' | 'staged-drifted' | 'stranded';
+
+/** Determine the 5-state Gather button state from current SceneObjects. */
+export function determineGatherButtonState(obj: SceneObjects): GatherButtonState {
+  const isActive = obj.filterState.isActive();
+  const sphereExists = obj.nucleusMeshes.has(STAGING_KEY);
+  const allCases = getAllCases(obj);
+  const matchedCount = isActive ? countMatches(obj, allCases) : 0;
+  const stagedCount = sphereExists
+    ? (obj.nucleusOrbits[STAGING_KEY]?.cases.length ?? 0)
+    : 0;
+
+  // Stranded: sphere present but filter was cleared
+  if (sphereExists && !isActive) return 'stranded';
+  // Disabled: no active filter or nothing matched
+  if (!isActive || matchedCount === 0) return 'disabled';
+  // Armed: filter active, no sphere yet
+  if (!sphereExists) return 'armed';
+  // Sphere present + filter active: current vs drifted
+  return matchedCount === stagedCount ? 'staged-current' : 'staged-drifted';
+}
+
+/** Build gather button HTML based on current state. */
+function buildGatherButtonHTML(obj: SceneObjects): string {
+  const state = determineGatherButtonState(obj);
+  if (state === 'disabled') {
+    return `<button class="gather-button disabled" disabled aria-label="Gather matched cases">GATHER</button>`;
+  }
+  if (state === 'stranded') {
+    return `<button class="gather-button stranded" data-gather-action="dismiss" aria-label="Dismiss staging sphere">DISMISS</button>`;
+  }
+  if (state === 'staged-current') {
+    return `<button class="gather-button staged-current" data-gather-action="dismiss" aria-label="Dismiss staging sphere">GATHERED</button>`;
+  }
+  if (state === 'staged-drifted') {
+    return `<button class="gather-button staged-drifted" data-gather-action="gather" aria-label="Re-gather matched cases">REGATHER</button>`;
+  }
+  // armed
+  return `<button class="gather-button armed" data-gather-action="gather" aria-label="Gather matched cases">GATHER</button>`;
 }
 
 /** Build accordion HTML for all 5 filter dimensions. */
@@ -125,6 +167,8 @@ function buildGlobalHTML(obj: SceneObjects): string {
     ? `<div class="filters-readout" aria-live="polite" role="status">${matched} CASES</div>`
     : `<div class="filters-readout" aria-live="polite" role="status">—</div>`;
 
+  const gatherButtonHtml = buildGatherButtonHTML(obj);
+
   return `
     <div class="filters-head">
       <h3>Filter</h3>
@@ -133,6 +177,7 @@ function buildGlobalHTML(obj: SceneObjects): string {
     <div class="filters-body">
       ${accordionSections}
     </div>
+    ${gatherButtonHtml}
     ${statusBar}
   `;
 }
@@ -157,6 +202,8 @@ function buildFocusedHTML(obj: SceneObjects): string {
     ? `<div class="filters-readout" aria-live="polite" role="status">${matched} CASES</div>`
     : `<div class="filters-readout" aria-live="polite" role="status">—</div>`;
 
+  const gatherButtonHtml = buildGatherButtonHTML(obj);
+
   return `
     <div class="filters-head">
       <button class="filters-back" id="filtersBack" aria-label="Back to global view">← ${obj.focusedKey}</button>
@@ -165,6 +212,7 @@ function buildFocusedHTML(obj: SceneObjects): string {
     <div class="filters-body">
       ${accordionSections}
     </div>
+    ${gatherButtonHtml}
     ${statusBar}
   `;
 }
@@ -271,6 +319,23 @@ export function mountFilterPanel(
         render();
       });
     });
+
+    // ── Gather button ──────────────────────────────────────────────────
+    const gatherBtn = container.querySelector('.gather-button') as HTMLButtonElement | null;
+    if (gatherBtn) {
+      const action = gatherBtn.dataset.gatherAction;
+      if (action === 'gather') {
+        gatherBtn.addEventListener('click', () => {
+          gather(objects);
+          render();
+        });
+      } else if (action === 'dismiss') {
+        gatherBtn.addEventListener('click', () => {
+          disposeStagingNucleus(objects);
+          render();
+        });
+      }
+    }
 
     // ── Back button (focused mode) ─────────────────────────────────────
     const backBtn = container.querySelector('#filtersBack') as HTMLButtonElement | null;
