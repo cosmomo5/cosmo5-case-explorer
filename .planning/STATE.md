@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-19-closed-ready-to-plan-phase-20
-stopped_at: "Phase 19 (Remove Query Input — Filter Panel Only) complete at commit 2ff4869. 3/3 plans shipped in 2 waves via gsd-executor worktrees: Wave 1 parallel (19-01 UI/CSS removal `7c991a0`→`40b24de`→`83f4fad`; 19-02 data-layer removal `6798bdd`→`d871fb4`→`aba3d61`→`3f9a2c3`). Post-wave-1 cleanup `bee9284` drops unused anyHintMatched local. Wave 2 (19-03 test pruning `4972d31`→`2ff4869`). Automated gates green: 287/287 tests (down from 303, -13 query-specific tests + 3 phase14 pruned); tsc clean; build success at 237.32 KB gzipped (-2.05 KB from 239.37 baseline, landing in the predicted 2-5 KB window). FilterState.searchText field, matchesFilter search branch, keyword-map searchText wiring, persistence query-history functions, CSS .query-* rules, filter-searchtext.test.ts, and query-input test blocks in unified-column.test.ts and phase14-edge-states.test.ts all deleted. Phase 18 Tests 8-9 auto-expand/collapse wiring PRESERVED. gsd-tools phase complete 19 hit the v3.3-roadmap-grep quirk again (memory note: gsd_tools_v33_roadmap_grep.md) — falsely set is_last_phase:true and status:completed. Manually corrected here; ROADMAP marked [x] 19 correctly. Phase 20 (Gather as Staging Action) is next. 4/12 v3.3 phases shipped (16, 17, 18, 19); 8 remaining (20-27)."
-last_updated: "2026-04-19T20:25:00.000Z"
+status: phase-20-context-ready-for-planning
+stopped_at: "Phase 20 (Gather as Staging Action) — discuss-phase complete 2026-04-19 via autonomous mode. Mo's directive: 'pick all you would recommend... don't stop /go'. All four gray areas resolved; 11 decisions (D-01..D-11) captured in 20-CONTEXT.md and logged to DECISIONS.md. Key calls: (1) Gather button inline at bottom of filter accordion — gold hairline, DM Mono uppercase, 3-state disabled/armed/staged; (2) pure-manual decoupling — filter narrows silently, filter changes while sphere present do NOT update sphere; (3) full strip of highlight-across-views including StarState.filterMatch/filterDim enum cleanup; (4) readout count stays live (silent scene ≠ invisible feedback); (5) view-state gating to global+constellation only, absent from DOM in planetary+reading. Planner decides 2-vs-3 plan split based on applyFilterWave disposition. Flagged for planner: stale-sphere-with-empty-filter edge case for Playwright pass. Next: `/gsd-plan-phase 20`. PREVIOUS: Phase 19 (Remove Query Input — Filter Panel Only) complete at commit 2ff4869. 3/3 plans shipped in 2 waves via gsd-executor worktrees: Wave 1 parallel (19-01 UI/CSS removal `7c991a0`→`40b24de`→`83f4fad`; 19-02 data-layer removal `6798bdd`→`d871fb4`→`aba3d61`→`3f9a2c3`). Post-wave-1 cleanup `bee9284` drops unused anyHintMatched local. Wave 2 (19-03 test pruning `4972d31`→`2ff4869`). Automated gates green: 287/287 tests (down from 303, -13 query-specific tests + 3 phase14 pruned); tsc clean; build success at 237.32 KB gzipped (-2.05 KB from 239.37 baseline, landing in the predicted 2-5 KB window). FilterState.searchText field, matchesFilter search branch, keyword-map searchText wiring, persistence query-history functions, CSS .query-* rules, filter-searchtext.test.ts, and query-input test blocks in unified-column.test.ts and phase14-edge-states.test.ts all deleted. Phase 18 Tests 8-9 auto-expand/collapse wiring PRESERVED. gsd-tools phase complete 19 hit the v3.3-roadmap-grep quirk again (memory note: gsd_tools_v33_roadmap_grep.md) — falsely set is_last_phase:true and status:completed. Manually corrected here; ROADMAP marked [x] 19 correctly. Phase 20 (Gather as Staging Action) is next. 4/12 v3.3 phases shipped (16, 17, 18, 19); 8 remaining (20-27)."
+last_updated: "2026-04-19T21:00:00.000Z"
 last_activity: 2026-04-19
 progress:
   total_phases: 17
@@ -28,19 +28,19 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 
 ## Current Position
 
-Phase: 20 (Gather as Staging Action) — ready to discuss
-Plan: Not started
+Phase: 20 (Gather as Staging Action) — context gathered, ready to plan
+Plan: Not started — next command: `/gsd-plan-phase 20`
 **Phase 19 category (closed):** feature/removal. Repurposed 2026-04-19 from brainstorm spike (text-input-drives-stars) after Mo chose filter-panel-only at intake. 3/3 plans shipped in 2 waves. Tests 287/287, build 237.32 KB gzipped (-2.05 KB). Original spike preserved as SEED-001.
 **Phase 18 category (closed):** feature — query-bar/filter-panel merge. 9/9 UAT tests pass; two E2E sub-gates deferred to Mo's trusted-pointer session.
 **Phase 17 category (closed):** polish (primary) + feature sliver.
-**Phase 20 category (opening):** feature — Gather as Staging Action. Filter narrows silently; Gather click stages. Remove "highlight filtered across all views." Category to be confirmed at discuss-phase (likely pure feature, no spike).
+**Phase 20 category (confirmed 2026-04-19 discuss-phase):** feature (decouple) + removal (highlight-across-views). 11 decisions D-01..D-11 captured autonomously per Mo's directive. Primary edit surfaces: `src/scene/scene-state.ts` `applyFilter` L408-478 + tick-loop L356-372 (gut both); `src/scene/staging.ts` (new `gather()` entry point composing existing lifecycle primitives); `src/ui/filter-panel.ts` (new 3-state Gather button); `src/data/star-state.ts` (remove `filterMatch`/`filterDim` enum values). Plan split 2-3 decided by planner based on `applyFilterWave` disposition.
 **Constraint set (project-wide):** `DESIGN-STATE.md` (project root).
 **Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth. 4 of 12 phases shipped (16, 17, 18, 19); 8 remaining (20-27).
-**Status:** Phase 19 closed; ready to discuss Phase 20.
+**Status:** Phase 20 context gathered autonomously; ready to plan.
 **Branch:** `draft` — all v3.3 work landed here. Revisit branch consolidation before milestone close (Phase 27).
 **Last activity:** 2026-04-19
 
-Progress: [████░░░░░░░░] v3.3: 4/12 phases shipped (33%). Phase 20 next.
+Progress: [████░░░░░░░░] v3.3: 4/12 phases shipped (33%). Phase 20 context gathered, plan next.
 
 ## Decisions Locked In 2026-04-17 (v3.3 opening)
 
@@ -68,12 +68,14 @@ Phase 19 closed. Filter-panel-only is now the only filter mechanism. Bundle 237.
 
 **Phase 20 — Gather as Staging Action.** Per MILESTONE-v3.3.md §2: "Filter narrows silently; Gather click stages. Remove 'highlight filtered across all views.'" The filter no longer animates matches across all three views — it just narrows. The Gather button becomes the trigger for staging (moving selected stars to the track in focused view).
 
-**Open questions for Phase 20 discuss-phase:**
+**Phase 20 discuss-phase answers (2026-04-19, autonomous):**
 
-1. What exactly does "filter narrows silently" mean — opacity change only, no motion / scene reflow?
-2. Does Gather work from the focused view only, or also from global?
-3. How is the Gather button currently wired vs. how it should be wired post-phase?
-4. Is there a cross-phase invariant with Phase 21 (reading panel → right drawer) — i.e., should Gather output go to the drawer eventually?
+1. "Filter narrows silently" = zero scene reaction. No motion, no opacity change, no camera lean, no staging sphere. Only the readout count updates.
+2. Gather works from both `global` and `constellation` views. Button absent from DOM in `planetary` and `reading`.
+3. No Gather button exists today. This phase builds one inside the unified left column, bottom of the filter accordion, gold hairline + DM Mono, 3-state (disabled/armed/staged).
+4. No direct coupling with Phase 21 (right drawer is for reading). Gather stages to the existing staging sphere. Phase 21 handles a separate surface (reading panel geometry).
+
+Full decisions: `.planning/phases/20-gather-as-staging-action/20-CONTEXT.md` (11 decisions D-01..D-11).
 
 **Phase 18 outstanding (not blocking Phase 20):**
 
@@ -84,7 +86,7 @@ Two visual E2E sub-gates still need Mo's trusted-pointer pass (raycaster ignores
 
 Covered at CSS + listener + unit-test level. Not blocking Phase 20 either.
 
-**Start Phase 20 with:** `/gsd-discuss-phase 20`
+**Start Phase 20 planning with:** `/gsd-plan-phase 20`
 
 ### Process notes
 

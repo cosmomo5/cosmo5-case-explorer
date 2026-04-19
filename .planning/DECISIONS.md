@@ -112,4 +112,32 @@ Confidence-low or rollback-expensive decisions: surface immediately, don't bury 
 **Rollback cost:** trivial. Delete `.mcp.json` (Workshop config takes over) + `Get-ScheduledTask 'PlaywrightChromeCDP' | Unregister-ScheduledTask`.
 **Surfaced to Mo:** in the next response (summary + handoff).
 
+### 2026-04-19 — [Phase 20] All four gray areas resolved autonomously
+
+**Context:** `/gsd-discuss-phase 20`. Mo's directive: "pick all you would recommend or what you would think I would do and continue. don't stop /go". Phase 20 = Gather as staging action (filter silent, Gather explicit, remove highlight-across-views).
+
+**Decisions made (D-01..D-11 in CONTEXT.md):**
+
+1. **Gather button placement (D-01):** Inline at bottom of filter accordion inside unified left column. **Why:** Phase 18 one-pane-one-model contract; cognitive order is scan-then-act; alternative placements fragment focus.
+2. **Gather button register (D-02):** Gold hairline, DM Mono uppercase label, no solid pill. **Why:** DESIGN-STATE.md — gold = active/navigation; BYLD analog-precision register; solid pills are in the rejected SaaS register.
+3. **Three button states (D-03) + empty-filter forbidden (D-06):** disabled / armed / staged. Empty + zero-match filter → disabled. **Why:** no dead-press UI (the pattern Phase 26 is removing).
+4. **Filter↔staging model (D-04):** Pure manual decoupling. Filter narrows silently; Gather stages; subsequent filter changes do NOT update existing sphere. Rejected live-while-staged and Gather-as-toggle. **Why:** MILESTONE-v3.3.md §2 explicitly says "filter narrows silently"; observatory metaphor (compose → observe, not continuous-reaction); cleanest test surface.
+5. **Disposal (D-05):** No new close button. Existing `unfocusSphere` / view-state transitions handle disposal. Re-click Gather when sphere present → restages with current filter. **Why:** minimize chrome; existing paths suffice.
+6. **Full highlight-behavior strip (D-07):** Delete global-mode tick-loop `filterMatch`/`filterDim` opacity writes (scene-state.ts L356-372) AND focused-mode opacity tween in `applyFilter` (L448-477). `applyFilter` collapses to state mutation. **Why:** half-measures reintroduce the bug; Phase 20 is the natural moment since we're already in this file.
+7. **StarState cleanup (D-08):** Remove `filterMatch` + `filterDim` enum values. Rewire or delete `applyFilterWave`. Planner splits into 2-3 plans. **Why:** dead code with semantic-looking names invites reintroduction.
+8. **Readout stays live (D-09):** `N CASES` count updates live as filters change, independent of Gather. **Why:** silent scene ≠ invisible feedback; readout is the observation surface.
+9. **View-state gating (D-10):** Gather button present in `global` + `constellation` only. Absent from DOM in `planetary` + `reading`. **Why:** follows Phase 22-merged-into-17 hide-per-view pattern; planetary has nothing to stage, reading is single-case.
+10. **Transitions (D-11):** Existing disposal paths handle view-state transitions with staging sphere present. Phase 20 adds a test verifying this still fires.
+
+**Confidence:** high on all eleven. Each decision traces to DESIGN-STATE.md, MILESTONE-v3.3.md §2, v3.3 opening decisions (STATE.md L31-37), or Phase 18/19 carried-forward architecture.
+
+**Rollback cost:** trivial. CONTEXT.md is markdown; any decision can be revised before `/gsd-plan-phase`. No code touched yet.
+
+**Flagged for planner:**
+- Stale-sphere-with-empty-filter edge case (Risk & Gotchas section). Playwright-time call during execution.
+- Plan split (2 vs. 3) depends on `applyFilterWave` disposition — planner decides based on scope.
+- Gather animation reading as "gathering" vs. "highlighting" — acceptable-but-tunable for Phase 20; polish in Phase 23.
+
+**Surfaced to Mo:** this response + CONTEXT.md. Entry logged for audit.
+
 <!-- Append new entries below this line -->
