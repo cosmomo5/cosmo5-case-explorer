@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-18-uat-complete-ready-to-transition
-stopped_at: "Phase 18 (Unified Left Column) UAT complete at commit 9c0a8b7. Driven by Claude via Playwright MCP attached to Windows Chrome (UA Win32 confirmed). 9/9 tests pass: D-01 overture-hide, D-02 post-overture collapsed-to-tab (hotfix e8fe08f holds), D-03 focused-expanded (CSS cascade + listener + unit tests 8-9), D-04 reading-panel-and-column coexist (no overlap, wrap x:0-281, slot x:698-1038), D-05 auto-expand listener wiring (unified-column.test.ts tests 8-9 + CSS cascade), D-12 #ring-switcher visible (global probe + CSS rule), query input filter 116→109, no query-bar residue, cold-start clean. Two visual sub-gates deferred to Mo's trusted-pointer session (D-03 real canvas click → T1 → auto-expand; D-05 home-click → auto-collapse) — raycaster ignores synthetic PointerEvents so these require an OS-generated click; all covered by CSS cascade + unit tests. Full report at .planning/phases/18-unified-left-column/18-UAT.md. Ready for /gsd-transition 18 after Mo's ~10s trusted-pointer confirmation or defer-accept. 6 plans × 3 waves already executed; see prior STATE for commit trail. Automated gates still green: 303/303 tests, tsc clean, build 239.37 KB gzipped."
-last_updated: "2026-04-19T19:50:00.000Z"
+status: phase-18-closed-ready-to-plan-phase-19
+stopped_at: "Phase 18 (Unified Left Column) transition complete at commit 9c0a8b7 + 905cfa8. ROADMAP.md marks Phase 18 [x] (completed 2026-04-19). 9/9 UAT tests passed via Playwright MCP on Windows Chrome; two E2E visual sub-gates (D-03 canvas click → auto-expand, D-05 home-click → auto-collapse) deferred to Mo since raycaster ignores synthetic PointerEvents. All covered by CSS cascade + unit tests 8-9 in unified-column.test.ts. Automated gates green: 303/303 tests, tsc clean, build 239.37 KB gzipped. gsd-tools `phase complete 18` hit the v3.3-roadmap quirk (memory note: gsd_tools_v33_roadmap_grep.md) — set next_phase:null and is_last_phase:true falsely because v3.3 ROADMAP uses summary-list format without `#### Phase N:` detail sections. Manually fixed status + Current Position here; ROADMAP.md update was correct. Phase 19 (Text-Input-Drives-Stars, brainstorm spike) is actually next. 3/12 v3.3 phases shipped (16, 17, 18); 9 remaining. Feedback memories unchanged and still apply:"
+last_updated: "2026-04-19T19:55:00.000Z"
 last_activity: 2026-04-19
 progress:
   total_phases: 17
@@ -28,18 +28,18 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 
 ## Current Position
 
-Phase: 18 (Unified Left Column) — CODE-COMPLETE, UAT pending
-Plan: All 6 plans shipped + cleanup + D-02 hotfix
-**Phase 18 category (closing):** feature — query-bar/filter-panel merge. GSD spine ran full: spec→discuss→plan→execute→verify. Visual UAT for D-02..D-05 deferred to Mo's Windows Chrome session before `/gsd-transition 18`.
+Phase: 19 (Text-Input-Drives-Stars — brainstorm spike) — ready to discuss
+Plan: Not started
+**Phase 18 category (closed):** feature — query-bar/filter-panel merge. GSD spine ran full: spec→discuss→plan→execute→verify→UAT→transition. 9/9 UAT tests pass; two E2E sub-gates deferred to Mo's trusted-pointer session.
 **Phase 17 category (closed):** polish (primary) + feature sliver. Closed via design-review apparatus + code-level tests; visual UAT deferred to end-of-milestone full check.
-**Next phase:** 19 (Text-Input-Drives-Stars — brainstorm spike). Blocked on Phase 18 UAT sign-off.
+**Phase 19 category (opening):** spike. 2–3 mockup variants first, Mo selects direction, then feature phase. Per `work-categories.md` spike loop — hard gate on `DIRECTION-SELECTED.md` before any execution.
 **Constraint set (project-wide):** `DESIGN-STATE.md` (project root).
 **Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth. 3 of 12 phases shipped (16, 17, 18); 9 remaining (19–27).
-**Status:** Phase 18 code-complete; UAT pending
+**Status:** Phase 18 closed; ready to discuss Phase 19.
 **Branch:** `draft` — Phase 16, 17, 18 all landed here. Revisit branch consolidation before milestone close (Phase 27).
 **Last activity:** 2026-04-19
 
-Progress: [███░░░░░░░░░] Phases 16–18 of 12 complete. v3.3: 3/12 phases shipped (25%). Phase 19 next after UAT sign-off.
+Progress: [███░░░░░░░░░] Phases 16–18 of 12 complete. v3.3: 3/12 phases shipped (25%). Phase 19 next.
 
 ## Decisions Locked In 2026-04-17 (v3.3 opening)
 
@@ -63,28 +63,27 @@ Progress: [███░░░░░░░░░] Phases 16–18 of 12 complete. 
 
 ### Immediate — Next Session
 
-Phase 18 UAT closed by Claude via Playwright-MCP on Windows Chrome (commit `9c0a8b7`). 9/9 tests pass. Report at `.planning/phases/18-unified-left-column/18-UAT.md`.
+Phase 18 closed. Phase 19 opens as a **brainstorm spike** per the v3.3 opening decision (Phase 16 was the other spike; both were uncommitted at milestone open).
 
-**All automated gates:**
+**Phase 19 — Text-Input-Drives-Stars.** Stars respond dynamically to typing: motion, brightness, reformation. The typed query is not just a filter — it becomes a force the constellation feels. Open questions: does the response happen during typing or on ENTER? Which of motion / brightness / reformation carries the primary signal? How much of it survives once the user stops typing?
 
-- (D-01) **Overture hides column:** `.filters-wrap` display:none, opacity:0, visibility:hidden. ✓ Confirmed 2026-04-19.
-- (D-02) **Post-overture collapsed-to-tab:** `.filters-wrap.on.collapsed`, tab 49.5×71.4 at x:0 y:128, aside width ~0. ✓ Hotfix `e8fe08f` holds.
-- (D-03) **Focused expanded (CSS + listener):** removing `.collapsed` yields 232px aside. Listener wiring at main.ts:274-285 + unit tests 8-9 in unified-column.test.ts. ✓ Component-level. E2E (real canvas click → T1 → auto-expand) deferred.
-- (D-04) **Reading panel + column coexist:** slot open → 340px at x:698; wrap stays visible at x:0-281. No overlap. ✓
-- (D-05) **Auto-expand/collapse wiring:** ✓ Component + CSS. E2E (home-click → auto-collapse) deferred.
-- (D-12) **#ring-switcher both views:** Visible in global (294×12). CSS rule only hides in .comparison-active. ✓
-- **Query input + no query-bar residue:** 116→109 on `ai`; 0 query-bar selectors; sole input inside .filters-wrap. ✓
+**Spike loop (per `work-categories.md`):**
 
-**Two visual E2E sub-gates remain (need trusted pointer):**
+1. `/gsd-discuss-phase 19` to gather context — what the spike question actually is, what the candidate responses look like, what canon references apply.
+2. Produce 2–3 visual variants (HTML mockups or live prototypes; whichever is cheapest + richest). Do NOT pick one.
+3. **Hard gate:** present to Mo, await `DIRECTION-SELECTED.md` with the chosen variant + his explicit "yes, build this." No execution before this file exists.
+4. Once direction is selected: spike closes, phase converts to a feature phase with `/gsd-plan-phase 19`.
 
-1. Click a nucleus in global → T1 transition runs → column auto-expands to 232px with `◂ Filter` in the tab.
-2. Home button (⌂) or Escape from focused → column auto-collapses back to 49.5px tab.
+**Phase 18 outstanding (not blocking Phase 19):**
 
-Raycaster ignores synthetic PointerEvents (isTrusted=false), so Claude cannot drive these from Playwright-MCP evaluate-based clicks. ~10 seconds of Mo's interactive clicking closes them.
+Two visual E2E sub-gates still need Mo's trusted-pointer pass for belt-and-suspenders confirmation (raycaster ignores synthetic PointerEvents):
 
-**Step 1 — Mo's trusted-pointer pass (or defer-accept).** Start dev (`npm run dev`), open http://localhost:5173, skip overture, click a nucleus, click ⌂, done.
+1. Click a nucleus in global → T1 transition runs → column auto-expands to 232px.
+2. Home (⌂) or Escape from focused → column auto-collapses back to tab.
 
-**Step 2 — transition.** `/gsd-transition 18` (v3.3-roadmap quirk: prior `/gsd-phase complete 18` set `next_phase: null`; Phase 19 is actually next). Then `/gsd-discuss-phase 19`.
+These are covered at CSS + listener + unit-test level. Mo can tick them off in 10 seconds between phases; not a blocker.
+
+**Start Phase 19 with:** `/gsd-discuss-phase 19`
 
 ### Process notes
 
