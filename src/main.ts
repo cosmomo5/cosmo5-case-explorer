@@ -6,7 +6,7 @@ import { gsap } from 'gsap';
 import { createStarfield } from './scene/background/starfield';
 import { createRenderer } from './scene/renderer';
 import { buildOrbitalScene, tickOrbits, focusSphere, unfocusSphere, switchRingDimension, syncShortlistToStarState } from './scene/scene-state';
-import { updateStarLabels, applyInClusterVisibility } from './scene/star-labels';
+import { updateStarLabels, applyInClusterVisibility, setStarLabelMaxOpacity, sliderValueToMaxOpacity } from './scene/star-labels';
 import type { RingDimension } from './scene/orbitals/concentric';
 import type { CaseStudy } from './data/types';
 import { enrichCases } from './data/enrich';
@@ -243,6 +243,10 @@ async function boot() {
           onComplete: () => {
             overtureComplete = true;
             overtureCompleteRef.value = true; // Phase 17: wake star-label clicks
+            // Phase 17: show bottom-right panel in global view (previously only
+            // appeared in focused mode). Slider must always be accessible once
+            // the overture is complete.
+            elControls.classList.add('on');
           },
         });
       }
@@ -266,11 +270,23 @@ async function boot() {
     // Dev-only: expose for Playwright DOM probes. Remove after milestone.
     (window as any).__overtureComplete = () => overtureComplete;
 
+    // Phase 17: slider now drives star-label max opacity (not a threshold for
+    // cluster-label show/hide). The DM Mono readout uses observatory register
+    // words instead of percent: "Off" / "Observed" (default) / "Read-clear".
+    const updateLabelReadout = (v: number) => {
+      if (v === 0) elLabelVal.textContent = 'Off';
+      else if (v <= 40) elLabelVal.textContent = 'Observed';
+      else if (v <= 80) elLabelVal.textContent = 'Near-read';
+      else elLabelVal.textContent = 'Read-clear';
+    };
+    // Initialize from the HTML default (value="30")
+    labelThreshold = parseInt(elLabelSlider.value);
+    setStarLabelMaxOpacity(sliderValueToMaxOpacity(labelThreshold));
+    updateLabelReadout(labelThreshold);
     elLabelSlider.addEventListener('input', () => {
       labelThreshold = parseInt(elLabelSlider.value);
-      elLabelVal.textContent = labelThreshold === 0 ? 'Auto'
-        : labelThreshold === 100 ? 'All'
-        : `${labelThreshold}%`;
+      setStarLabelMaxOpacity(sliderValueToMaxOpacity(labelThreshold));
+      updateLabelReadout(labelThreshold);
     });
 
     // ── Tick loop ─────────────────────────────────────────────────────────
@@ -565,7 +581,9 @@ async function boot() {
 
       elCrumb.classList.remove('on');
       elFocusHint.classList.remove('on');
-      elControls.classList.remove('on');
+      // Phase 17: do NOT remove .on from elControls — slider must remain
+      // visible in global view. body.constellation CSS toggle handles
+      // the view-scoped content (ring switcher hides outside constellation).
 
       // Hide all labels (they'll reappear if threshold > 0 in tick)
       for (const div of sceneObjects.nucleusLabels.values()) {

@@ -22,7 +22,36 @@ import { projectToScreen } from '../ui/tooltip';
 // near camera or disappear too early.
 export const STAR_LABEL_FALLOFF_NEAR = 250;
 export const STAR_LABEL_FALLOFF_FAR = 700;
-export const STAR_LABEL_MAX_OPACITY = 0.12;
+/**
+ * Default baseline opacity for .sl labels at near-camera distance. The
+ * observatory register sits at .12 ("observed, not advertised"). The slider
+ * in the bottom-right panel sets this live via setStarLabelMaxOpacity().
+ */
+export const STAR_LABEL_MAX_OPACITY_DEFAULT = 0.12;
+export const STAR_LABEL_MAX_OPACITY_CEILING = 0.35; // slider at 100%
+
+let _starLabelMaxOpacity = STAR_LABEL_MAX_OPACITY_DEFAULT;
+/** Get the current ceiling. Used by tests and by UI readouts. */
+export function getStarLabelMaxOpacity(): number {
+  return _starLabelMaxOpacity;
+}
+/** Set the ceiling. Called by the slider input handler in main.ts. */
+export function setStarLabelMaxOpacity(value: number): void {
+  _starLabelMaxOpacity = Math.max(0, Math.min(STAR_LABEL_MAX_OPACITY_CEILING, value));
+}
+/**
+ * Map slider value (0–100) to a max-opacity ceiling.
+ * 0 = hidden at rest (hover-only); 30 = .12 observed register; 100 = .35 fully readable.
+ */
+export function sliderValueToMaxOpacity(sliderValue: number): number {
+  const clamped = Math.max(0, Math.min(100, sliderValue));
+  // Piecewise linear: 0 → 0, 30 → 0.12 (default), 100 → 0.35 (ceiling)
+  if (clamped <= 30) {
+    return (clamped / 30) * STAR_LABEL_MAX_OPACITY_DEFAULT;
+  }
+  const t = (clamped - 30) / 70;
+  return STAR_LABEL_MAX_OPACITY_DEFAULT + t * (STAR_LABEL_MAX_OPACITY_CEILING - STAR_LABEL_MAX_OPACITY_DEFAULT);
+}
 
 export interface StarLabelHandlers {
   onClick: (c: CaseStudy) => void;
@@ -120,7 +149,7 @@ export function updateStarLabels(
       factor = 1 - t;
     }
 
-    const opacity = STAR_LABEL_MAX_OPACITY * factor;
+    const opacity = _starLabelMaxOpacity * factor;
     // Format to 2 decimals to keep the style string stable across frames.
     label.style.opacity = opacity === 0 ? '0' : opacity.toFixed(2);
 

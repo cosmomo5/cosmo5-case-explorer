@@ -5,6 +5,9 @@ import {
   createStarLabel,
   updateStarLabels,
   applyInClusterVisibility,
+  setStarLabelMaxOpacity,
+  getStarLabelMaxOpacity,
+  sliderValueToMaxOpacity,
   STAR_LABEL_FALLOFF_NEAR,
   STAR_LABEL_FALLOFF_FAR,
 } from './star-labels';
@@ -299,6 +302,39 @@ describe('updateStarLabels — distance falloff + positioning', () => {
     );
     expect(autoLabel.classList.contains('show')).toBe(true);
     expect(mediaLabel.classList.contains('show')).toBe(true);
+  });
+
+  it('setStarLabelMaxOpacity — changes the ceiling applied by updateStarLabels', () => {
+    const container = setupDOM();
+    const star = makeStarAt(new THREE.Vector3(0, 0, 0), 'ceiling');
+    const label = createStarLabel(star.userData.caseStudy, container, {
+      onClick: () => {},
+      isClickEnabled: () => true,
+    });
+
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
+    camera.position.set(0, 0, STAR_LABEL_FALLOFF_NEAR - 10); // near = full factor
+    camera.lookAt(0, 0, 0);
+    camera.updateMatrixWorld();
+
+    setStarLabelMaxOpacity(0.3);
+    updateStarLabels([{ star, label }], camera, 800, 600);
+    expect(parseFloat(label.style.opacity)).toBeCloseTo(0.3, 2);
+
+    setStarLabelMaxOpacity(0.12); // restore default for other tests
+  });
+
+  it('sliderValueToMaxOpacity — maps slider range 0–100 to baseline range', () => {
+    expect(sliderValueToMaxOpacity(0)).toBe(0);         // Auto = hidden at rest
+    expect(sliderValueToMaxOpacity(30)).toBeCloseTo(0.12, 2); // default = observed register
+    expect(sliderValueToMaxOpacity(100)).toBeCloseTo(0.35, 2); // All = clearly readable
+  });
+
+  it('getStarLabelMaxOpacity — returns the current ceiling', () => {
+    setStarLabelMaxOpacity(0.2);
+    expect(getStarLabelMaxOpacity()).toBe(0.2);
+    setStarLabelMaxOpacity(0.12);
+    expect(getStarLabelMaxOpacity()).toBe(0.12);
   });
 
   it('hides label entirely (opacity 0) when star is behind camera', () => {
