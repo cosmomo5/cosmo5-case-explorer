@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-16-executed-verified-pending-playwright-uat
-stopped_at: "2026-04-18 late — /gsd-execute-phase 16 completed. 16-01 + 16-02 committed retroactively from uncommitted working tree (da6bd3d, 4ea66e6). 16-03 executed via gsd-executor: 8 commits (a2ad68b → 1a649a1) landing calibration overture + observatory header + skippable + reduced-motion + Gap 1 closure (body.planetary chrome-hide + scene-geometry gate) + Gap 2 closure (overtureComplete flag). gsd-verifier returned PASS-WITH-CONDITIONS: 29/29 code-level must_haves honored, all 12 PO-* requirements traced to implementation. Automated gates green: 285/285 tests, tsc --noEmit clean, build 239.01 KB gzipped (10.99 KB headroom under 250 KB budget). Outstanding: Playwright visual UAT (chrome-hidden-at-boot probe, 7 .cl.show post-reverse-gather probe, tests 3 + 4 previously blocked, full sequence smoke, reduced-motion smoke, skippable smoke). Next action: /gsd-verify-work re-runs 16-UAT.md gates via Playwright MCP → Windows Chrome; if green, /gsd-transition 16 → /gsd-plan-phase 17."
-last_updated: "2026-04-18T22:30:00.000Z"
-last_activity: "2026-04-18 late — Phase 16 fully executed. Branch truth corrected (working tree is on `draft`, not `phase-1c` as previous STATE.md claimed — no action taken on branch itself; phase-1c line below in Branch Strategy is legacy from v3.2 and no longer applies to v3.3 work). 11 commits added to draft: 2 retroactive (16-01 state machine, 16-02 planet mesh + choreograph with 2 known gaps captured in SUMMARY) + 8 net-new from gsd-executor for 16-03 + 1 plan-docs commit. Code-level verification via gsd-verifier: PASS-WITH-CONDITIONS. 16-UAT.md now has one visual UAT pass left to run via Playwright MCP before transition."
+status: phase-17-ready-to-plan
+stopped_at: "2026-04-19 — Phase 16 transitioned complete. ROADMAP.md checkbox flipped [x] with completion date, STATE.md advanced to Phase 17 (Star Labels Always-On + Label-Click Nav). All 16-* artefacts intact (3 plans, 3 summaries, 1 verification, 1 UAT, 3 uat screenshots). Next action: /gsd-discuss-phase 17 (no CONTEXT.md yet for phase 17) or /gsd-plan-phase 17 directly."
+last_updated: "2026-04-19T14:50:00.000Z"
+last_activity: "2026-04-19 — Phase 16 → Phase 17 transition. Phase 16 closed with visual UAT 7/7 pass. Phase 17 goal (from ROADMAP): reinstate `.sl` visibility at low opacity by default; label click triggers ENTER_CONSTELLATION."
 progress:
   total_phases: 12
   completed_phases: 1
@@ -28,13 +28,16 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 
 ## Current Position
 
-**Phase:** 16 (Planetary Overture) — ALL PLANS COMMITTED. 16-01, 16-02, 16-03 all have SUMMARY.md; gsd-verifier returned PASS-WITH-CONDITIONS. Only Playwright visual UAT remains.
+**Category:** polish (primary) + spike (secondary, closed) — v3.3 is a polish milestone. Phase 16 opened as a spike (mockup-driven option selection for the planetary overture) and transitioned to polish once direction was selected. Current state is polish: implementation exists, visual UAT is the remaining gate. Feedback loop is `design-review-apparatus` + Playwright UAT against the constraint set in `../DESIGN-STATE.md`, not `/gsd-plan-phase`. See `work-technical/.claude/rules/work-categories.md` for the loop.
+**Constraint set:** `/mnt/c/Users/moham/Documents/Thales/work-technical/case-study-explorer/DESIGN-STATE.md`
+**Sign-off criterion:** Mo confirms Phase 16 calibration overture + observatory header + planet sequence reads as an instrument-panel boot, not a marketing intro, against the BYLD/Kunumi/Cosmo5 canon; all 6 `16-UAT.md` gates pass via Playwright → Windows Chrome.
+**Phase:** 17 (Star Labels Always-On + Label-Click Nav) — READY TO PLAN. Phase 16 CLOSED: 3/3 plans complete, UAT 7/7 pass, 3 screenshots in artefacts.
 **Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth.
-**Status:** Code complete for Phase 16. Code-level verification PASS via VERIFICATION.md (29/29 must_haves, all 12 PO-* requirements traced). Automated gates green: 285/285 tests, tsc --noEmit clean, build 239.01 KB gzipped. Outstanding: one Playwright visual UAT pass (16-UAT.md gates — chrome-hidden-at-boot probe, 7 `.cl.show` post-reverse-gather probe, tests 3 + 4 previously blocked, full sequence smoke, reduced-motion smoke, skippable smoke) before `/gsd-transition 16`.
+**Status:** Phase 17 ready to plan. Goal (from ROADMAP): reinstate `.sl` (star label) visibility at low opacity by default; label click triggers ENTER_CONSTELLATION. No CONTEXT.md or PLAN.md yet. Phase category will be feature or polish depending on whether reinstatement is net-new or re-enabling an existing path — confirm at /gsd-discuss-phase.
 **Branch:** `draft` (previous STATE.md claimed `phase-1c` — that was legacy from v3.2 and no longer describes reality; v3.3 phase 16 work landed on `draft`).
 **Last activity:** 2026-04-18 late — /gsd-execute-phase 16 end-to-end. 11 commits added to draft (da6bd3d → 1a649a1). See commit log for the plan-by-plan breakdown. VERIFICATION.md at .planning/phases/16-planetary-overture/VERIFICATION.md.
 
-Progress: [██░░░░░░░░░░] Phase 16 of 12 complete (code-level); v3.3 ~17%. Visual UAT still pending — do NOT `/gsd-transition 16` until it passes.
+Progress: [██░░░░░░░░░░] Phase 16 of 12 complete. v3.3: 1/12 phases shipped (~8%). Phase 17 next.
 
 ## Decisions Locked In 2026-04-17 (v3.3 opening)
 

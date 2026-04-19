@@ -20,7 +20,7 @@
 - Integer phases (16–27): Planned milestone work
 - Decimal phases: Urgent insertions only (via `/gsd:insert-phase`)
 
-- [ ] **Phase 16: Planetary Overture** *(brainstorm spike)* — Initial planet-like view with cases gathered around/within, click/scroll transitions into cluster layout. Visual companion mockups → Mo selects → execute.
+- [x] **Phase 16: Planetary Overture** *(brainstorm spike)* — Initial planet-like view with cases gathered around/within, click/scroll transitions into cluster layout. Visual companion mockups → Mo selects → execute. **3/3 plans complete (completed 2026-04-19)**
 - [ ] **Phase 17: Star Labels Always-On + Label-Click Nav** — Reinstate `.sl` visibility at low opacity by default; label click triggers ENTER_CONSTELLATION.
 - [ ] **Phase 18: Unified Left Column** — `query-bar.ts` folds into `filter-panel.ts`. One pane, two input modes (keyword + facet), same result set.
 - [ ] **Phase 19: Text-Input-Drives-Stars** *(brainstorm spike)* — Stars respond dynamically to typing (motion / brightness / reformation). Visual companion mockups → Mo selects → execute.
