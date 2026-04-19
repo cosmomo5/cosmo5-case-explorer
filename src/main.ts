@@ -281,6 +281,11 @@ async function boot() {
       }
     });
 
+    // Set initial collapsed state in global view (D-02)
+    if (elFiltersWrap && viewState.getState().kind === 'global') {
+      elFiltersWrap.classList.add('collapsed');
+    }
+
     // ── Label opacity control ────────────────────────────────────────────
     let labelThreshold = 0; // 0 = auto (show on hover only), 100 = all visible
 
