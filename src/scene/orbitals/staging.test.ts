@@ -146,7 +146,9 @@ describe('computeStagingPositions', () => {
   });
 });
 
-// ── Staging sphere lifecycle (new — FILT-04, FILT-06, FILT-09) ──────────────
+// ── Staging sphere lifecycle (FILT-04/FILT-09 rewired — D-04) ────────────────
+// applyFilter is now a pure state mutation. It no longer creates or manages
+// the staging sphere. Staging is triggered by gather() (Plan 20-02).
 
 describe('staging sphere lifecycle', () => {
   let objects: SceneObjects;
@@ -157,58 +159,40 @@ describe('staging sphere lifecycle', () => {
     vi.clearAllMocks();
   });
 
-  it('FILT-04: applyFilter() in global mode with active filter — nucleusMeshes has STAGING_KEY after call', () => {
+  it('FILT-04: applyFilter() does NOT create staging sphere in global mode (pure state only)', () => {
     const filter = createFilterState();
     filter.proofTypes.add(ProofType.Awareness);
     applyFilter(objects, filter);
-    expect(objects.nucleusMeshes.has('__staging__')).toBe(true);
-  });
-
-  it('FILT-04: applyFilter() in global mode with active filter — nucleusOrbits has STAGING_KEY after call', () => {
-    const filter = createFilterState();
-    filter.proofTypes.add(ProofType.Awareness);
-    applyFilter(objects, filter);
-    expect('__staging__' in objects.nucleusOrbits).toBe(true);
-  });
-
-  it('FILT-09: applyFilter() then clear filter — nucleusMeshes does NOT have STAGING_KEY', () => {
-    vi.useFakeTimers();
-    const filter = createFilterState();
-    filter.proofTypes.add(ProofType.Awareness);
-    applyFilter(objects, filter);
-    expect(objects.nucleusMeshes.has('__staging__')).toBe(true);
-
-    const clearFilter = createFilterState(); // inactive filter
-    applyFilter(objects, clearFilter);
-    vi.runAllTimers(); // flush the 700ms delayed disposal
+    // applyFilter is now a pure state mutation — staging sphere is NOT created
     expect(objects.nucleusMeshes.has('__staging__')).toBe(false);
-    vi.useRealTimers();
   });
 
-  it('FILT-09: clearing filter calls geometry.dispose() on the staging mesh', () => {
-    vi.useFakeTimers();
+  it('FILT-04: applyFilter() does NOT add STAGING_KEY to nucleusOrbits (pure state only)', () => {
     const filter = createFilterState();
     filter.proofTypes.add(ProofType.Awareness);
     applyFilter(objects, filter);
-    const stagingMesh = objects.nucleusMeshes.get('__staging__')!;
-    const disposeSpy = vi.spyOn(stagingMesh.geometry, 'dispose');
-
-    const clearFilter = createFilterState();
-    applyFilter(objects, clearFilter);
-    vi.runAllTimers();
-    expect(disposeSpy).toHaveBeenCalled();
-    vi.useRealTimers();
+    expect('__staging__' in objects.nucleusOrbits).toBe(false);
   });
 
-  it('FILT-04: applying filter twice (filter changes) creates only one staging sphere', () => {
+  it('FILT-09: nucleusMeshes.size unchanged after applyFilter (no sphere lifecycle)', () => {
+    const initialSize = objects.nucleusMeshes.size;
     const filter = createFilterState();
     filter.proofTypes.add(ProofType.Awareness);
     applyFilter(objects, filter);
-    expect(objects.nucleusMeshes.size).toBe(2); // 'Media' + '__staging__'
+    expect(objects.nucleusMeshes.size).toBe(initialSize);
 
-    // Apply again — should not add a second staging sphere
+    applyFilter(objects, createFilterState()); // clear filter
+    expect(objects.nucleusMeshes.size).toBe(initialSize);
+  });
+
+  it('FILT-04: applying filter twice leaves nucleusMeshes unchanged (no staging sphere)', () => {
+    const initialSize = objects.nucleusMeshes.size;
+    const filter = createFilterState();
+    filter.proofTypes.add(ProofType.Awareness);
     applyFilter(objects, filter);
-    expect(objects.nucleusMeshes.size).toBe(2);
-    expect(objects.nucleusMeshes.has('__staging__')).toBe(true);
+    applyFilter(objects, filter);
+    // Nucleus count unchanged — applyFilter does not touch nucleusMeshes
+    expect(objects.nucleusMeshes.size).toBe(initialSize);
+    expect(objects.nucleusMeshes.has('__staging__')).toBe(false);
   });
 });

@@ -116,106 +116,93 @@ function makeFocusedSceneObjects(cases: EnrichedCaseStudy[]): SceneObjects {
   };
 }
 
-// ── Focused-view filter dimming tests (FILT-07) ───────────────────────────────
+// ── Pure-state applyFilter tests (FILT-07 rewired — D-04) ────────────────────
+// applyFilter is now a pure state mutation: objects.filterState = newFilter.
+// Visual updates are the responsibility of applyFilterWave (global) and
+// gather() (Phase 20+). applyFilter itself does NOT touch starState or opacity.
 
-describe('applyFilter — focused mode (FILT-07)', () => {
+describe('applyFilter — pure state mutation (FILT-07)', () => {
   const matchingCase  = makeCase('c1', ProofType.Awareness);
   const nonMatchingCase = makeCase('c2', ProofType.Conversion);
   let objects: SceneObjects;
+  let gsapMock: ReturnType<typeof vi.fn>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     objects = makeFocusedSceneObjects([matchingCase, nonMatchingCase]);
+    const gsapMod = await import('gsap') as any;
+    gsapMock = gsapMod.gsap.to as ReturnType<typeof vi.fn>;
     vi.clearAllMocks();
   });
 
-  it('non-matching star gets userData.starState === "filterDim"', () => {
-    const filter = createFilterState();
-    filter.proofTypes.add(ProofType.Awareness); // only c1 matches
-
-    applyFilter(objects, filter);
-
-    const nonMatchingStar = objects.starMeshes.find(
-      s => (s.userData.caseStudy as EnrichedCaseStudy).id === 'c2',
-    )!;
-    expect(nonMatchingStar.userData.starState).toBe('filterDim');
-  });
-
-  it('matching star stays at userData.starState === "idle"', () => {
-    const filter = createFilterState();
-    filter.proofTypes.add(ProofType.Awareness); // c1 matches
-
-    applyFilter(objects, filter);
-
-    const matchingStar = objects.starMeshes.find(
-      s => (s.userData.caseStudy as EnrichedCaseStudy).id === 'c1',
-    )!;
-    expect(matchingStar.userData.starState).toBe('idle');
-  });
-
-  it('clearing filter in focused mode — all stars return to starState "idle"', () => {
-    // First apply a filter to dim non-matching stars
+  it('sets objects.filterState to the new filter (focused mode)', () => {
     const filter = createFilterState();
     filter.proofTypes.add(ProofType.Awareness);
+
     applyFilter(objects, filter);
 
-    const nonMatchingStar = objects.starMeshes.find(
-      s => (s.userData.caseStudy as EnrichedCaseStudy).id === 'c2',
-    )!;
-    expect(nonMatchingStar.userData.starState).toBe('filterDim');
+    expect(objects.filterState).toBe(filter);
+  });
 
-    // Now clear the filter
-    applyFilter(objects, createFilterState());
+  it('sets objects.filterState to the new filter (global mode)', () => {
+    objects.mode = 'global';
+    const filter = createFilterState();
+    filter.proofTypes.add(ProofType.Awareness);
+
+    applyFilter(objects, filter);
+
+    expect(objects.filterState).toBe(filter);
+  });
+
+  it('does NOT call gsap.to (no visual side effects in focused mode)', () => {
+    const filter = createFilterState();
+    filter.proofTypes.add(ProofType.Awareness);
+
+    applyFilter(objects, filter);
+
+    expect(gsapMock).not.toHaveBeenCalled();
+  });
+
+  it('does NOT call gsap.to (no visual side effects in global mode)', () => {
+    objects.mode = 'global';
+    const filter = createFilterState();
+    filter.proofTypes.add(ProofType.Awareness);
+
+    applyFilter(objects, filter);
+
+    expect(gsapMock).not.toHaveBeenCalled();
+  });
+
+  it('does NOT modify starState on any star (focused mode)', () => {
+    for (const star of objects.starMeshes) {
+      star.userData.starState = 'idle';
+    }
+    const filter = createFilterState();
+    filter.proofTypes.add(ProofType.Awareness);
+
+    applyFilter(objects, filter);
 
     for (const star of objects.starMeshes) {
       expect(star.userData.starState).toBe('idle');
     }
   });
 
-  it('star with state "selected" is NOT changed to filterDim — precedence respected', () => {
-    // Pre-set c1 as selected (higher precedence than filterDim)
-    const selectedStar = objects.starMeshes.find(
-      s => (s.userData.caseStudy as EnrichedCaseStudy).id === 'c1',
-    )!;
-    selectedStar.userData.starState = 'selected';
-
+  it('does NOT modify starState on any star (global mode)', () => {
+    objects.mode = 'global';
+    for (const star of objects.starMeshes) {
+      star.userData.starState = 'idle';
+    }
     const filter = createFilterState();
-    filter.proofTypes.add(ProofType.Conversion); // c1 does NOT match
+    filter.proofTypes.add(ProofType.Awareness);
 
     applyFilter(objects, filter);
 
-    // c1 has state 'selected' — should not be downgraded to 'filterDim'
-    expect(selectedStar.userData.starState).toBe('selected');
+    for (const star of objects.starMeshes) {
+      expect(star.userData.starState).toBe('idle');
+    }
   });
 
-  it('star with state "reading" is NOT changed to filterDim — precedence respected', () => {
-    const readingStar = objects.starMeshes.find(
-      s => (s.userData.caseStudy as EnrichedCaseStudy).id === 'c1',
-    )!;
-    readingStar.userData.starState = 'reading';
-
-    const filter = createFilterState();
-    filter.proofTypes.add(ProofType.Conversion); // c1 does NOT match
-
-    applyFilter(objects, filter);
-
-    expect(readingStar.userData.starState).toBe('reading');
-  });
-
-  it('star with state "ghost" is NOT changed to filterDim — precedence respected', () => {
-    const ghostStar = objects.starMeshes.find(
-      s => (s.userData.caseStudy as EnrichedCaseStudy).id === 'c1',
-    )!;
-    ghostStar.userData.starState = 'ghost';
-
-    const filter = createFilterState();
-    filter.proofTypes.add(ProofType.Conversion); // c1 does NOT match
-
-    applyFilter(objects, filter);
-
-    expect(ghostStar.userData.starState).toBe('ghost');
-  });
-
-  it('no staging sphere created in focused mode even when filter is active', () => {
+  it('does NOT create staging sphere (applyFilter no longer manages staging)', () => {
+    objects.mode = 'global';
     const filter = createFilterState();
     filter.proofTypes.add(ProofType.Awareness);
 
@@ -257,16 +244,16 @@ describe('syncShortlistToStarState', () => {
     expect(starFor('a').userData.starState).toBe('selected');
   });
 
-  it('marks shortlisted star as "selected" when currently "filterMatch"', () => {
-    starFor('a').userData.starState = 'filterMatch';
+  it('marks shortlisted star as "selected" when currently "selected" (idempotent)', () => {
+    starFor('a').userData.starState = 'selected';
 
     syncShortlistToStarState(objects, entries('a'));
 
     expect(starFor('a').userData.starState).toBe('selected');
   });
 
-  it('marks shortlisted star as "selected" when currently "filterDim"', () => {
-    starFor('a').userData.starState = 'filterDim';
+  it('marks shortlisted star as "selected" when starState is undefined (treated as idle)', () => {
+    starFor('a').userData.starState = undefined;
 
     syncShortlistToStarState(objects, entries('a'));
 
@@ -298,22 +285,24 @@ describe('syncShortlistToStarState', () => {
     expect(starFor('a').userData.starState).toBe('idle');
   });
 
-  it('leaves "filterDim" star unchanged when it is not shortlisted', () => {
-    starFor('b').userData.starState = 'filterDim';
+  it('leaves "idle" star unchanged when it is not shortlisted', () => {
+    starFor('b').userData.starState = 'idle';
 
     // Only 'a' is shortlisted; 'b' is not
     syncShortlistToStarState(objects, entries('a'));
 
-    // 'b' should remain filterDim — sync does NOT reset filter states
-    expect(starFor('b').userData.starState).toBe('filterDim');
+    // 'b' should remain idle — sync does not promote non-shortlisted stars
+    expect(starFor('b').userData.starState).toBe('idle');
   });
 
-  it('leaves "filterMatch" star unchanged when it is not shortlisted', () => {
-    starFor('b').userData.starState = 'filterMatch';
+  it('does not promote non-shortlisted star with undefined starState', () => {
+    starFor('b').userData.starState = undefined;
 
+    // Only 'a' is shortlisted; 'b' is not
     syncShortlistToStarState(objects, entries('a'));
 
-    expect(starFor('b').userData.starState).toBe('filterMatch');
+    // 'b' was not shortlisted — starState stays undefined (not promoted to selected)
+    expect(starFor('b').userData.starState).toBeUndefined();
   });
 
   it('handles star with undefined starState (treated as idle) — sets selected when shortlisted', () => {

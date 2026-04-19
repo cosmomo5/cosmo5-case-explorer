@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // applyFilterWave will be added to scene-state.ts in Plan 03.
-// Mock the module so the 207 existing tests don't break during Wave 0.
+// Mock the module so the existing tests don't break during Wave 0.
 vi.mock('../scene/scene-state', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../scene/scene-state')>();
   return {
@@ -60,26 +60,36 @@ describe('applyFilterWave — wave propagation (Plan 03)', () => {
     vi.mocked(applyFilterWave).mockReset();
   });
 
-  it('applyFilterWave sets filterMatch state on matching stars', () => {
+  it('applyFilterWave animates matching stars to full opacity via GSAP', async () => {
+    const gsapMod = await import('gsap') as any;
+    const gsap = gsapMod.gsap;
     const star = mockStar(matchingCaseData);
     vi.mocked(applyFilterWave).mockImplementation((_sceneObjects, _filterState) => {
-      star.userData.starState = 'filterMatch';
+      gsap.to(star.material, { opacity: 0.85, duration: 0.15, delay: 0 });
     });
     const filter = createFilterState();
     filter.services.add('Media');
     applyFilterWave({ starMeshes: [star as any] } as any, filter);
-    expect(star.userData.starState).toBe('filterMatch');
+    expect(gsap.to).toHaveBeenCalledWith(
+      star.material,
+      expect.objectContaining({ opacity: 0.85 }),
+    );
   });
 
-  it('applyFilterWave sets filterDim state on non-matching stars', () => {
+  it('applyFilterWave animates non-matching stars to dim opacity via GSAP', async () => {
+    const gsapMod = await import('gsap') as any;
+    const gsap = gsapMod.gsap;
     const star = mockStar(nonMatchingCaseData);
     vi.mocked(applyFilterWave).mockImplementation((_sceneObjects, _filterState) => {
-      star.userData.starState = 'filterDim';
+      gsap.to(star.material, { opacity: 0.12, duration: 0.15, delay: 0 });
     });
     const filter = createFilterState();
     filter.services.add('Media');
     applyFilterWave({ starMeshes: [star as any] } as any, filter);
-    expect(star.userData.starState).toBe('filterDim');
+    expect(gsap.to).toHaveBeenCalledWith(
+      star.material,
+      expect.objectContaining({ opacity: 0.12 }),
+    );
   });
 
   it('applyFilterWave skips stars in reading state', () => {
