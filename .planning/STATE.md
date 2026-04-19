@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-18-context-gathered
-stopped_at: "2026-04-19 — Phase 18 (Unified Left Column) CONTEXT captured. 19 decisions + 4 follow-ups across 4 gray areas: Visibility (collapsed-tab in global, auto-expand on ENTER_CONSTELLATION, stays during reading), Composition (input top + N CASES only + history kept + hint kept + welcome-back dropped + Advanced drawer removed), Mode-row (grouping goes bottom-right full-time, mode-row dropped from filter-panel), Cleanup (query-bar DOM/TS/CSS + orphaned v3.1 DOM all removed in Phase 18). Seams flagged: Phase 19 input wiring only, Phase 20 preserve applyFilterWave, Phase 21 drawer geometry compatible. Next action: /gsd-plan-phase 18."
-last_updated: "2026-04-19T19:05:00.000Z"
-last_activity: "2026-04-19 — Phase 18 discuss-phase complete. CONTEXT.md + DISCUSSION-LOG.md committed (44845c5). Key register move: left column collapsed-by-default in global, Kunumi structural — inquiry available on reach, not announced. Query-bar DOM/TS/CSS removed entirely in Phase 18. Grouping switcher relaxes from Phase 17 D-08 constellation-only rule to bottom-right full-time."
+status: executing
+stopped_at: "Phase 16 code-complete + code-verified. 16-01 + 16-02 committed retroactively from the uncommitted working tree (16-01: `da6bd3d`; 16-02: `4ea66e6` — SUMMARY.md written this session, marked `shipped-with-known-gaps` since the 2 UAT gaps were deferred to 16-03 rather than shipped resolved). 16-03 executed via gsd-executor: 8 commits `a2ad68b` → `4d8ccdb` (plus plan-docs `1a649a1`) landing calibration overture, observatory header, skippable handler, reduced-motion variant, Gap 1 closure (body.planetary chrome-hide CSS + planetaryActive scene gate), Gap 2 closure (overtureComplete flag + tick-loop widened condition). gsd-verifier returned PASS-WITH-CONDITIONS (29/29 must_haves honored, all 12 PO-* requirements traced); VERIFICATION.md at .planning/phases/16-planetary-overture/VERIFICATION.md. Automated gates green: 285/285 tests, `tsc --noEmit` clean, build 239.01 KB gzipped (10.99 KB headroom). Feedback memories unchanged and still apply:"
+last_updated: "2026-04-19T17:14:34.042Z"
+last_activity: 2026-04-19
 progress:
-  total_phases: 12
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
-  percent: 17
+  total_phases: 17
+  completed_phases: 9
+  total_plans: 46
+  completed_plans: 31
+  percent: 67
 ---
 
 # Project State
@@ -28,14 +28,16 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 
 ## Current Position
 
+Phase: 18 (Unified Left Column) — EXECUTING
+Plan: 1 of 6
 **Category (next phase 18):** feature — query-bar/filter-panel merge is structural consolidation with UX-visible reshape. Run the GSD spine: spec → discuss → plan → execute → verify → transition. See `work-technical/.claude/rules/work-categories.md` for the loop.
 **Phase 17 category (closed):** polish (primary) + feature sliver. Closed via design-review apparatus + code-level tests; visual UAT deferred to end-of-milestone full check.
 **Constraint set (project-wide):** `DESIGN-STATE.md` (project root).
 **Phase:** 18 (Unified Left Column) — CONTEXT GATHERED. 19 decisions + 4 follow-ups across Visibility / Composition / Mode-row / Cleanup. Ready for /gsd-plan-phase 18.
 **Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth.
-**Status:** Phase 18 context captured. Register move locked: left column collapsed-by-default in global, auto-expands on ENTER_CONSTELLATION, re-collapses on EXIT. Query-bar DOM/TS/CSS + orphaned v3.1 filter DOM all removed in Phase 18. Grouping switcher relaxes to bottom-right full-time.
+**Status:** Executing Phase 18
 **Branch:** `draft` — Phase 16 + 17 both landed here; Phase 18 discuss commit (44845c5) also on draft. Revisit branch consolidation before milestone close (Phase 27).
-**Last activity:** 2026-04-19 — Phase 18 discuss-phase complete. 18-CONTEXT.md + 18-DISCUSSION-LOG.md committed on draft. Seams flagged for planner: Phase 19 (input wiring here, star response there), Phase 20 (preserve applyFilterWave, strip there), Phase 21 (drawer geometry compatible).
+**Last activity:** 2026-04-19
 
 Progress: [██░░░░░░░░░░] Phases 16–17 of 12 complete. v3.3: 2/12 phases shipped (~17%). Phase 18 next.
 
@@ -66,6 +68,7 @@ Phase 16 is code-complete and code-verified. The only remaining gate is visual U
 **Step 0 (blocking) — UA probe.** First call: `mcp__plugin_playwright_playwright__browser_navigate` to `about:blank`, then `browser_evaluate` `() => ({ ua: navigator.userAgent, platform: navigator.platform })`. Pass: `ua` contains `Windows NT`, `platform === 'Win32'`. Fail: anything `Linux`/`X11` → stop, don't drive UAT.
 
 **Step 1 — visual UAT.** `/gsd-verify-work` re-runs the 16-UAT.md gates:
+
 - (a) **At boot**, `.wordmark-corner`, `#queryWrap`, `#catalogReadout`, `#crumb`, `#filtersWrap`, `#cosmoControls`, `#homeBtn`, `#gatherList` all invisible per `getBoundingClientRect` / computed `opacity: 0`. Observatory header + calibration overture visible.
 - (b) **Acts I + II play.** Reticle + 4 DM Mono status lines fade in on schedule (0.3 / 0.9 / 1.5 / 2.1s). Scan-line sweep at 2.4s. Planet fades in at ~2.7s. Hint line at 3.5s.
 - (c) **Skippable.** Click / Enter / Space on the overture commits ENTER_FIELD; input/textarea targets ignored.
@@ -104,6 +107,7 @@ Phases 8–15. Shipped: clean substrate, CRT graticule + calibrating loader, que
 
 Last session: 2026-04-18 late (/gsd-execute-phase 16 end-to-end)
 Stopped at: Phase 16 code-complete + code-verified. 16-01 + 16-02 committed retroactively from the uncommitted working tree (16-01: `da6bd3d`; 16-02: `4ea66e6` — SUMMARY.md written this session, marked `shipped-with-known-gaps` since the 2 UAT gaps were deferred to 16-03 rather than shipped resolved). 16-03 executed via gsd-executor: 8 commits `a2ad68b` → `4d8ccdb` (plus plan-docs `1a649a1`) landing calibration overture, observatory header, skippable handler, reduced-motion variant, Gap 1 closure (body.planetary chrome-hide CSS + planetaryActive scene gate), Gap 2 closure (overtureComplete flag + tick-loop widened condition). gsd-verifier returned PASS-WITH-CONDITIONS (29/29 must_haves honored, all 12 PO-* requirements traced); VERIFICATION.md at .planning/phases/16-planetary-overture/VERIFICATION.md. Automated gates green: 285/285 tests, `tsc --noEmit` clean, build 239.01 KB gzipped (10.99 KB headroom). Feedback memories unchanged and still apply:
+
 - `memory/feedback_playwright-wsl-prohibited.md`
 - `memory/feedback_use-gsd-for-structured-work.md`
 - `memory/playwright_mcp_windows_fix.md` (authoritative on the Playwright MCP config)
