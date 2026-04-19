@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { mountFilterPanel } from './filter-panel';
 import { createFilterState } from '../data/filter';
-import { createViewStateMachine } from '../data/view-state';
+import { createViewStateMachine, type ViewStateMachine, type ViewState, type ViewEvent } from '../data/view-state';
 import type { SceneObjects } from '../scene/scene-state';
 import type { EnrichedCaseStudy } from '../data/enrich';
 import { ProofType } from '../data/proof-type';
@@ -38,7 +38,7 @@ const mockCases: EnrichedCaseStudy[] = [
     approach: '',
     metrics: [],
     proofType: ProofType.Awareness,
-    impactScale: { value: 0.5, band: 'moderate', maxPct: 100 },
+    impactScale: { value: 0.5, band: 'notable', maxPct: 100 },
   },
   {
     id: 'c3',
@@ -238,7 +238,6 @@ describe('Unified Left Column - Input Behavior', () => {
 describe('Unified Left Column - Query History', () => {
   let container: HTMLElement;
   let objects: SceneObjects;
-  let viewState: ViewStateMachine;
 
   beforeEach(() => {
     document.body.innerHTML = '';
@@ -246,7 +245,6 @@ describe('Unified Left Column - Query History', () => {
     container.id = 'filters';
     document.body.appendChild(container);
     objects = makeSceneObjects();
-    viewState = createViewStateMachine({ kind: 'global' });
     // Clear query history before each test
     localStorage.removeItem('cosmo5.queryHistory.v1');
   });
@@ -376,7 +374,7 @@ describe('Unified Left Column - View-State Auto-Expand', () => {
 
     // In the actual implementation (main.ts), the view-state listener removes .collapsed on ENTER_CONSTELLATION.
     // Simulate that behavior here to verify the container state machine works:
-    viewState.subscribe((_next, _prev, event) => {
+    viewState.subscribe((_next: ViewState, _prev: ViewState, event: ViewEvent) => {
       if (event.type === 'ENTER_CONSTELLATION') {
         container.classList.remove('collapsed');
       }
@@ -403,7 +401,7 @@ describe('Unified Left Column - View-State Auto-Expand', () => {
 
     // In the actual implementation (main.ts), the view-state listener adds .collapsed on EXIT_CONSTELLATION.
     // Simulate that behavior here to verify the container state machine works:
-    constellationViewState.subscribe((_next, _prev, event) => {
+    constellationViewState.subscribe((_next: ViewState, _prev: ViewState, event: ViewEvent) => {
       if (event.type === 'EXIT_CONSTELLATION') {
         container.classList.add('collapsed');
       }

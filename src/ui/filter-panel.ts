@@ -9,14 +9,6 @@ import type { EnrichedCaseStudy } from '../data/enrich';
 import { applyQuery } from '../data/keyword-map';
 import { loadQueryHistory, addQueryToHistory } from '../data/persistence';
 
-/**
- * Backward-compat interface for pre-Phase 18 callers (e.g., query-bar.ts in Wave 2).
- * Will be removed when query-bar.ts is deleted in Wave 3.
- */
-export interface FilterPanelOptions {
-  hideModeSwitcher?: boolean;
-}
-
 // Human-readable labels per dimension
 const DIM_LABELS: Record<FilterDimension, string> = {
   countries:   'Country',
@@ -215,34 +207,18 @@ function buildFocusedHTML(obj: SceneObjects): string {
   `;
 }
 
-/**
- * Mount filter panel. Supports two calling conventions:
- * 1. New (Phase 18+): mountFilterPanel(container, objects, onGroupModeChange, onExitFocus, cases, onFilterChange)
- * 2. Old (pre-Phase 18): mountFilterPanel(container, objects, onGroupModeChange, onExitFocus, options)
- */
 export function mountFilterPanel(
   container: HTMLElement,
   objects: SceneObjects,
   onGroupModeChange: (mode: GroupMode) => void,
   onExitFocus?: () => void,
-  casesOrOptions?: CaseStudy[] | FilterPanelOptions,
-  onFilterChange?: () => void,
+  cases: CaseStudy[] = [],
+  onFilterChange: () => void = () => {},
 ): void {
-  // Detect calling convention: if 5th param is an array, it's cases (new); if it's an object with hideModeSwitcher, it's options (old)
-  let cases: CaseStudy[] = [];
-  if (casesOrOptions) {
-    if (Array.isArray(casesOrOptions)) {
-      cases = casesOrOptions;
-    } else if ('hideModeSwitcher' in casesOrOptions) {
-      // Old calling convention - options passed; ignore hideModeSwitcher (not used per D-13)
-      cases = [];
-    }
-  }
-
   const deps = {
     sceneObjects: objects,
     cases,
-    onFilterChange: onFilterChange || (() => {}),
+    onFilterChange,
     onGroupModeChange,
     onExitFocus,
   };
