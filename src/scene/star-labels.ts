@@ -16,12 +16,22 @@ import * as THREE from 'three';
 import type { CaseStudy } from '../data/types';
 import { projectToScreen } from '../ui/tooltip';
 
-// Distance thresholds measured in world units. These values assume the
-// existing camera ranges (VIEW_DISTANCE = 200, global view ~300–500 from
-// origin). Tune empirically during Playwright UAT if labels read too crowded
-// near camera or disappear too early.
-export const STAR_LABEL_FALLOFF_NEAR = 250;
-export const STAR_LABEL_FALLOFF_FAR = 700;
+// Distance thresholds measured in world units. Tuned empirically during
+// Playwright UAT on 2026-04-19: the renderer's default camera sits at
+// (80, 880, 280) ≈ 927 units from origin in global view, and stars orbit
+// nuclei that can be ~300 from origin. So the effective star-to-camera
+// distance in global view ranges ~700–1300. In constellation view the
+// camera zooms to VIEW_DISTANCE=200 from the focused nucleus, so star
+// distance is ~30–80 (well inside NEAR).
+//
+// NEAR must cover the closest stars in global view so they read visibly;
+// FAR must clip the backside of the field so it doesn't advertise.
+//
+// UAT telemetry (2026-04-19): actual star-to-camera distance distribution
+// in global view is min=745, median=986, max=1113. Tuned so closest stars
+// sit just above NEAR (full .12 opacity) and farthest stars reach ~0 near FAR.
+export const STAR_LABEL_FALLOFF_NEAR = 700;
+export const STAR_LABEL_FALLOFF_FAR = 1150;
 /**
  * Default baseline opacity for .sl labels at near-camera distance. The
  * observatory register sits at .12 ("observed, not advertised"). The slider
