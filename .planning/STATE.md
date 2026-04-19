@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-18-closed-ready-to-plan-phase-19
-stopped_at: "Phase 18 (Unified Left Column) transition complete at commit 9c0a8b7 + 905cfa8. ROADMAP.md marks Phase 18 [x] (completed 2026-04-19). 9/9 UAT tests passed via Playwright MCP on Windows Chrome; two E2E visual sub-gates (D-03 canvas click → auto-expand, D-05 home-click → auto-collapse) deferred to Mo since raycaster ignores synthetic PointerEvents. All covered by CSS cascade + unit tests 8-9 in unified-column.test.ts. Automated gates green: 303/303 tests, tsc clean, build 239.37 KB gzipped. gsd-tools `phase complete 18` hit the v3.3-roadmap quirk (memory note: gsd_tools_v33_roadmap_grep.md) — set next_phase:null and is_last_phase:true falsely because v3.3 ROADMAP uses summary-list format without `#### Phase N:` detail sections. Manually fixed status + Current Position here; ROADMAP.md update was correct. Phase 19 (Text-Input-Drives-Stars, brainstorm spike) is actually next. 3/12 v3.3 phases shipped (16, 17, 18); 9 remaining. Feedback memories unchanged and still apply:"
-last_updated: "2026-04-19T19:55:00.000Z"
+status: phase-19-closed-ready-to-plan-phase-20
+stopped_at: "Phase 19 (Remove Query Input — Filter Panel Only) complete at commit 2ff4869. 3/3 plans shipped in 2 waves via gsd-executor worktrees: Wave 1 parallel (19-01 UI/CSS removal `7c991a0`→`40b24de`→`83f4fad`; 19-02 data-layer removal `6798bdd`→`d871fb4`→`aba3d61`→`3f9a2c3`). Post-wave-1 cleanup `bee9284` drops unused anyHintMatched local. Wave 2 (19-03 test pruning `4972d31`→`2ff4869`). Automated gates green: 287/287 tests (down from 303, -13 query-specific tests + 3 phase14 pruned); tsc clean; build success at 237.32 KB gzipped (-2.05 KB from 239.37 baseline, landing in the predicted 2-5 KB window). FilterState.searchText field, matchesFilter search branch, keyword-map searchText wiring, persistence query-history functions, CSS .query-* rules, filter-searchtext.test.ts, and query-input test blocks in unified-column.test.ts and phase14-edge-states.test.ts all deleted. Phase 18 Tests 8-9 auto-expand/collapse wiring PRESERVED. gsd-tools phase complete 19 hit the v3.3-roadmap-grep quirk again (memory note: gsd_tools_v33_roadmap_grep.md) — falsely set is_last_phase:true and status:completed. Manually corrected here; ROADMAP marked [x] 19 correctly. Phase 20 (Gather as Staging Action) is next. 4/12 v3.3 phases shipped (16, 17, 18, 19); 8 remaining (20-27)."
+last_updated: "2026-04-19T20:25:00.000Z"
 last_activity: 2026-04-19
 progress:
   total_phases: 17
-  completed_phases: 10
-  total_plans: 46
-  completed_plans: 37
-  percent: 80
+  completed_phases: 11
+  total_plans: 49
+  completed_plans: 40
+  percent: 82
 ---
 
 # Project State
@@ -28,18 +28,19 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 
 ## Current Position
 
-Phase: 19 (Remove Query Input — Filter Panel Only) — ready to discuss
+Phase: 20 (Gather as Staging Action) — ready to discuss
 Plan: Not started
-**Phase 18 category (closed):** feature — query-bar/filter-panel merge. GSD spine ran full: spec→discuss→plan→execute→verify→UAT→transition. 9/9 UAT tests pass; two E2E sub-gates deferred to Mo's trusted-pointer session.
-**Phase 17 category (closed):** polish (primary) + feature sliver. Closed via design-review apparatus + code-level tests; visual UAT deferred to end-of-milestone full check.
-**Phase 19 category (opening):** feature/removal. Repurposed 2026-04-19 — original brainstorm spike (text-input-drives-stars) shelved at intake; Mo chose filter-panel-only filtering. Original idea preserved as SEED-001. Scope: remove the query input + history + hint from filter-panel.ts, drop searchText from FilterState, delete associated tests and CSS. Clean-edged deletion ~200 LOC.
+**Phase 19 category (closed):** feature/removal. Repurposed 2026-04-19 from brainstorm spike (text-input-drives-stars) after Mo chose filter-panel-only at intake. 3/3 plans shipped in 2 waves. Tests 287/287, build 237.32 KB gzipped (-2.05 KB). Original spike preserved as SEED-001.
+**Phase 18 category (closed):** feature — query-bar/filter-panel merge. 9/9 UAT tests pass; two E2E sub-gates deferred to Mo's trusted-pointer session.
+**Phase 17 category (closed):** polish (primary) + feature sliver.
+**Phase 20 category (opening):** feature — Gather as Staging Action. Filter narrows silently; Gather click stages. Remove "highlight filtered across all views." Category to be confirmed at discuss-phase (likely pure feature, no spike).
 **Constraint set (project-wide):** `DESIGN-STATE.md` (project root).
-**Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth. 3 of 12 phases shipped (16, 17, 18); 9 remaining (19–27).
-**Status:** Phase 18 closed; ready to discuss Phase 19.
-**Branch:** `draft` — Phase 16, 17, 18 all landed here. Revisit branch consolidation before milestone close (Phase 27).
+**Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth. 4 of 12 phases shipped (16, 17, 18, 19); 8 remaining (20-27).
+**Status:** Phase 19 closed; ready to discuss Phase 20.
+**Branch:** `draft` — all v3.3 work landed here. Revisit branch consolidation before milestone close (Phase 27).
 **Last activity:** 2026-04-19
 
-Progress: [███░░░░░░░░░] Phases 16–18 of 12 complete. v3.3: 3/12 phases shipped (25%). Phase 19 next.
+Progress: [████░░░░░░░░] v3.3: 4/12 phases shipped (33%). Phase 20 next.
 
 ## Decisions Locked In 2026-04-17 (v3.3 opening)
 
@@ -63,37 +64,27 @@ Progress: [███░░░░░░░░░] Phases 16–18 of 12 complete. 
 
 ### Immediate — Next Session
 
-Phase 18 closed. Phase 19 **repurposed 2026-04-19** from brainstorm spike (Text-Input-Drives-Stars) to feature/removal (Remove Query Input). The original spike question is preserved as `SEED-001` with a future-surface trigger ("when the filter panel feels static").
+Phase 19 closed. Filter-panel-only is now the only filter mechanism. Bundle 237.32 KB gzipped (-2.05 KB), 287/287 tests, tsc clean.
 
-**Phase 19 — Remove Query Input.** Filter-panel-only filtering. The text input, history chips, query hint, and `FilterState.searchText` field shipped in Phase 18 all get deleted. Facet filters (Country / Service / Year / Proof Type / Impact) become the only filter mechanism.
+**Phase 20 — Gather as Staging Action.** Per MILESTONE-v3.3.md §2: "Filter narrows silently; Gather click stages. Remove 'highlight filtered across all views.'" The filter no longer animates matches across all three views — it just narrows. The Gather button becomes the trigger for staging (moving selected stars to the track in focused view).
 
-**Removal surface (scanned 2026-04-19):**
+**Open questions for Phase 20 discuss-phase:**
 
-- `src/ui/filter-panel.ts` — input element, ENTER/Escape handlers, `.query-history` container, `.query-chip` history chips, `.query-hint` + no-match/suggestion logic, `loadQueryHistory`/`addQueryToHistory` calls (~lines 126-355).
-- `src/data/filter.ts` — `FilterState.searchText` field (line 14), `matchesFilter` search branch (lines 63-64).
-- `src/data/keyword-map.ts` — `searchText` wiring (lines 108, 121).
-- `src/data/persistence.ts` — `addQueryToHistory` + `loadQueryHistory` + their localStorage schema.
-- `src/style.css` — `.query-history`, `.query-chip` rules (475-485).
-- `src/tests/filter-searchtext.test.ts` — delete.
-- `src/ui/unified-column.test.ts` — drop tests that exercise query input / history paths.
-- `src/main.ts` — check callers that expect `filterState.searchText`.
+1. What exactly does "filter narrows silently" mean — opacity change only, no motion / scene reflow?
+2. Does Gather work from the focused view only, or also from global?
+3. How is the Gather button currently wired vs. how it should be wired post-phase?
+4. Is there a cross-phase invariant with Phase 21 (reading panel → right drawer) — i.e., should Gather output go to the drawer eventually?
 
-Est. ~200 LOC deletion. Clean-edged; reverses ~1/3 of Phase 18 filter-panel.ts work.
-
-**Note on Phase 18 UAT evidence.** `18-UAT.md` test T8 ("query input filter works from unified column") will become evidence for a since-removed feature. That is fine — the history reads correctly: Phase 18 shipped it, Phase 19 removed it, SEED-001 documents why.
-
-**Spike hard-gate NOT applicable** — phase category is feature/removal, not spike. No `DIRECTION-SELECTED.md` required.
-
-**Phase 18 outstanding (not blocking Phase 19):**
+**Phase 18 outstanding (not blocking Phase 20):**
 
 Two visual E2E sub-gates still need Mo's trusted-pointer pass (raycaster ignores synthetic PointerEvents):
 
 1. Click a nucleus in global → T1 transition runs → column auto-expands to 232px.
 2. Home (⌂) or Escape from focused → column auto-collapses back to tab.
 
-Covered at CSS + listener + unit-test level. Mo can close them in 10 seconds whenever.
+Covered at CSS + listener + unit-test level. Not blocking Phase 20 either.
 
-**Start Phase 19 with:** `/gsd-discuss-phase 19`
+**Start Phase 20 with:** `/gsd-discuss-phase 20`
 
 ### Process notes
 

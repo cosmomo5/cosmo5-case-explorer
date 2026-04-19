@@ -23,7 +23,7 @@
 - [x] **Phase 16: Planetary Overture** *(brainstorm spike)* — Initial planet-like view with cases gathered around/within, click/scroll transitions into cluster layout. Visual companion mockups → Mo selects → execute. **3/3 plans complete (completed 2026-04-19)**
 - [x] **Phase 17: Star Labels Always-On + Label-Click Nav + Contextual Bottom-Right Panel** — Reinstate `.sl` visibility at low opacity by default (slider-controlled, low-default on boot); label click opens reading panel directly (scene stays put, gated by `overtureComplete`); bottom-right panel becomes view-scoped (slider always present; constellation adds grouping switcher + filtering toggles). **Merged with former Phase 22 per 2026-04-19 discuss-phase (D-08).** Category: polish (primary) + feature sliver. **Complete 2026-04-19: 6 commits (0fcb9e5 → 13daa55); tests 308/308 green; bundle 239.80 kB gzipped.**
 - [x] **Phase 18: Unified Left Column** — `query-bar.ts` folds into `filter-panel.ts`. One pane, two input modes (keyword + facet), same result set. (completed 2026-04-19)
-- [ ] **Phase 19: Remove Query Input — Filter Panel Only** *(repurposed 2026-04-19)* — Delete the query input, history chips, hint, and `searchText` field introduced in Phase 18. Filtering is facet-only (Country / Service / Year / Proof Type / Impact). The original brainstorm-spike idea (typing-as-scene-force) is preserved in `.planning/seeds/SEED-001-text-input-drives-stars.md` for a future milestone when "the filter panel feels static." Category: feature/removal.
+- [x] **Phase 19: Remove Query Input — Filter Panel Only** *(repurposed 2026-04-19)* — Delete the query input, history chips, hint, and `searchText` field introduced in Phase 18. Filtering is facet-only (Country / Service / Year / Proof Type / Impact). The original brainstorm-spike idea (typing-as-scene-force) is preserved in `.planning/seeds/SEED-001-text-input-drives-stars.md` for a future milestone when "the filter panel feels static." Category: feature/removal. (completed 2026-04-19)
 - [ ] **Phase 20: Gather as Staging Action** — Filter narrows silently; Gather click stages. Remove "highlight filtered across all views."
 - [ ] **Phase 21: Reading Panel → Right Drawer** — Geometry change to ≈380px right drawer. No overlap with selection surface.
 - [~] **Phase 22: Contextual Bottom-Right Panel** — **Merged into Phase 17** per 2026-04-19 discuss-phase (D-08). Slot preserved for numbering continuity; depth-per-year removal carried forward to Phase 26 Kimi scope.
@@ -40,11 +40,11 @@
 **Depends on:** Phase 18.
 **Context:** `.planning/phases/19-remove-query-input/19-CONTEXT.md`
 **Category:** feature / removal (repurposed 2026-04-19 from brainstorm spike "Text-Input-Drives-Stars"; original idea preserved as `.planning/seeds/SEED-001-text-input-drives-stars.md`).
-**Plans:** 3/3 plans created
+**Plans:** 3/3 plans complete
 Plans:
-- [ ] 19-01-PLAN.md — Delete query input DOM + handlers from filter-panel.ts; remove .query-* CSS rules from style.css
-- [ ] 19-02-PLAN.md — Remove searchText from FilterState, matchesFilter, keyword-map, and persistence functions
-- [ ] 19-03-PLAN.md — Delete filter-searchtext.test.ts; remove query-input tests from unified-column.test.ts (keep Tests 8-9)
+- [x] 19-01-PLAN.md — Delete query input DOM + handlers from filter-panel.ts; remove .query-* CSS rules from style.css
+- [x] 19-02-PLAN.md — Remove searchText from FilterState, matchesFilter, keyword-map, and persistence functions
+- [x] 19-03-PLAN.md — Delete filter-searchtext.test.ts; remove query-input tests from unified-column.test.ts (keep Tests 8-9)
 **Success Criteria:**
 1. No `<input>` element, `.query-history` container, `.query-chip`, `.query-hint`, or suggestion-chip handler in `src/ui/filter-panel.ts`.
 2. No `searchText` field in `FilterState`; no `searchText` branch in `matchesFilter`; no `searchText` wiring in `keyword-map.ts`.
