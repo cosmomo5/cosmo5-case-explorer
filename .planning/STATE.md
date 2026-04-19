@@ -28,11 +28,11 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 
 ## Current Position
 
-Phase: 19 (Text-Input-Drives-Stars — brainstorm spike) — ready to discuss
+Phase: 19 (Remove Query Input — Filter Panel Only) — ready to discuss
 Plan: Not started
 **Phase 18 category (closed):** feature — query-bar/filter-panel merge. GSD spine ran full: spec→discuss→plan→execute→verify→UAT→transition. 9/9 UAT tests pass; two E2E sub-gates deferred to Mo's trusted-pointer session.
 **Phase 17 category (closed):** polish (primary) + feature sliver. Closed via design-review apparatus + code-level tests; visual UAT deferred to end-of-milestone full check.
-**Phase 19 category (opening):** spike. 2–3 mockup variants first, Mo selects direction, then feature phase. Per `work-categories.md` spike loop — hard gate on `DIRECTION-SELECTED.md` before any execution.
+**Phase 19 category (opening):** feature/removal. Repurposed 2026-04-19 — original brainstorm spike (text-input-drives-stars) shelved at intake; Mo chose filter-panel-only filtering. Original idea preserved as SEED-001. Scope: remove the query input + history + hint from filter-panel.ts, drop searchText from FilterState, delete associated tests and CSS. Clean-edged deletion ~200 LOC.
 **Constraint set (project-wide):** `DESIGN-STATE.md` (project root).
 **Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth. 3 of 12 phases shipped (16, 17, 18); 9 remaining (19–27).
 **Status:** Phase 18 closed; ready to discuss Phase 19.
@@ -63,25 +63,35 @@ Progress: [███░░░░░░░░░] Phases 16–18 of 12 complete. 
 
 ### Immediate — Next Session
 
-Phase 18 closed. Phase 19 opens as a **brainstorm spike** per the v3.3 opening decision (Phase 16 was the other spike; both were uncommitted at milestone open).
+Phase 18 closed. Phase 19 **repurposed 2026-04-19** from brainstorm spike (Text-Input-Drives-Stars) to feature/removal (Remove Query Input). The original spike question is preserved as `SEED-001` with a future-surface trigger ("when the filter panel feels static").
 
-**Phase 19 — Text-Input-Drives-Stars.** Stars respond dynamically to typing: motion, brightness, reformation. The typed query is not just a filter — it becomes a force the constellation feels. Open questions: does the response happen during typing or on ENTER? Which of motion / brightness / reformation carries the primary signal? How much of it survives once the user stops typing?
+**Phase 19 — Remove Query Input.** Filter-panel-only filtering. The text input, history chips, query hint, and `FilterState.searchText` field shipped in Phase 18 all get deleted. Facet filters (Country / Service / Year / Proof Type / Impact) become the only filter mechanism.
 
-**Spike loop (per `work-categories.md`):**
+**Removal surface (scanned 2026-04-19):**
 
-1. `/gsd-discuss-phase 19` to gather context — what the spike question actually is, what the candidate responses look like, what canon references apply.
-2. Produce 2–3 visual variants (HTML mockups or live prototypes; whichever is cheapest + richest). Do NOT pick one.
-3. **Hard gate:** present to Mo, await `DIRECTION-SELECTED.md` with the chosen variant + his explicit "yes, build this." No execution before this file exists.
-4. Once direction is selected: spike closes, phase converts to a feature phase with `/gsd-plan-phase 19`.
+- `src/ui/filter-panel.ts` — input element, ENTER/Escape handlers, `.query-history` container, `.query-chip` history chips, `.query-hint` + no-match/suggestion logic, `loadQueryHistory`/`addQueryToHistory` calls (~lines 126-355).
+- `src/data/filter.ts` — `FilterState.searchText` field (line 14), `matchesFilter` search branch (lines 63-64).
+- `src/data/keyword-map.ts` — `searchText` wiring (lines 108, 121).
+- `src/data/persistence.ts` — `addQueryToHistory` + `loadQueryHistory` + their localStorage schema.
+- `src/style.css` — `.query-history`, `.query-chip` rules (475-485).
+- `src/tests/filter-searchtext.test.ts` — delete.
+- `src/ui/unified-column.test.ts` — drop tests that exercise query input / history paths.
+- `src/main.ts` — check callers that expect `filterState.searchText`.
+
+Est. ~200 LOC deletion. Clean-edged; reverses ~1/3 of Phase 18 filter-panel.ts work.
+
+**Note on Phase 18 UAT evidence.** `18-UAT.md` test T8 ("query input filter works from unified column") will become evidence for a since-removed feature. That is fine — the history reads correctly: Phase 18 shipped it, Phase 19 removed it, SEED-001 documents why.
+
+**Spike hard-gate NOT applicable** — phase category is feature/removal, not spike. No `DIRECTION-SELECTED.md` required.
 
 **Phase 18 outstanding (not blocking Phase 19):**
 
-Two visual E2E sub-gates still need Mo's trusted-pointer pass for belt-and-suspenders confirmation (raycaster ignores synthetic PointerEvents):
+Two visual E2E sub-gates still need Mo's trusted-pointer pass (raycaster ignores synthetic PointerEvents):
 
 1. Click a nucleus in global → T1 transition runs → column auto-expands to 232px.
 2. Home (⌂) or Escape from focused → column auto-collapses back to tab.
 
-These are covered at CSS + listener + unit-test level. Mo can tick them off in 10 seconds between phases; not a blocker.
+Covered at CSS + listener + unit-test level. Mo can close them in 10 seconds whenever.
 
 **Start Phase 19 with:** `/gsd-discuss-phase 19`
 
