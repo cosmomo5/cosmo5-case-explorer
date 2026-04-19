@@ -38,11 +38,38 @@ Authoritative direction note: `/mnt/c/Users/moham/Documents/Thales/design/review
 
 - 2026-04-18 — Phase 16 code-complete (commits `da6bd3d` → `1a649a1` on `draft`) — verdict: PASS-WITH-CONDITIONS at code level; visual UAT via Playwright MCP pending
 
-## Open aesthetic questions
+## Phase 17 constraint set (opened 2026-04-19)
+
+**What Phase 17 delivers**: star labels visible by default at low opacity; clicking a label opens the reading panel directly (right drawer); bottom-right panel becomes view-scoped (label slider always, constellation adds grouping switcher).
+
+**Must be**:
+- **Labels at rest = museum register plate.** DM Mono 11px, white at `rgba(255,255,255,.82)`, `.sl.show { opacity: .12 }` — present but subordinate to stars. No gold at rest.
+- **Reading panel = right drawer, the reading register.** Panel opens from the right edge. The right side is where the strategist receives raw, well-presented information — reading is a register shift from observing to studying, and the drawer geometry carries that shift. (Override of the research-informed "emerge spatially at star" direction; Mo's call, 2026-04-19.) Star visually highlights on click to carry the star→panel connection without requiring spatial emergence.
+- **Click transition = shared-element feedback, not fade.** ~280–350ms entry on single `--ease`. `prefers-reduced-motion` = instant swap, no slide.
+- **Hover = ~150ms ease-out, gold border + full opacity.** Unchanged from current `.sl.hover`. Gold is the active/navigation semantic — hover is correct.
+- **Bottom-right panel = inquiry instrument, not filter tray.** DM Mono labels. Slider labeled like an instrument ("LABEL OPACITY"). Grouping switcher as segmented mono buttons (BY COUNTRY / BY REGION / BY VERTICAL) — no dropdown chrome, no select arrows, no card shadows. Per Kunumi's structural refusal: the panel must operate as inquiry (what view am I constructing?), not filtering (what parameters am I applying?).
+- **In-cluster label visibility**: only the focused cluster's labels show. When you enter Automotive, you see Automotive's labels; the other 100 aren't visible because their stars aren't.
+- **Overture gate**: labels inert until `overtureComplete === true` (Phase 16 invariant).
+
+**Must not be**:
+- A drawer that slides in from a neutral screen edge with no star highlight — strips the spatial claim entirely.
+- Gold on star labels at rest. Gold stays for hover + active + navigation, not persistent annotation (defends the gold-overload question the v2 review left open).
+- A filter tray masquerading as contextual controls (dropdowns, checkboxes, filter chips). Kunumi refusal.
+- Proof-type/impact-scale toggles wired to live data — derived fields don't exist; scaffold disabled if built, defer otherwise.
+- Any click→panel behavior that fires during the planetary overture.
+
+**Open aesthetic question** (Mo flagged 2026-04-19, revisit post-implementation): gold on `.sl.hover` — gold now marks cluster labels, connection lines, active/hover state, navigation semantic, and now hover-on-star-label. Five uses. Accepted for Phase 17; revisit if it reads as gold-everywhere rather than gold-means-something.
+
+**Verification**:
+- TDD (inside the polish loop): ReadingPanel opens without `focusedKey`; label click handler invokes with correct case id; in-cluster mode hides non-focused-cluster `.sl`; view-scoped panel renders grouping switcher only in constellation mode.
+- Playwright MCP → Windows Chrome: post-overture `.sl` elements at computed `opacity: 0.12`; click a specific `.sl` opens reading panel with correct case from any non-planetary view; inside a cluster only that cluster's `.sl` present; hover produces `.hover` class + gold border; `.sl` click is a no-op during overture; bottom-right panel shows slider always + grouping switcher only in constellation mode.
+
+## Open aesthetic questions (project-wide)
 
 - Planet scale / camera framing — punted from Phase 16; revisit post-UAT only if planet still reads undersized after chrome hide reclaims the frame
 - Imagery (P2-D) — schema hook `imagery?: { logo, key_visual }` preserved; visual integration waits for content team; deferred from v3.3
 - Graticule — possibly up for removal in v3.3; decision not yet locked
+- Gold overload — see Phase 17 open question above
 
 ## Sign-off log
 
