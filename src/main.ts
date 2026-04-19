@@ -246,6 +246,8 @@ async function boot() {
             // appeared in focused mode). Slider must always be accessible once
             // the overture is complete.
             elControls.classList.add('on');
+            // Phase 18: unified column visible (collapsed-to-tab in global)
+            elFiltersWrap.classList.add('on');
           },
         });
       }
