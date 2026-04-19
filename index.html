@@ -79,34 +79,6 @@
     <span>Filter</span>
   </div>
   <aside class="filters" id="filters">
-    <div class="filters-head">
-      <h3>Filter + Arrange</h3>
-      <button class="clr" id="filterClear">Reset</button>
-    </div>
-    <div class="f-search">
-      <svg class="fsi" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/>
-      </svg>
-      <input type="text" id="searchInput" placeholder="Search client, service, keyword…" autocomplete="off"/>
-      <button class="fsc" id="searchClear">×</button>
-    </div>
-    <div class="filters-body">
-      <div class="fgroup" id="fg-year">
-        <h4>Year</h4>
-        <div class="fchips" id="fc-year"></div>
-      </div>
-      <div class="fgroup" id="fg-scope">
-        <h4>Scope</h4>
-        <div class="fchips" id="fc-scope"></div>
-      </div>
-      <div class="fgroup" id="fg-service">
-        <h4>Service</h4>
-        <div class="fchips" id="fc-service"></div>
-      </div>
-    </div>
-    <div class="filters-foot">
-      <div class="f-stat"><span>Matching</span><b id="f-count">—</b></div>
-    </div>
   </aside>
 </div>
 
@@ -133,26 +105,6 @@
   </div>
 </div>
 
-<div class="query-wrap" id="queryWrap">
-  <div class="query-bar">
-    <input type="text" id="queryInput" role="searchbox"
-           aria-label="Case library query"
-           placeholder="What kind of proof do you need?"
-           autocomplete="off"/>
-    <span class="query-readout" id="queryReadout" aria-live="polite"></span>
-    <button class="query-clear" id="queryClear" aria-label="Clear query">×</button>
-  </div>
-  <div class="query-hint" id="queryHint" aria-live="polite"></div>
-  <div class="query-history" id="queryHistory"></div>
-  <button class="query-advanced-toggle" id="queryAdvancedToggle"
-          aria-expanded="false" aria-controls="advancedDrawer">
-    ADVANCED
-  </button>
-  <div class="advanced-drawer" id="advancedDrawer" aria-hidden="true">
-    <!-- mountFilterPanel renders here -->
-  </div>
-</div>
-
 <button class="home-btn" id="homeBtn" title="Reset view">⌂</button>
 
 <div class="cosmo-controls" id="cosmoControls">
@@ -163,7 +115,7 @@
     <span class="cc-val" id="labelVal">Observed</span>
   </div>
   <!-- Constellation-only: dimension switcher — populated at runtime -->
-  <div id="ring-switcher" class="ring-switcher cc-constellation-only" aria-label="Ring dimension"></div>
+  <div id="ring-switcher" class="ring-switcher" aria-label="Ring dimension"></div>
 </div>
 
 
