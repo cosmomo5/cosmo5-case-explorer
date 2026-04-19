@@ -115,16 +115,7 @@ describe('mountFilterPanel — accordion structure (global mode)', () => {
     expect(header.getAttribute('aria-expanded')).toBe('false');
   });
 
-  it('orbit-by switcher row is present with Vertical/Country/Region chips', () => {
-    mountFilterPanel(container, objects, vi.fn());
-    const modeRow = container.querySelector('.mode-row');
-    expect(modeRow).not.toBeNull();
-    const modeChips = modeRow!.querySelectorAll('[data-mode]');
-    const modes = Array.from(modeChips).map(c => (c as HTMLElement).dataset.mode);
-    expect(modes).toContain('vertical');
-    expect(modes).toContain('country');
-    expect(modes).toContain('region');
-  });
+  // Orbit-by switcher test removed per Phase 18 D-13: mode-row removed, grouping switcher moved to bottom-right panel
 });
 
 describe('mountFilterPanel — chip dim/on states', () => {
@@ -211,27 +202,8 @@ describe('mountFilterPanel — status bar', () => {
   });
 });
 
-describe('mountFilterPanel — orbit-by switcher', () => {
-  it('orbit-by chip click calls onGroupModeChange with correct GroupMode value', () => {
-    document.body.innerHTML = '';
-    const container = makeContainer();
-    const objects = makeObjects();
-    const onGroupModeChange = vi.fn() as (mode: GroupMode) => void;
-    mountFilterPanel(container, objects, onGroupModeChange);
-
-    const modeRow = container.querySelector('.mode-row')!;
-    const countryChip = Array.from(modeRow.querySelectorAll('[data-mode]'))
-      .find(c => (c as HTMLElement).dataset.mode === 'country') as HTMLElement;
-    expect(countryChip).not.toBeUndefined();
-    countryChip.click();
-    expect(onGroupModeChange).toHaveBeenCalledWith('country');
-
-    const regionChip = Array.from(modeRow.querySelectorAll('[data-mode]'))
-      .find(c => (c as HTMLElement).dataset.mode === 'region') as HTMLElement;
-    regionChip.click();
-    expect(onGroupModeChange).toHaveBeenCalledWith('region');
-  });
-});
+// Mode-row tests removed per Phase 18 D-13: grouping switcher moved to bottom-right panel
+// (Tests re-added in Plan 18-06 as part of unified-column test suite)
 
 describe('mountFilterPanel — focused mode', () => {
   it('renders accordion groups in focused mode (no orbit-by switcher)', () => {
@@ -250,7 +222,7 @@ describe('mountFilterPanel — focused mode', () => {
     // No orbit-by switcher in focused mode — Back button shown instead
     const modeRow = container.querySelector('.mode-row');
     expect(modeRow).toBeNull();
-    const backBtn = container.querySelector('#focusBack');
+    const backBtn = container.querySelector('#filtersBack');
     expect(backBtn).not.toBeNull();
   });
 });
