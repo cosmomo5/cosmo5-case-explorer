@@ -11,7 +11,6 @@ export interface FilterState {
   nucleusKeys: Set<string>;
   proofTypes: Set<ProofType>;
   impactBands: Set<ImpactScaleBand>;
-  searchText?: string;
   isActive(): boolean;
   without(dim: FilterDimension): FilterState;
 }
@@ -33,8 +32,7 @@ export function createFilterState(): FilterState {
     isActive() {
       return this.countries.size > 0 || this.services.size > 0 ||
              this.years.size > 0 || this.nucleusKeys.size > 0 ||
-             this.proofTypes.size > 0 || this.impactBands.size > 0 ||
-             !!(this.searchText && this.searchText.length > 0);
+             this.proofTypes.size > 0 || this.impactBands.size > 0;
     },
     without(dim: FilterDimension): FilterState {
       const copy = createFilterState();
@@ -59,12 +57,6 @@ export function matchesFilter(c: CaseStudy, f: FilterState): boolean {
   }
   if (f.impactBands.size > 0) {
     if (!('impactScale' in c) || !f.impactBands.has((c as CaseStudy & { impactScale: { band: ImpactScaleBand } }).impactScale.band)) return false;
-  }
-  if (f.searchText) {
-    const q = f.searchText.toLowerCase();
-    const hit = [c.client, c.title, c.challenge ?? '', c.approach ?? '']
-      .some(s => s.toLowerCase().includes(q));
-    if (!hit) return false;
   }
   return true;
 }
