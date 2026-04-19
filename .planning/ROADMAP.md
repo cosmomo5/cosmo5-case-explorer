@@ -22,7 +22,7 @@
 
 - [x] **Phase 16: Planetary Overture** *(brainstorm spike)* — Initial planet-like view with cases gathered around/within, click/scroll transitions into cluster layout. Visual companion mockups → Mo selects → execute. **3/3 plans complete (completed 2026-04-19)**
 - [x] **Phase 17: Star Labels Always-On + Label-Click Nav + Contextual Bottom-Right Panel** — Reinstate `.sl` visibility at low opacity by default (slider-controlled, low-default on boot); label click opens reading panel directly (scene stays put, gated by `overtureComplete`); bottom-right panel becomes view-scoped (slider always present; constellation adds grouping switcher + filtering toggles). **Merged with former Phase 22 per 2026-04-19 discuss-phase (D-08).** Category: polish (primary) + feature sliver. **Complete 2026-04-19: 6 commits (0fcb9e5 → 13daa55); tests 308/308 green; bundle 239.80 kB gzipped.**
-- [ ] **Phase 18: Unified Left Column** — `query-bar.ts` folds into `filter-panel.ts`. One pane, two input modes (keyword + facet), same result set.
+- [x] **Phase 18: Unified Left Column** — `query-bar.ts` folds into `filter-panel.ts`. One pane, two input modes (keyword + facet), same result set. (completed 2026-04-19)
 - [ ] **Phase 19: Text-Input-Drives-Stars** *(brainstorm spike)* — Stars respond dynamically to typing (motion / brightness / reformation). Visual companion mockups → Mo selects → execute.
 - [ ] **Phase 20: Gather as Staging Action** — Filter narrows silently; Gather click stages. Remove "highlight filtered across all views."
 - [ ] **Phase 21: Reading Panel → Right Drawer** — Geometry change to ≈380px right drawer. No overlap with selection surface.

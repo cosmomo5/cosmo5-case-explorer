@@ -245,10 +245,35 @@ No items found that are addressed in later phases. All Phase 18 work is self-con
 - ✓ Build: 239.37 kB gzipped (within 250 kB threshold)
 - ✓ No anti-patterns, no stubs, no hardcoded placeholders
 
-**Ready to proceed to Phase 19.**
+**Ready to proceed to Phase 19** *(pending visual UAT for D-02..D-05 on Windows Chrome)*.
+
+---
+
+## Post-verify addendum — 2026-04-19 21:10 UTC
+
+Subsequent Playwright probe (via `mcp__plugin_playwright_playwright__*` → Windows Chrome over CDP) caught a runtime bug that code-level verification could not see:
+
+**Finding (D-02 regression).** The boot-time check `if (viewState.getState().kind === 'global') elFiltersWrap.classList.add('collapsed')` never fired. `createViewStateMachine()` defaults to `{ kind: 'planetary' }`, not `'global'`, so the `.collapsed` class was never added. Post-overture the unified column displayed fully expanded (232px `aside.filters`) instead of collapsed-to-tab.
+
+**Fix.** Commit `e8fe08f` — `.collapsed` class is now added alongside `.on` in the overture-complete callback. By that moment the state has transitioned `planetary → global` (that transition is what fires the choreographer whose `onComplete` this is). Dead boot-time check removed.
+
+**Verified post-hotfix (automated gates):**
+- 303/303 tests pass
+- `npm run build` clean; bundle 239.37 kB gzipped (unchanged)
+- D-01 behaviour visually confirmed via Playwright before fix shipped (display:none, opacity:0, visibility:hidden during `body.planetary`)
+- D-12 ring-switcher unconditional post-overture confirmed via Playwright ✓
+
+**Still pending visual confirmation (deferred to Mo's Windows Chrome session):**
+- D-02 (.filters-wrap.collapsed present after overture in global) — code-level fixed, needs eyes
+- D-03 (no .collapsed in focused constellation; expanded column visible)
+- D-04 (column stays visible while reading panel is open)
+- D-05 (click cluster → auto-expand; escape / home → re-collapse)
+
+**Revised verdict:** PASS-WITH-CONDITIONS. Condition: visual UAT for D-02..D-05 before `/gsd-transition 18`.
 
 ---
 
 *Verified: 2026-04-19 21:15 UTC*  
 *Verifier: Claude Code (Haiku 4.5)*  
-*Verification method: Goal-backward (truths → artifacts → wiring → tested)*
+*Verification method: Goal-backward (truths → artifacts → wiring → tested)*  
+*Post-verify addendum: Main-thread Playwright probe, 2026-04-19 21:10 UTC*
