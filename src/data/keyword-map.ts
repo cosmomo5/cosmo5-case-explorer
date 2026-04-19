@@ -105,7 +105,6 @@ export function applyQuery(q: string, fs: FilterState, cases: CaseStudy[]): void
   fs.nucleusKeys = new Set();
   fs.proofTypes = new Set();
   fs.impactBands = new Set();
-  delete fs.searchText;
 
   if (!norm) return; // empty query = clear all
 
@@ -115,9 +114,5 @@ export function applyQuery(q: string, fs: FilterState, cases: CaseStudy[]): void
       hint.apply(fs, cases);
       anyHintMatched = true;
     }
-  }
-
-  if (!anyHintMatched) {
-    fs.searchText = norm;
   }
 }
