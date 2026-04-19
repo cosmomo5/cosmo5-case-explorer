@@ -13,6 +13,9 @@ export class ReadingPanel {
   private slot: HTMLElement;
   private currentCaseId: string | null = null;
   private currentNucleusKey: string | null = null;
+  // Phase 17: when opened without a nucleusKey (from global/planetary), close()
+  // must return to 'global', not 'constellation'. Remember the entry mode.
+  private entryMode: 'global' | 'constellation' = 'constellation';
 
   private layoutController: LayoutController;
   private viewStateMachine: ViewStateMachine;
@@ -48,7 +51,7 @@ export class ReadingPanel {
     closeBtn.addEventListener('click', () => this.close());
   }
 
-  open(c: CaseStudy, nucleusKey: string): void {
+  open(c: CaseStudy, nucleusKey: string | null): void {
     // If re-opening on a different case, restore previous star's state
     if (this.currentCaseId && this.currentCaseId !== c.id) {
       this._restoreStarState(this.currentCaseId);
@@ -56,6 +59,9 @@ export class ReadingPanel {
 
     this.currentCaseId = c.id;
     this.currentNucleusKey = nucleusKey;
+    // A null nucleusKey means the label was clicked from global/planetary view.
+    // Remember so close() restores the right view mode.
+    this.entryMode = nucleusKey ? 'constellation' : 'global';
 
     // Track this case as recently viewed
     trackRecentlyViewed(c.id);
@@ -156,7 +162,7 @@ export class ReadingPanel {
           returnStarToOrbit(mesh, c.id);
         }
       } else {
-        this.shortlistStore.add(c.id, nucleusKey);
+        this.shortlistStore.add(c.id, nucleusKey ?? '');
         shortlistBtn.textContent = 'REMOVE';
         // Trigger flight animation
         if (mesh && this.sceneObjects.camera && this.sceneObjects.scene) {
@@ -184,9 +190,9 @@ export class ReadingPanel {
     // Restore star state
     this._restoreStarState(this.currentCaseId);
 
-    // Reset layout and view state
+    // Reset layout and view state — restore whichever view opened the panel
     this.layoutController.setPanelOpen(false);
-    this.layoutController.setViewMode('constellation');
+    this.layoutController.setViewMode(this.entryMode);
     this.viewStateMachine.dispatch({ type: 'CLOSE_READING' });
 
     this.currentCaseId = null;
@@ -212,7 +218,7 @@ export class ReadingPanel {
         : (idx - 1 + ringCases.length) % ringCases.length;
     }
 
-    this.open(ringCases[nextIdx], this.currentNucleusKey!);
+    this.open(ringCases[nextIdx], this.currentNucleusKey);
   }
 
   // ── Private helpers ──────────────────────────────────────────────────────

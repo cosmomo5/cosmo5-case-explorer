@@ -46,11 +46,24 @@ describe('createViewStateMachine', () => {
     ).toThrow();
   });
 
-  it('OPEN_READING from global throws (not valid from global)', () => {
+  // Phase 17: OPEN_READING from global is now legal (label click from global view).
+  // Reading state records origin='global' so CLOSE_READING returns to global, not constellation.
+  it('OPEN_READING from global → reading with origin=global and null nucleusKey', () => {
     const machine = machineInGlobal();
-    expect(() =>
-      machine.dispatch({ type: 'OPEN_READING', caseId: 'x' })
-    ).toThrowError(/OPEN_READING/);
+    machine.dispatch({ type: 'OPEN_READING', caseId: 'case-1' });
+    expect(machine.getState()).toEqual({
+      kind: 'reading',
+      nucleusKey: null,
+      caseId: 'case-1',
+      origin: 'global',
+    });
+  });
+
+  it('CLOSE_READING from reading(origin=global) → global', () => {
+    const machine = machineInGlobal();
+    machine.dispatch({ type: 'OPEN_READING', caseId: 'case-1' });
+    machine.dispatch({ type: 'CLOSE_READING' });
+    expect(machine.getState()).toEqual({ kind: 'global' });
   });
 
   it('CLOSE_READING from global throws (not valid from global)', () => {
@@ -171,14 +184,19 @@ describe('planetary state + ENTER_FIELD', () => {
 });
 
 describe('reading state transitions', () => {
-  it('OPEN_READING from constellation → reading, preserves nucleusKey and stores caseId', () => {
+  it('OPEN_READING from constellation → reading, preserves nucleusKey and stores caseId + origin=constellation', () => {
     const machine = machineInGlobal();
     machine.dispatch({ type: 'ENTER_CONSTELLATION', nucleusKey: 'Media' });
     machine.dispatch({ type: 'OPEN_READING', caseId: 'case-42' });
-    expect(machine.getState()).toEqual({ kind: 'reading', nucleusKey: 'Media', caseId: 'case-42' });
+    expect(machine.getState()).toEqual({
+      kind: 'reading',
+      nucleusKey: 'Media',
+      caseId: 'case-42',
+      origin: 'constellation',
+    });
   });
 
-  it('CLOSE_READING from reading → constellation, preserves nucleusKey', () => {
+  it('CLOSE_READING from reading(origin=constellation) → constellation, preserves nucleusKey', () => {
     const machine = machineInGlobal();
     machine.dispatch({ type: 'ENTER_CONSTELLATION', nucleusKey: 'Retail' });
     machine.dispatch({ type: 'OPEN_READING', caseId: 'case-7' });
@@ -186,12 +204,9 @@ describe('reading state transitions', () => {
     expect(machine.getState()).toEqual({ kind: 'constellation', nucleusKey: 'Retail' });
   });
 
-  it('OPEN_READING from global throws with message containing "OPEN_READING"', () => {
-    const machine = machineInGlobal();
-    expect(() =>
-      machine.dispatch({ type: 'OPEN_READING', caseId: 'case-1' })
-    ).toThrowError(/OPEN_READING/);
-  });
+  // Phase 17: OPEN_READING from global is legal (was formerly throwing).
+  // See earlier test block for the positive case; this test is removed as its
+  // contract is intentionally reversed.
 
   it('CLOSE_READING from global throws with message containing "CLOSE_READING"', () => {
     const machine = machineInGlobal();
@@ -219,7 +234,7 @@ describe('reading state transitions', () => {
     const openEvent = { type: 'OPEN_READING' as const, caseId: 'case-99' };
     machine.dispatch(openEvent);
     expect(listener).toHaveBeenCalledWith(
-      { kind: 'reading', nucleusKey: 'Tech', caseId: 'case-99' },
+      { kind: 'reading', nucleusKey: 'Tech', caseId: 'case-99', origin: 'constellation' },
       { kind: 'constellation', nucleusKey: 'Tech' },
       openEvent
     );
@@ -229,7 +244,7 @@ describe('reading state transitions', () => {
     machine.dispatch(closeEvent);
     expect(listener).toHaveBeenCalledWith(
       { kind: 'constellation', nucleusKey: 'Tech' },
-      { kind: 'reading', nucleusKey: 'Tech', caseId: 'case-99' },
+      { kind: 'reading', nucleusKey: 'Tech', caseId: 'case-99', origin: 'constellation' },
       closeEvent
     );
   });

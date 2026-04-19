@@ -239,3 +239,52 @@ describe('ReadingPanel — isOpen()', () => {
     expect(panel.isOpen()).toBe(true);
   });
 });
+
+// Phase 17, Slice 1 — decouple from focusedKey
+// Label click from global/planetary views needs panel.open(case, null) to work.
+describe('ReadingPanel — open without nucleusKey (Phase 17)', () => {
+  beforeEach(() => setupDOM());
+
+  it('accepts null nucleusKey and still opens', () => {
+    const { panel, layoutController } = makePanel();
+    const spy = vi.spyOn(layoutController, 'setPanelOpen');
+    panel.open(caseOpen, null);
+    expect(spy).toHaveBeenCalledWith(true);
+  });
+
+  it('renders the same instrument readout when opened with null nucleusKey', () => {
+    const { panel } = makePanel();
+    panel.open(caseOpen, null);
+    const instrument = document.getElementById('rp-instrument')!;
+    expect(instrument.textContent).toContain('DACH');
+    expect(instrument.textContent).toContain('2023');
+  });
+
+  it('dispatches OPEN_READING with caseId when nucleusKey is null', () => {
+    const { panel, viewStateMachine } = makePanel();
+    const spy = vi.spyOn(viewStateMachine, 'dispatch');
+    panel.open(caseOpen, null);
+    expect(spy).toHaveBeenCalledWith({ type: 'OPEN_READING', caseId: caseOpen.id });
+  });
+
+  it('close() after opening with null does not error and resets panel', () => {
+    const { panel, layoutController } = makePanel();
+    panel.open(caseOpen, null);
+    const spy = vi.spyOn(layoutController, 'setPanelOpen');
+    expect(() => panel.close()).not.toThrow();
+    expect(spy).toHaveBeenLastCalledWith(false);
+    expect(panel.isOpen()).toBe(false);
+  });
+
+  it('shortlist add from null-key open stores with empty nucleus key', () => {
+    // When opened without a parent cluster, adding to shortlist stores an empty
+    // nucleusKey — star-flight logic handles this as "has no cluster of origin."
+    const { panel, shortlistStore } = makePanel();
+    panel.open(caseOpen, null);
+    const btn = document.getElementById('rp-shortlist-btn') as HTMLButtonElement;
+    btn.click();
+    expect(shortlistStore.has(caseOpen.id)).toBe(true);
+    const entry = shortlistStore.entries().find(e => e.caseId === caseOpen.id);
+    expect(entry?.nucleusKey).toBe('');
+  });
+});
