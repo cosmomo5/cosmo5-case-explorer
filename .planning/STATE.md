@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-20-context-ready-for-planning
-stopped_at: "Phase 20 (Gather as Staging Action) — discuss-phase complete 2026-04-19 via autonomous mode. Mo's directive: 'pick all you would recommend... don't stop /go'. All four gray areas resolved; 11 decisions (D-01..D-11) captured in 20-CONTEXT.md and logged to DECISIONS.md. Key calls: (1) Gather button inline at bottom of filter accordion — gold hairline, DM Mono uppercase, 3-state disabled/armed/staged; (2) pure-manual decoupling — filter narrows silently, filter changes while sphere present do NOT update sphere; (3) full strip of highlight-across-views including StarState.filterMatch/filterDim enum cleanup; (4) readout count stays live (silent scene ≠ invisible feedback); (5) view-state gating to global+constellation only, absent from DOM in planetary+reading. Planner decides 2-vs-3 plan split based on applyFilterWave disposition. Flagged for planner: stale-sphere-with-empty-filter edge case for Playwright pass. Next: `/gsd-plan-phase 20`. PREVIOUS: Phase 19 (Remove Query Input — Filter Panel Only) complete at commit 2ff4869. 3/3 plans shipped in 2 waves via gsd-executor worktrees: Wave 1 parallel (19-01 UI/CSS removal `7c991a0`→`40b24de`→`83f4fad`; 19-02 data-layer removal `6798bdd`→`d871fb4`→`aba3d61`→`3f9a2c3`). Post-wave-1 cleanup `bee9284` drops unused anyHintMatched local. Wave 2 (19-03 test pruning `4972d31`→`2ff4869`). Automated gates green: 287/287 tests (down from 303, -13 query-specific tests + 3 phase14 pruned); tsc clean; build success at 237.32 KB gzipped (-2.05 KB from 239.37 baseline, landing in the predicted 2-5 KB window). FilterState.searchText field, matchesFilter search branch, keyword-map searchText wiring, persistence query-history functions, CSS .query-* rules, filter-searchtext.test.ts, and query-input test blocks in unified-column.test.ts and phase14-edge-states.test.ts all deleted. Phase 18 Tests 8-9 auto-expand/collapse wiring PRESERVED. gsd-tools phase complete 19 hit the v3.3-roadmap-grep quirk again (memory note: gsd_tools_v33_roadmap_grep.md) — falsely set is_last_phase:true and status:completed. Manually corrected here; ROADMAP marked [x] 19 correctly. Phase 20 (Gather as Staging Action) is next. 4/12 v3.3 phases shipped (16, 17, 18, 19); 8 remaining (20-27)."
-last_updated: "2026-04-19T21:00:00.000Z"
+status: phase-20-ui-spec-approved-ready-to-plan
+stopped_at: "Phase 20 (Gather as Staging Action) UI-SPEC approved by gsd-ui-checker 6/6 dimensions at commit c050245. 5-state Gather button contract: disabled-no-filter / disabled-zero-match / armed / staged-current (inert) / staged-drifted / stranded. Uses only existing project tokens (--gold, --teal, DM Mono, single --ease). Hairline register per BYLD canon. No new color tokens, no third-party components. 20 machine-verifiable assertions for planner/executor/checker downstream. Non-blocking flag deferred to planner: view-state gating can be CSS body-class (requires adding body.reading toggle) or JS conditional render — planner picks based on existing-pattern consistency. Previous: Phase 20 CONTEXT.md (14 decisions) committed 0fc8501."
+last_updated: "2026-04-19T21:30:00.000Z"
 last_activity: 2026-04-19
 progress:
   total_phases: 17
@@ -28,8 +28,9 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 
 ## Current Position
 
-Phase: 20 (Gather as Staging Action) — context gathered, ready to plan
+Phase: 20 (Gather as Staging Action) — context + UI-SPEC ready, ready to plan
 Plan: Not started — next command: `/gsd-plan-phase 20`
+**UI-SPEC approved 2026-04-19 by gsd-ui-checker (6/6 dimensions passed).** See `.planning/phases/20-gather-as-staging-action/20-UI-SPEC.md` for the locked visual/interaction contract.
 **Phase 19 category (closed):** feature/removal. Repurposed 2026-04-19 from brainstorm spike (text-input-drives-stars) after Mo chose filter-panel-only at intake. 3/3 plans shipped in 2 waves. Tests 287/287, build 237.32 KB gzipped (-2.05 KB). Original spike preserved as SEED-001.
 **Phase 18 category (closed):** feature — query-bar/filter-panel merge. 9/9 UAT tests pass; two E2E sub-gates deferred to Mo's trusted-pointer session.
 **Phase 17 category (closed):** polish (primary) + feature sliver.
@@ -113,9 +114,9 @@ Phases 8–15. Shipped: clean substrate, CRT graticule + calibrating loader, que
 
 ## Session Continuity
 
-Last session: 2026-04-19 late (/gsd-execute-phase 18 end-to-end — 6 plans, 3 waves, post-execution cleanup + D-02 hotfix)
+Last session: 2026-04-19T20:48:04.958Z
 
-Stopped at: Phase 18 (Unified Left Column) code-complete. 6 plans × 3 waves executed via gsd-executor worktrees: Wave 1 (18-01 HTML/CSS cleanup `498390e`→`d222307`, 18-02 new unified-column CSS `d0df2a3`→`8f3fea5`). Wave 2 (18-03 filter-panel.ts absorbs input/readout/history/hint `97cc81f`→`8156f56`, 18-04 main.ts caller updates + auto-expand listener `5483bea`→`5b08ede`). Wave 3 (18-05 delete query-bar.ts `2052108`→`7e313b8`, 18-06 split tests unified-column.test.ts + delete dead query-bar.test.ts `b697609`→`b8dff3f`). Post-execution cleanup `1267706` drops dead clusters-count.test.ts + Wave-2 backward-compat branch in mountFilterPanel. Post-verify D-02 hotfix `e8fe08f`: moves `.collapsed` class add from dead boot-time check (initial viewState was 'planetary', not 'global') into the overture-complete callback — caught via Playwright UAT probe. gsd-verifier `a22892e` passed 13/13 must-haves + all 8 QRY-IDs at `718deaf` (pre-hotfix code-level PASS; hotfix was not re-verified). Automated gates green: 303/303 tests, tsc clean, build 239.37 KB gzipped (-0.43 KB from baseline 239.80). D-01 visual UAT confirmed via Playwright this session; D-02..D-05 deferred to Mo's Windows Chrome session. Feedback memories unchanged and still apply:
+Stopped at: Phase 20 UI-SPEC approved 6/6 dimensions. Ready to plan.
 
 - `memory/feedback_playwright-wsl-prohibited.md`
 - `memory/feedback_use-gsd-for-structured-work.md`
