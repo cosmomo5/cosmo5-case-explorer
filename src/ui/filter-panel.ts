@@ -3,11 +3,9 @@ import type { GroupMode, CaseStudy } from '../data/types';
 import type { FilterDimension } from '../data/filter';
 import { createFilterState } from '../data/filter';
 import { computeChipCounts, FILTER_DIMENSIONS } from '../data/filter-counts';
-import { applyFilter, applyFilterWave, clearFilter } from '../scene/scene-state';
+import { applyFilter, clearFilter } from '../scene/scene-state';
 import { matchesFilter } from '../data/filter';
 import type { EnrichedCaseStudy } from '../data/enrich';
-import { applyQuery } from '../data/keyword-map';
-import { loadQueryHistory, addQueryToHistory } from '../data/persistence';
 
 // Human-readable labels per dimension
 const DIM_LABELS: Record<FilterDimension, string> = {
@@ -123,33 +121,15 @@ function buildGlobalHTML(obj: SceneObjects): string {
       <button class="clr" id="filterClear">Reset all</button>
     </div>` : '';
 
-  // Input + readout + history + hint (unified input region)
-  const inputHtml = `
-    <input type="text" role="searchbox" aria-label="Case library query"
-           placeholder="What kind of proof do you need?" autocomplete="off" />
-  `;
-
   const readoutHtml = isActive
     ? `<div class="filters-readout" aria-live="polite" role="status">${matched} CASES</div>`
     : `<div class="filters-readout" aria-live="polite" role="status">—</div>`;
-
-  const history = loadQueryHistory();
-  const historyHtml = history.length > 0
-    ? `<div class="query-history">${history.map(q =>
-        `<button class="query-chip" data-query="${q.replace(/"/g, '&quot;')}">${q}</button>`
-      ).join('')}</div>`
-    : '';
-
-  const hintHtml = `<div class="query-hint" aria-live="polite" role="status"></div>`;
 
   return `
     <div class="filters-head">
       <h3>Filter</h3>
     </div>
-    ${inputHtml}
     ${readoutHtml}
-    ${historyHtml}
-    ${hintHtml}
     <div class="filters-body">
       ${accordionSections}
     </div>
@@ -173,33 +153,15 @@ function buildFocusedHTML(obj: SceneObjects): string {
       <button class="clr" id="filterClear">Reset all</button>
     </div>` : '';
 
-  // Input + readout + history + hint (unified input region)
-  const inputHtml = `
-    <input type="text" role="searchbox" aria-label="Case library query"
-           placeholder="What kind of proof do you need?" autocomplete="off" />
-  `;
-
   const readoutHtml = isActive
     ? `<div class="filters-readout" aria-live="polite" role="status">${matched} CASES</div>`
     : `<div class="filters-readout" aria-live="polite" role="status">—</div>`;
-
-  const history = loadQueryHistory();
-  const historyHtml = history.length > 0
-    ? `<div class="query-history">${history.map(q =>
-        `<button class="query-chip" data-query="${q.replace(/"/g, '&quot;')}">${q}</button>`
-      ).join('')}</div>`
-    : '';
-
-  const hintHtml = `<div class="query-hint" aria-live="polite" role="status"></div>`;
 
   return `
     <div class="filters-head">
       <button class="filters-back" id="filtersBack" aria-label="Back to global view">← ${obj.focusedKey}</button>
     </div>
-    ${inputHtml}
     ${readoutHtml}
-    ${historyHtml}
-    ${hintHtml}
     <div class="filters-body">
       ${accordionSections}
     </div>
@@ -245,115 +207,6 @@ export function mountFilterPanel(
   }
 
   function bindEvents() {
-    // ── Unified input handler ──────────────────────────────────────────
-    const inputEl = container.querySelector('input[type="text"]') as HTMLInputElement | null;
-    const readoutEl = container.querySelector('.filters-readout') as HTMLElement | null;
-    const hintEl = container.querySelector('.query-hint') as HTMLElement | null;
-    const historyContainer = container.querySelector('.query-history') as HTMLElement | null;
-    const clearBtn = container.querySelector('[aria-label*="Reset"], button.filter-reset') as HTMLButtonElement | null;
-
-    if (inputEl) {
-      let waveTimer: ReturnType<typeof setTimeout> | null = null;
-
-      function updateReadout(): void {
-        if (!readoutEl) return;
-        const allCases = getAllCases(deps.sceneObjects);
-        const matched = countMatches(deps.sceneObjects, allCases);
-        const q = inputEl!.value.trim();
-        readoutEl.textContent = q.length > 0 ? `${matched} CASES` : '—';
-      }
-
-      function updateHint(): void {
-        if (!hintEl) return;
-        const q = inputEl!.value.trim();
-        const allCases = getAllCases(deps.sceneObjects);
-        const matched = countMatches(deps.sceneObjects, allCases);
-
-        if (q.length === 0) {
-          hintEl.innerHTML = 'Or explore the full catalog — click a cluster to enter.';
-          hintEl.classList.add('visible');
-          return;
-        }
-
-        if (matched === 0) {
-          const suggestions = ['performance', 'brand', 'social media']
-            .filter(s => !q.toLowerCase().includes(s))
-            .slice(0, 3);
-          const safeQ = q.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          const suggestHtml = suggestions
-            .map(s => `<button class="qh-suggest" data-suggest="${s}">${s}</button>`)
-            .join(', ');
-          hintEl.innerHTML = `No observations match <span class="qh-term">"${safeQ}"</span>. Try broader terms: ${suggestHtml}`;
-          hintEl.classList.add('visible');
-          hintEl.querySelectorAll('.qh-suggest').forEach(btn => {
-            btn.addEventListener('click', () => {
-              const term = (btn as HTMLButtonElement).getAttribute('data-suggest') ?? '';
-              inputEl!.value = term;
-              inputEl!.dispatchEvent(new Event('input'));
-            });
-          });
-          return;
-        }
-
-        hintEl.classList.remove('visible');
-        hintEl.innerHTML = '';
-      }
-
-      function handleInput(): void {
-        const q = inputEl!.value;
-
-        // Toggle clear button visibility
-        if (clearBtn) clearBtn.classList.toggle('visible', q.length > 0);
-
-        // Apply query to filterState
-        applyQuery(q, deps.sceneObjects.filterState, deps.cases);
-
-        // Immediate readout update
-        updateReadout();
-        updateHint();
-
-        // Debounced wave trigger (80ms per D-19)
-        if (waveTimer) clearTimeout(waveTimer);
-        waveTimer = setTimeout(() => {
-          applyFilterWave(deps.sceneObjects, deps.sceneObjects.filterState);
-          deps.onFilterChange();
-        }, 80);
-      }
-
-      inputEl.addEventListener('input', handleInput);
-
-      // Keyboard handlers (D-18)
-      inputEl.addEventListener('keydown', (e: KeyboardEvent) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          if (waveTimer) clearTimeout(waveTimer);
-          applyFilterWave(deps.sceneObjects, deps.sceneObjects.filterState);
-          deps.onFilterChange();
-          addQueryToHistory(inputEl!.value);
-        }
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          inputEl!.value = '';
-          inputEl!.dispatchEvent(new Event('input'));
-        }
-      });
-
-      // History chip click handler (D-08)
-      if (historyContainer) {
-        historyContainer.addEventListener('click', (e: MouseEvent) => {
-          const chip = (e.target as HTMLElement).closest('.query-chip');
-          if (chip) {
-            const query = chip.getAttribute('data-query') ?? '';
-            inputEl!.value = query;
-            inputEl!.dispatchEvent(new Event('input'));
-          }
-        });
-      }
-
-      // Initial hint state
-      updateHint();
-    }
-
     // ── Accordion toggle ───────────────────────────────────────────────
     container.querySelectorAll('.fgroup-header').forEach(btn => {
       btn.addEventListener('click', () => {
