@@ -6,7 +6,7 @@ import { gsap } from 'gsap';
 import { createStarfield } from './scene/background/starfield';
 import { createRenderer } from './scene/renderer';
 import { buildOrbitalScene, tickOrbits, focusSphere, unfocusSphere, switchRingDimension, syncShortlistToStarState } from './scene/scene-state';
-import { updateStarLabels } from './scene/star-labels';
+import { updateStarLabels, applyInClusterVisibility } from './scene/star-labels';
 import type { RingDimension } from './scene/orbitals/concentric';
 import type { CaseStudy } from './data/types';
 import { enrichCases } from './data/enrich';
@@ -309,6 +309,11 @@ async function boot() {
             return { star, label };
           })
           .filter((e): e is { star: THREE.Mesh; label: HTMLDivElement } => e !== null);
+        // Slice 3: in focused mode, only the focused cluster's labels keep .show.
+        applyInClusterVisibility(entries, {
+          mode: sceneObjects.mode === 'focused' ? 'focused' : 'global',
+          focusedKey: sceneObjects.focusedKey,
+        });
         updateStarLabels(entries, camera, sceneContainer.clientWidth, sceneContainer.clientHeight);
       }
 

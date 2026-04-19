@@ -61,6 +61,33 @@ const _scratchWorldPos = new THREE.Vector3();
 const _scratchCameraPos = new THREE.Vector3();
 const _scratchNdc = new THREE.Vector3();
 
+/**
+ * Phase 17 slice 3 — in-cluster visibility rule.
+ *
+ * Inside a focused constellation, only that cluster's star labels get the
+ * .show class. Rationale (DESIGN-STATE Phase 17 constraint set): inside a
+ * cluster, the user is studying a group; the other 100 stars' labels would
+ * crowd without adding signal. Label visibility mirrors star visibility.
+ *
+ * Called each tick, AFTER .show is added by the main visibility loop. This
+ * function filters that set down to the focused cluster when applicable.
+ */
+export function applyInClusterVisibility(
+  entries: StarLabelEntry[],
+  viewState: { mode: 'global' | 'focused'; focusedKey: string | null },
+): void {
+  if (viewState.mode !== 'focused' || !viewState.focusedKey) {
+    // Global mode: no filtering, every label keeps its .show state
+    return;
+  }
+  for (const { star, label } of entries) {
+    const nucleusKey = star.userData.starOrbit?.nucleusKey as string | undefined;
+    if (nucleusKey !== viewState.focusedKey) {
+      label.classList.remove('show');
+    }
+  }
+}
+
 export function updateStarLabels(
   entries: StarLabelEntry[],
   camera: THREE.Camera,

@@ -1,7 +1,13 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as THREE from 'three';
-import { createStarLabel, updateStarLabels, STAR_LABEL_FALLOFF_NEAR, STAR_LABEL_FALLOFF_FAR } from './star-labels';
+import {
+  createStarLabel,
+  updateStarLabels,
+  applyInClusterVisibility,
+  STAR_LABEL_FALLOFF_NEAR,
+  STAR_LABEL_FALLOFF_FAR,
+} from './star-labels';
 import type { CaseStudy } from '../data/types';
 
 const sampleCase: CaseStudy = {
@@ -186,6 +192,113 @@ describe('updateStarLabels — distance falloff + positioning', () => {
 
     updateStarLabels([{ star, label }], camera, 800, 600);
     expect(label.style.transform).toMatch(/translate\(/);
+  });
+
+  it('applyInClusterVisibility — in focused mode, only focused cluster labels get .show', () => {
+    const container = setupDOM();
+    const autoStar = makeStarAt(new THREE.Vector3(0, 0, 0), 'auto-1');
+    autoStar.userData.starOrbit = { nucleusKey: 'Automotive' };
+    const mediaStar = makeStarAt(new THREE.Vector3(10, 0, 0), 'media-1');
+    mediaStar.userData.starOrbit = { nucleusKey: 'Media' };
+
+    const autoLabel = createStarLabel(autoStar.userData.caseStudy, container, {
+      onClick: () => {},
+      isClickEnabled: () => true,
+    });
+    const mediaLabel = createStarLabel(mediaStar.userData.caseStudy, container, {
+      onClick: () => {},
+      isClickEnabled: () => true,
+    });
+    // Both start with .show (pre-tick state)
+    autoLabel.classList.add('show');
+    mediaLabel.classList.add('show');
+
+    applyInClusterVisibility(
+      [
+        { star: autoStar, label: autoLabel },
+        { star: mediaStar, label: mediaLabel },
+      ],
+      { mode: 'focused', focusedKey: 'Automotive' },
+    );
+
+    expect(autoLabel.classList.contains('show')).toBe(true);
+    expect(mediaLabel.classList.contains('show')).toBe(false);
+  });
+
+  it('applyInClusterVisibility — in global mode, all labels keep .show (no filtering)', () => {
+    const container = setupDOM();
+    const autoStar = makeStarAt(new THREE.Vector3(0, 0, 0), 'auto-1');
+    autoStar.userData.starOrbit = { nucleusKey: 'Automotive' };
+    const mediaStar = makeStarAt(new THREE.Vector3(10, 0, 0), 'media-1');
+    mediaStar.userData.starOrbit = { nucleusKey: 'Media' };
+
+    const autoLabel = createStarLabel(autoStar.userData.caseStudy, container, {
+      onClick: () => {},
+      isClickEnabled: () => true,
+    });
+    const mediaLabel = createStarLabel(mediaStar.userData.caseStudy, container, {
+      onClick: () => {},
+      isClickEnabled: () => true,
+    });
+    autoLabel.classList.add('show');
+    mediaLabel.classList.add('show');
+
+    applyInClusterVisibility(
+      [
+        { star: autoStar, label: autoLabel },
+        { star: mediaStar, label: mediaLabel },
+      ],
+      { mode: 'global', focusedKey: null },
+    );
+
+    expect(autoLabel.classList.contains('show')).toBe(true);
+    expect(mediaLabel.classList.contains('show')).toBe(true);
+  });
+
+  it('applyInClusterVisibility — reverts to all-visible when leaving focused mode', () => {
+    const container = setupDOM();
+    const autoStar = makeStarAt(new THREE.Vector3(0, 0, 0), 'auto-1');
+    autoStar.userData.starOrbit = { nucleusKey: 'Automotive' };
+    const mediaStar = makeStarAt(new THREE.Vector3(10, 0, 0), 'media-1');
+    mediaStar.userData.starOrbit = { nucleusKey: 'Media' };
+
+    const autoLabel = createStarLabel(autoStar.userData.caseStudy, container, {
+      onClick: () => {},
+      isClickEnabled: () => true,
+    });
+    const mediaLabel = createStarLabel(mediaStar.userData.caseStudy, container, {
+      onClick: () => {},
+      isClickEnabled: () => true,
+    });
+
+    // Enter focused mode: other-cluster labels lose .show
+    autoLabel.classList.add('show');
+    mediaLabel.classList.add('show');
+    applyInClusterVisibility(
+      [
+        { star: autoStar, label: autoLabel },
+        { star: mediaStar, label: mediaLabel },
+      ],
+      { mode: 'focused', focusedKey: 'Automotive' },
+    );
+    expect(mediaLabel.classList.contains('show')).toBe(false);
+
+    // Leave focused mode → function does NOT add .show back (caller's
+    // responsibility: main.ts tick re-adds .show every frame before calling
+    // this function). Assert the non-interference contract: in global mode,
+    // this function never removes .show — labels the caller marked visible
+    // stay visible.
+    autoLabel.classList.add('show');
+    mediaLabel.classList.add('show');
+    applyInClusterVisibility(
+      [
+        { star: autoStar, label: autoLabel },
+        { star: mediaStar, label: mediaLabel },
+      ],
+      { mode: 'global', focusedKey: null },
+    );
+    expect(autoLabel.classList.contains('show')).toBe(true);
+    expect(mediaLabel.classList.contains('show')).toBe(true);
   });
 
   it('hides label entirely (opacity 0) when star is behind camera', () => {
