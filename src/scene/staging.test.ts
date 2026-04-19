@@ -7,9 +7,8 @@
  */
 
 import * as THREE from 'three';
-import { describe, it, expect, beforeEach } from 'vitest';
-import { gather } from './staging';
-import { STAGING_KEY, createStagingNucleus, applyStagingPush } from './staging';
+import { describe, it, expect } from 'vitest';
+import { gather, STAGING_KEY } from './staging';
 import { createFilterState } from '../data/filter';
 import type { FilterState } from '../data/filter';
 import type { SceneObjects } from './scene-state';

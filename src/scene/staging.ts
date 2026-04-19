@@ -213,13 +213,14 @@ export function restoreStagingPush(objects: SceneObjects): void {
  * Called by the Gather button (Plan 20-03). Safe to call repeatedly.
  */
 export function gather(objects: SceneObjects): void {
+  // Safety: button should be disabled when filter inactive, but guard here too
+  if (!objects.filterState.isActive()) return;
+
   // Compute matched cases from current filter state
   const matchedCases = objects.starMeshes
     .filter(s => matchesFilter(s.userData.caseStudy as CaseStudy, objects.filterState))
     .map(s => s.userData.caseStudy as EnrichedCaseStudy);
 
-  // Safety: button should be disabled when filter inactive, but guard here too
-  if (!objects.filterState.isActive()) return;
   if (matchedCases.length === 0) return;
 
   // Decide: create new sphere or update existing
