@@ -21,16 +21,16 @@
 - Decimal phases: Urgent insertions only (via `/gsd:insert-phase`)
 
 - [x] **Phase 16: Planetary Overture** *(brainstorm spike)* — Initial planet-like view with cases gathered around/within, click/scroll transitions into cluster layout. Visual companion mockups → Mo selects → execute. **3/3 plans complete (completed 2026-04-19)**
-- [ ] **Phase 17: Star Labels Always-On + Label-Click Nav** — Reinstate `.sl` visibility at low opacity by default; label click triggers ENTER_CONSTELLATION.
+- [ ] **Phase 17: Star Labels Always-On + Label-Click Nav + Contextual Bottom-Right Panel** — Reinstate `.sl` visibility at low opacity by default (slider-controlled, low-default on boot); label click opens reading panel directly (scene stays put, gated by `overtureComplete`); bottom-right panel becomes view-scoped (slider always present; constellation adds grouping switcher + filtering toggles). **Merged with former Phase 22 per 2026-04-19 discuss-phase (D-08).** Category: polish (primary) + feature sliver.
 - [ ] **Phase 18: Unified Left Column** — `query-bar.ts` folds into `filter-panel.ts`. One pane, two input modes (keyword + facet), same result set.
 - [ ] **Phase 19: Text-Input-Drives-Stars** *(brainstorm spike)* — Stars respond dynamically to typing (motion / brightness / reformation). Visual companion mockups → Mo selects → execute.
 - [ ] **Phase 20: Gather as Staging Action** — Filter narrows silently; Gather click stages. Remove "highlight filtered across all views."
 - [ ] **Phase 21: Reading Panel → Right Drawer** — Geometry change to ≈380px right drawer. No overlap with selection surface.
-- [ ] **Phase 22: Contextual Bottom-Right Panel** — View-scoped controls. Depth-per-year removed.
+- [~] **Phase 22: Contextual Bottom-Right Panel** — **Merged into Phase 17** per 2026-04-19 discuss-phase (D-08). Slot preserved for numbering continuity; depth-per-year removal carried forward to Phase 26 Kimi scope.
 - [ ] **Phase 23: Star Motion + Dim/Highlight Polish** — `transition-choreographer.ts` + `star-flight.ts` tuned to astrophotographic timing. Single `--ease` preserved.
 - [ ] **Phase 24: Theme + Token Audit** *(Kimi dispatch)* — Coral staging sphere replaced or named; ad-hoc opacities named (`--dim-matched`, `--dim-unmatched`, `--ghost`, `--glow`).
 - [ ] **Phase 25: Font + Size Audit + Overlap Regression** *(Kimi dispatch)* — Font families correct across all DOM; scale tightened to 4–5 sizes; viewport sweep at 1280×800, 1440×900, 1920×1080, 2560×1440.
-- [ ] **Phase 26: Removals** *(Kimi dispatch)* — Gathered button, depth-per-year, old shortcuts, unused graticule, label slider.
+- [ ] **Phase 26: Removals** *(Kimi dispatch)* — Gathered button, depth-per-year (carried from merged Phase 22), old shortcuts, unused graticule. **Label slider removal REVERSED per 2026-04-19 Phase 17 discuss-phase (D-06/D-07)** — slider stays as the opacity control of record.
 - [ ] **Phase 27: Final QA + Ship Gate** — Full 60–90s flow; Vercel preview; closes v3.2 P7-01 + P7-06.
 
 ---
