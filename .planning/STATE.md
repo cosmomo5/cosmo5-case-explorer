@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-17-ready-to-plan
-stopped_at: "2026-04-19 — Phase 16 transitioned complete. ROADMAP.md checkbox flipped [x] with completion date, STATE.md advanced to Phase 17 (Star Labels Always-On + Label-Click Nav). All 16-* artefacts intact (3 plans, 3 summaries, 1 verification, 1 UAT, 3 uat screenshots). Next action: /gsd-discuss-phase 17 (no CONTEXT.md yet for phase 17) or /gsd-plan-phase 17 directly."
-last_updated: "2026-04-19T14:50:00.000Z"
-last_activity: "2026-04-19 — Phase 16 → Phase 17 transition. Phase 16 closed with visual UAT 7/7 pass. Phase 17 goal (from ROADMAP): reinstate `.sl` visibility at low opacity by default; label click triggers ENTER_CONSTELLATION."
+status: phase-17-context-locked
+stopped_at: "2026-04-19 — Phase 17 discuss-phase complete. CONTEXT.md + DISCUSSION-LOG.md written. ROADMAP edited: Phase 17 renamed to 'Star Labels Always-On + Label-Click Nav + Contextual Bottom-Right Panel' (merged with former Phase 22); Phase 22 marked [~ merged into 17]; Phase 26 scope adjusted (label slider removal reversed). 15 decisions locked (D-01 through D-15). Category: polish (primary) + feature sliver. Next action: load design-research-reflex + design-sensibility, update DESIGN-STATE.md with Phase 17 constraint set, then drive implementation via design-review-apparatus with TDD inside for click-handler + ReadingPanel decouple slivers. Do NOT run /gsd-plan-phase — polish loop owns this phase."
+last_updated: "2026-04-19T17:10:00.000Z"
+last_activity: "2026-04-19 — Phase 17 discuss-phase. Label click semantics rewritten from ENTER_CONSTELLATION (MILESTONE plain reading) to direct reading-panel open (Mo's richer interpretation); slider stays as opacity control of record (reverses Phase 26 plan); Phase 22 scope merged into 17; proof-type/impact-scale filtering flagged BLOCKED on derived fields."
 progress:
   total_phases: 12
   completed_phases: 1
