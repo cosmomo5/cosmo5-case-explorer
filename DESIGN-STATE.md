@@ -75,3 +75,4 @@ Authoritative direction note: `/mnt/c/Users/moham/Documents/Thales/design/review
 
 - 2026-04-17 — v3.2 milestone closed (Phases 8–15) — Mo: clean substrate, CRT graticule, query bar, reading panel as instrument, reading list + Review + Comparison modes, hero collapse, edge states, accessibility audit all shipped
 - 2026-04-18 — Phase 16 code-level verification — Mo: pending visual UAT; no polish sign-off yet
+- 2026-04-19 — Phase 17 polish closed (star labels always-on + click-to-read + view-scoped bottom-right panel, merged with former Phase 22) — Mo: visual UAT deferred to end-of-milestone full check; code gate passed via 308/308 tests + Playwright telemetry-tuned distance falloff; DM Mono instrument register preserved; gold stays on hover only (rest opacity white at .12); Kunumi refusal honored (panel = inquiry instrument, not filter tray)

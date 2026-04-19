@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-17-code-complete-pending-uat
-stopped_at: "2026-04-19 — Phase 17 code complete: 4 slices committed (0fcb9e5 ReadingPanel decouple, 981f710 .sl build from scratch + click, 1a2987c in-cluster visibility, 3552463 view-scoped panel + slider). Tests 308/308 green; typecheck clean; build 239.80 kB gzipped (baseline 239 kB, no regression). Dead depth-per-year + keyboard-hints HTML removed as part of panel restructure (Phase 26 scope trimmed). Next action: Playwright MCP → Windows Chrome visual UAT against DESIGN-STATE Phase 17 constraint set (6 gates: post-overture .sl opacity at .12; click opens reading panel with correct case; in-cluster mode hides other-cluster .sl; hover produces .hover gold border; .sl click inert during overture; bottom-right panel shows slider always + grouping switcher only in constellation mode). On pass: add sign-off line to DESIGN-STATE.md, /gsd-transition 17."
-last_updated: "2026-04-19T18:05:00.000Z"
-last_activity: "2026-04-19 — Phase 17 code implementation. 4 commits on draft. Discovery: .sl DOM never ported from v2 to v3 — built from scratch rather than reinstated. Distance-based opacity falloff added (near .12, far 0) to carry density reduction without control chrome. Slider repurposed to drive star-label max opacity (Off/Observed/Near-read/Read-clear). Reading panel decoupled from focusedKey — view-state machine now carries origin so CLOSE_READING returns to the opening view."
+status: phase-18-ready-to-discuss
+stopped_at: "2026-04-19 — Phase 17 TRANSITIONED COMPLETE. 6 commits on draft (0fcb9e5 → 13daa55). ROADMAP.md checkbox flipped [x]. DESIGN-STATE.md sign-off line added. Visual UAT deferred to end-of-milestone full check (Mo's call). All four slices shipped: ReadingPanel decouple, .sl build from scratch + click, in-cluster visibility rule, view-scoped bottom-right panel + slider rewire. Tests 308/308 green; bundle 239.80 kB gzipped. Next action: /gsd-discuss-phase 18 (Unified Left Column — query-bar folds into filter-panel)."
+last_updated: "2026-04-19T18:28:00.000Z"
+last_activity: "2026-04-19 — Phase 17 complete. Star labels (.sl) built from scratch in v3 (never ported from v2); distance-based opacity falloff tuned from Playwright telemetry (NEAR=700, FAR=1150); slider drives opacity (Off/Observed/Near-read/Read-clear); reading panel decoupled from focusedKey via view-state machine origin field; bottom-right panel restructured — slider always visible, grouping switcher constellation-only, depth-per-year + keyboard-hints HTML removed."
 progress:
   total_phases: 12
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 3
   completed_plans: 3
   percent: 17
@@ -28,16 +28,16 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 
 ## Current Position
 
-**Category:** polish (primary) + spike (secondary, closed) — v3.3 is a polish milestone. Phase 16 opened as a spike (mockup-driven option selection for the planetary overture) and transitioned to polish once direction was selected. Current state is polish: implementation exists, visual UAT is the remaining gate. Feedback loop is `design-review-apparatus` + Playwright UAT against the constraint set in `../DESIGN-STATE.md`, not `/gsd-plan-phase`. See `work-technical/.claude/rules/work-categories.md` for the loop.
-**Constraint set:** `/mnt/c/Users/moham/Documents/Thales/work-technical/case-study-explorer/DESIGN-STATE.md`
-**Sign-off criterion:** Mo confirms Phase 16 calibration overture + observatory header + planet sequence reads as an instrument-panel boot, not a marketing intro, against the BYLD/Kunumi/Cosmo5 canon; all 6 `16-UAT.md` gates pass via Playwright → Windows Chrome.
-**Phase:** 17 (Star Labels Always-On + Label-Click Nav) — READY TO PLAN. Phase 16 CLOSED: 3/3 plans complete, UAT 7/7 pass, 3 screenshots in artefacts.
+**Category (next phase 18):** feature — query-bar/filter-panel merge is structural consolidation with UX-visible reshape. Run the GSD spine: spec → discuss → plan → execute → verify → transition. See `work-technical/.claude/rules/work-categories.md` for the loop.
+**Phase 17 category (closed):** polish (primary) + feature sliver. Closed via design-review apparatus + code-level tests; visual UAT deferred to end-of-milestone full check.
+**Constraint set (project-wide):** `DESIGN-STATE.md` (project root).
+**Phase:** 18 (Unified Left Column) — READY TO DISCUSS. Phase 17 CLOSED 2026-04-19: 6 commits on draft (0fcb9e5 → 13daa55); 308/308 tests; 239.80 kB gzipped bundle; DESIGN-STATE sign-off line added; UAT deferred to milestone-end. Phases 16+17 complete.
 **Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth.
-**Status:** Phase 17 ready to plan. Goal (from ROADMAP): reinstate `.sl` (star label) visibility at low opacity by default; label click triggers ENTER_CONSTELLATION. No CONTEXT.md or PLAN.md yet. Phase category will be feature or polish depending on whether reinstatement is net-new or re-enabling an existing path — confirm at /gsd-discuss-phase.
-**Branch:** `draft` (previous STATE.md claimed `phase-1c` — that was legacy from v3.2 and no longer describes reality; v3.3 phase 16 work landed on `draft`).
-**Last activity:** 2026-04-18 late — /gsd-execute-phase 16 end-to-end. 11 commits added to draft (da6bd3d → 1a649a1). See commit log for the plan-by-plan breakdown. VERIFICATION.md at .planning/phases/16-planetary-overture/VERIFICATION.md.
+**Status:** Phase 18 ready to discuss. Goal (from ROADMAP): `query-bar.ts` folds into `filter-panel.ts` — one pane, two input modes (keyword + facet), same result set.
+**Branch:** `draft` — Phase 16 + 17 both landed here. Revisit branch consolidation before milestone close (Phase 27).
+**Last activity:** 2026-04-19 — Phase 17 transitioned complete. 6 commits landed on draft. Star labels built from scratch in v3, distance-falloff tuned via Playwright telemetry, view-scoped bottom-right panel shipped (merged former Phase 22), slider rewired to drive star-label opacity.
 
-Progress: [██░░░░░░░░░░] Phase 16 of 12 complete. v3.3: 1/12 phases shipped (~8%). Phase 17 next.
+Progress: [██░░░░░░░░░░] Phases 16–17 of 12 complete. v3.3: 2/12 phases shipped (~17%). Phase 18 next.
 
 ## Decisions Locked In 2026-04-17 (v3.3 opening)
 
