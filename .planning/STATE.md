@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-18-ready-to-discuss
-stopped_at: "2026-04-19 — Phase 17 TRANSITIONED COMPLETE. 6 commits on draft (0fcb9e5 → 13daa55). ROADMAP.md checkbox flipped [x]. DESIGN-STATE.md sign-off line added. Visual UAT deferred to end-of-milestone full check (Mo's call). All four slices shipped: ReadingPanel decouple, .sl build from scratch + click, in-cluster visibility rule, view-scoped bottom-right panel + slider rewire. Tests 308/308 green; bundle 239.80 kB gzipped. Next action: /gsd-discuss-phase 18 (Unified Left Column — query-bar folds into filter-panel)."
-last_updated: "2026-04-19T18:28:00.000Z"
-last_activity: "2026-04-19 — Phase 17 complete. Star labels (.sl) built from scratch in v3 (never ported from v2); distance-based opacity falloff tuned from Playwright telemetry (NEAR=700, FAR=1150); slider drives opacity (Off/Observed/Near-read/Read-clear); reading panel decoupled from focusedKey via view-state machine origin field; bottom-right panel restructured — slider always visible, grouping switcher constellation-only, depth-per-year + keyboard-hints HTML removed."
+status: phase-18-context-gathered
+stopped_at: "2026-04-19 — Phase 18 (Unified Left Column) CONTEXT captured. 19 decisions + 4 follow-ups across 4 gray areas: Visibility (collapsed-tab in global, auto-expand on ENTER_CONSTELLATION, stays during reading), Composition (input top + N CASES only + history kept + hint kept + welcome-back dropped + Advanced drawer removed), Mode-row (grouping goes bottom-right full-time, mode-row dropped from filter-panel), Cleanup (query-bar DOM/TS/CSS + orphaned v3.1 DOM all removed in Phase 18). Seams flagged: Phase 19 input wiring only, Phase 20 preserve applyFilterWave, Phase 21 drawer geometry compatible. Next action: /gsd-plan-phase 18."
+last_updated: "2026-04-19T19:05:00.000Z"
+last_activity: "2026-04-19 — Phase 18 discuss-phase complete. CONTEXT.md + DISCUSSION-LOG.md committed (44845c5). Key register move: left column collapsed-by-default in global, Kunumi structural — inquiry available on reach, not announced. Query-bar DOM/TS/CSS removed entirely in Phase 18. Grouping switcher relaxes from Phase 17 D-08 constellation-only rule to bottom-right full-time."
 progress:
   total_phases: 12
   completed_phases: 2
@@ -31,11 +31,11 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 **Category (next phase 18):** feature — query-bar/filter-panel merge is structural consolidation with UX-visible reshape. Run the GSD spine: spec → discuss → plan → execute → verify → transition. See `work-technical/.claude/rules/work-categories.md` for the loop.
 **Phase 17 category (closed):** polish (primary) + feature sliver. Closed via design-review apparatus + code-level tests; visual UAT deferred to end-of-milestone full check.
 **Constraint set (project-wide):** `DESIGN-STATE.md` (project root).
-**Phase:** 18 (Unified Left Column) — READY TO DISCUSS. Phase 17 CLOSED 2026-04-19: 6 commits on draft (0fcb9e5 → 13daa55); 308/308 tests; 239.80 kB gzipped bundle; DESIGN-STATE sign-off line added; UAT deferred to milestone-end. Phases 16+17 complete.
+**Phase:** 18 (Unified Left Column) — CONTEXT GATHERED. 19 decisions + 4 follow-ups across Visibility / Composition / Mode-row / Cleanup. Ready for /gsd-plan-phase 18.
 **Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth.
-**Status:** Phase 18 ready to discuss. Goal (from ROADMAP): `query-bar.ts` folds into `filter-panel.ts` — one pane, two input modes (keyword + facet), same result set.
-**Branch:** `draft` — Phase 16 + 17 both landed here. Revisit branch consolidation before milestone close (Phase 27).
-**Last activity:** 2026-04-19 — Phase 17 transitioned complete. 6 commits landed on draft. Star labels built from scratch in v3, distance-falloff tuned via Playwright telemetry, view-scoped bottom-right panel shipped (merged former Phase 22), slider rewired to drive star-label opacity.
+**Status:** Phase 18 context captured. Register move locked: left column collapsed-by-default in global, auto-expands on ENTER_CONSTELLATION, re-collapses on EXIT. Query-bar DOM/TS/CSS + orphaned v3.1 filter DOM all removed in Phase 18. Grouping switcher relaxes to bottom-right full-time.
+**Branch:** `draft` — Phase 16 + 17 both landed here; Phase 18 discuss commit (44845c5) also on draft. Revisit branch consolidation before milestone close (Phase 27).
+**Last activity:** 2026-04-19 — Phase 18 discuss-phase complete. 18-CONTEXT.md + 18-DISCUSSION-LOG.md committed on draft. Seams flagged for planner: Phase 19 (input wiring here, star response there), Phase 20 (preserve applyFilterWave, strip there), Phase 21 (drawer geometry compatible).
 
 Progress: [██░░░░░░░░░░] Phases 16–17 of 12 complete. v3.3: 2/12 phases shipped (~17%). Phase 18 next.
 
