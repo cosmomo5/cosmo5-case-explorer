@@ -8,7 +8,6 @@ import type { ShortlistStore } from './shortlist-store';
 // ─── localStorage Keys ────────────────────────────────────────────────────
 
 const KEY_READING_LIST = 'cosmo5.readingList.v1';
-const KEY_QUERY_HISTORY = 'cosmo5.queryHistory.v1';
 const KEY_RECENTLY_VIEWED = 'cosmo5.recentlyViewed.v1';
 
 // ─── Reading List Persistence ────────────────────────────────────────────
@@ -99,58 +98,6 @@ export function recordAddedAt(store: ShortlistStore, caseId: string): void {
     (store as any)._addedAt = {};
   }
   (store as any)._addedAt[caseId] = Date.now();
-}
-
-// ─── Query History ────────────────────────────────────────────────────────
-
-/**
- * Load query history from localStorage.
- * Returns array of last 5 queries, or empty array if none stored.
- */
-export function loadQueryHistory(): string[] {
-  try {
-    const stored = localStorage.getItem(KEY_QUERY_HISTORY);
-    if (!stored) return [];
-    const arr = JSON.parse(stored);
-    return Array.isArray(arr) ? arr : [];
-  } catch (e) {
-    console.warn('[persistence] Query history load failed:', e);
-    return [];
-  }
-}
-
-/**
- * Save query history to localStorage.
- * Enforces max 5 entries (FIFO).
- */
-export function saveQueryHistory(queries: string[]): void {
-  try {
-    // Keep last 5, trim if needed
-    const trimmed = queries.slice(-5);
-    localStorage.setItem(KEY_QUERY_HISTORY, JSON.stringify(trimmed));
-  } catch (e) {
-    console.error('[persistence] Query history save failed:', e);
-  }
-}
-
-/**
- * Add a new query to history.
- * Deduplicates, keeps last 5 unique queries, saves to localStorage.
- */
-export function addQueryToHistory(query: string): void {
-  if (!query || !query.trim()) return; // Skip empty queries
-
-  const history = loadQueryHistory();
-  const trimmed = query.trim();
-
-  // Remove if already present (to move it to end)
-  const filtered = history.filter(q => q !== trimmed);
-
-  // Add to end
-  filtered.push(trimmed);
-
-  // Keep last 5
-  saveQueryHistory(filtered);
 }
 
 // ─── Recently Viewed ─────────────────────────────────────────────────────
