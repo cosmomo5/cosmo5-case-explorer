@@ -16,15 +16,7 @@ import type { RingOrbit, RingDimension, ConcentricConfig } from './orbitals/conc
 import { createStarLabel, type StarLabelHandlers } from './star-labels';
 import type { EnrichedCaseStudy } from '../data/enrich';
 import type { ShortlistEntry } from '../data/shortlist-store';
-import {
-  STAGING_KEY,
-  createStagingNucleus,
-  disposeStagingNucleus,
-  animateStarsToStaging,
-  returnStarsFromStaging,
-  applyStagingPush,
-  zoomTowardStaging
-} from './staging';
+import { STAGING_KEY } from './staging';
 
 export type SceneMode = 'global' | 'focused';
 
@@ -261,7 +253,7 @@ export function tickOrbits(
   t: number,
   _camera: THREE.Camera,
 ): void {
-  const { nucleusMeshes, nucleusOrbits, starMeshes, filterState } = objects;
+  const { nucleusMeshes, nucleusOrbits, starMeshes } = objects;
   const prefersReduced = matchesReducedMotion();
 
   // Phase 16-03: while the overture owns the viewport, hide nucleus meshes +
@@ -310,7 +302,6 @@ export function tickOrbits(
   }
 
   // Update star positions (inner orbital, unless staging)
-  const anyFilter = filterState.isActive();
   const inFocused = objects.mode === 'focused';
   const hasHighlight = objects.highlightedRingValue !== null;
   for (const star of starMeshes) {
@@ -354,10 +345,9 @@ export function tickOrbits(
         }
       }
     } else {
-      const isMatch = !anyFilter || matchesFilter(star.userData.caseStudy as CaseStudy, filterState);
-      const starState: StarState = isMatch ? 'filterMatch' : 'filterDim';
-      mat.opacity = resolveStarAppearance(starState).opacity;
-      // Restore color if star was left in reading state after exiting focus
+      // Global mode: tick loop does not manage filter opacity — applyFilter() is a
+      // pure state mutation; visual updates are handled by applyFilterWave().
+      // Restore original color if star was left in a reading state after exiting focus.
       const origC = star.userData.originalColor as number | undefined;
       if (origC !== undefined) {
         const currentHex = mat.color.getHex();
@@ -410,71 +400,6 @@ export function applyFilter(
   newFilter: FilterState,
 ): void {
   objects.filterState = newFilter;
-
-  if (objects.mode === 'global') {
-    // ── Global branch: staging sphere lifecycle ─────────────────────────
-    const matchedCases = objects.starMeshes
-      .filter(s => matchesFilter(s.userData.caseStudy as CaseStudy, newFilter))
-      .map(s => s.userData.caseStudy as EnrichedCaseStudy);
-
-    if (newFilter.isActive() && matchedCases.length > 0) {
-      if (!objects.nucleusMeshes.has(STAGING_KEY)) {
-        // First filter application: create sphere, push nuclei, lean camera
-        createStagingNucleus(objects, matchedCases);
-        applyStagingPush(objects);
-        zoomTowardStaging(objects);
-      } else {
-        // Filter changed while staging sphere already present — update star positions
-        animateStarsToStaging(objects, matchedCases);
-      }
-    } else {
-      // Filter cleared or no matches: return stars, delayed sphere disposal
-      if (objects.nucleusMeshes.has(STAGING_KEY)) {
-        returnStarsFromStaging(objects);
-        // Cancel any existing pending disposal before scheduling a new one
-        if (objects._stagingDisposalTimeout !== undefined) {
-          clearTimeout(objects._stagingDisposalTimeout);
-        }
-        // Delay disposal until return tweens complete (~700ms).
-        // Track timeout ID: if a new filter is applied within 700ms of clearing,
-        // createStagingNucleus will cancel this pending disposal before creating the sphere.
-        objects._stagingDisposalTimeout = setTimeout(() => {
-          objects._stagingDisposalTimeout = undefined;
-          disposeStagingNucleus(objects);
-        }, 700);
-      }
-    }
-  }
-  else if (objects.mode === 'focused') {
-    // ── Focused branch: dim non-matching stars in place (FILT-07) ──────────
-    // Staging sphere is NOT created in focused mode; filter dims stars only.
-    const isActive = newFilter.isActive();
-    for (const mesh of objects.starMeshes) {
-      const caseStudy = mesh.userData.caseStudy as CaseStudy | undefined;
-      if (!caseStudy) continue;
-
-      const mat = mesh.material as THREE.MeshBasicMaterial;
-      const currentState: StarState = (mesh.userData.starState ?? 'idle') as StarState;
-
-      // Precedence: only apply filterDim/idle when star is in a filter-managed state.
-      // Higher states (reading, selected, ghost) are unaffected.
-      if (currentState === 'idle' || currentState === 'filterDim' || currentState === 'filterMatch') {
-        const matches = !isActive || matchesFilter(caseStudy, newFilter);
-        const targetOpacity = matches ? 1.0 : 0.12;
-        const targetState: StarState = matches ? 'idle' : 'filterDim';
-
-        // Set state immediately (tick loop reads this; GSAP transition adds smoothness)
-        mesh.userData.starState = targetState;
-
-        gsap.killTweensOf(mat);
-        gsap.to(mat, {
-          opacity: targetOpacity,
-          duration: 0.2,
-          ease: 'power2.out',
-        });
-      }
-    }
-  }
 }
 
 export function clearFilter(objects: SceneObjects): void {
