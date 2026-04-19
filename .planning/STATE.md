@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-20-planned-ready-to-execute
-stopped_at: "Phase 20 (Gather as Staging Action) planned. 3 plans + RESEARCH + VALIDATION approved by plan-checker 11/11 dimensions on re-verification. Commits: a1ad94b (initial plans) + eb384a5 (D-14 metadata patch + planner hygiene log) + 551d17f (research + validation). Plan split: Wave 1A 20-01 (gut filter-to-scene coupling + remove StarState.filterMatch/filterDim + rewire applyFilterWave as gather traversal per D-14); Wave 1B 20-02 (TDD gather() entry point); Wave 2 20-03 (5-state Gather button, view-state gating via body-class Option A, autonomous:false because Playwright UAT is required from Mo's Windows Chrome). Test count target 280-305 (baseline 287 ±15); bundle envelope 237-239.5 KB gzipped. Hygiene notes logged: gsd-planner used --no-verify and staged out-of-scope config.json newline drift with a1ad94b (no active hooks so nothing actually bypassed; counter-instruction saved to memory for future planner briefs). Ready to execute."
-last_updated: "2026-04-19T21:30:00.000Z"
-last_activity: 2026-04-19
+status: phase-20-complete-awaiting-uat
+stopped_at: "Phase 20 (Gather as Staging Action) shipped. 3 plans executed sequentially on draft (gsd-sdk unavailable forced no-worktree mode). 11 commits 73ca850 → 1007a18. Wave 1A 20-01 gutted applyFilter to pure state mutation + removed StarState.filterMatch/filterDim + rewired applyFilterWave per D-14. Wave 1B 20-02 TDD'd gather() entry point in staging.ts (RED e21d914 → GREEN 8a37c57 → REFACTOR 71172a1). Wave 2 20-03 wired 5-state Gather button + body-class view-state gating. Verifier passed 18/18 must-haves, status=human_needed; tests 301/301, tsc clean. HUMAN-UAT.md persisted with 8 pending items — deferred until end of v3.3 per user directive 'continue, we'll check after all phases are done'. Verifier commit 34af85a. UAT artifact commit 1007a18. Next: Phase 21 (Reading Panel → Right Drawer)."
+last_updated: "2026-04-20T00:35:00.000Z"
+last_activity: 2026-04-20
 progress:
   total_phases: 17
-  completed_phases: 11
+  completed_phases: 12
   total_plans: 52
-  completed_plans: 40
-  percent: 77
+  completed_plans: 43
+  percent: 83
 ---
 
 # Project State
@@ -28,8 +28,8 @@ See: `.planning/PROJECT.md` (updated 2026-04-17), `.planning/MILESTONE-v3.3.md` 
 
 ## Current Position
 
-Phase: 20 (Gather as Staging Action) — **planned, ready to execute**
-Plans: 3/3 created (20-01 Wave 1A, 20-02 Wave 1B TDD, 20-03 Wave 2 non-autonomous). Next command: `/gsd-execute-phase 20`
+Phase: 20 (Gather as Staging Action) — **complete, awaiting HUMAN-UAT (deferred to end of v3.3)**
+Plans: 3/3 shipped (20-01, 20-02, 20-03). Verifier 18/18 must-haves, tests 301/301. UAT 8 items pending in `20-HUMAN-UAT.md`. Next command: `/gsd-discuss-phase 21`
 **CONTEXT.md:** 14 decisions D-01..D-14 locked (autonomous discuss-phase).
 **UI-SPEC.md:** approved by gsd-ui-checker 6/6 dimensions.
 **RESEARCH.md + VALIDATION.md:** generated via `--research` re-run; Nyquist gate satisfied.
@@ -39,12 +39,12 @@ Plans: 3/3 created (20-01 Wave 1A, 20-02 Wave 1B TDD, 20-03 Wave 2 non-autonomou
 **Phase 17 category (closed):** polish (primary) + feature sliver.
 **Phase 20 category (confirmed 2026-04-19 discuss-phase):** feature (decouple) + removal (highlight-across-views). 11 decisions D-01..D-11 captured autonomously per Mo's directive. Primary edit surfaces: `src/scene/scene-state.ts` `applyFilter` L408-478 + tick-loop L356-372 (gut both); `src/scene/staging.ts` (new `gather()` entry point composing existing lifecycle primitives); `src/ui/filter-panel.ts` (new 3-state Gather button); `src/data/star-state.ts` (remove `filterMatch`/`filterDim` enum values). Plan split 2-3 decided by planner based on `applyFilterWave` disposition.
 **Constraint set (project-wide):** `DESIGN-STATE.md` (project root).
-**Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth. 4 of 12 phases shipped (16, 17, 18, 19); 8 remaining (20-27).
-**Status:** Phase 20 planned; all pre-flight gates (CONTEXT + UI-SPEC + RESEARCH + VALIDATION + plan-checker) green. Ready to execute.
+**Milestone:** v3.3 opened 2026-04-17. MILESTONE-v3.3.md is the source of truth. 5 of 12 phases shipped (16, 17, 18, 19, 20); 7 remaining (21-27).
+**Status:** Phase 20 shipped with 8-item HUMAN-UAT deferred to milestone-end session; Phase 21 is next up.
 **Branch:** `draft` — all v3.3 work landed here. Revisit branch consolidation before milestone close (Phase 27).
-**Last activity:** 2026-04-19
+**Last activity:** 2026-04-20
 
-Progress: [████░░░░░░░░] v3.3: 4/12 phases shipped (33%). Phase 20 planned; execute next.
+Progress: [█████░░░░░░░] v3.3: 5/12 phases shipped (42%). Phase 21 (Reading Panel → Right Drawer) next.
 
 ## Decisions Locked In 2026-04-17 (v3.3 opening)
 
