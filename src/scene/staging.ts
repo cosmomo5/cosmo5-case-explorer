@@ -11,6 +11,7 @@ import type { CaseStudy } from '../data/types';
 import type { EnrichedCaseStudy } from '../data/enrich';
 import type { NucleusOrbitData } from './orbitals/nucleus-orbit';
 import type { SceneObjects } from './scene-state';
+import { matchesFilter } from '../data/filter';
 
 // ── Staging sphere constants ──────────────────────────────────────────────────
 export const STAGING_KEY = '__staging__';
@@ -200,6 +201,36 @@ export function restoreStagingPush(objects: SceneObjects): void {
         duration: 0.5, ease: 'power1.inOut',
       });
     }
+  }
+}
+
+/**
+ * Entry point for staging filtered cases.
+ * Computes matched cases from objects.filterState at call time, then either:
+ *   - creates the staging sphere (createStagingNucleus + applyStagingPush + zoomTowardStaging) if sphere absent, or
+ *   - animates the new matched set to the existing sphere (animateStarsToStaging) if sphere is already present.
+ * Returns early with no side effects if filter is inactive or no cases match.
+ * Called by the Gather button (Plan 20-03). Safe to call repeatedly.
+ */
+export function gather(objects: SceneObjects): void {
+  // Compute matched cases from current filter state
+  const matchedCases = objects.starMeshes
+    .filter(s => matchesFilter(s.userData.caseStudy as CaseStudy, objects.filterState))
+    .map(s => s.userData.caseStudy as EnrichedCaseStudy);
+
+  // Safety: button should be disabled when filter inactive, but guard here too
+  if (!objects.filterState.isActive()) return;
+  if (matchedCases.length === 0) return;
+
+  // Decide: create new sphere or update existing
+  if (!objects.nucleusMeshes.has(STAGING_KEY)) {
+    // First gather: create sphere, push nuclei outward, lean camera toward it
+    createStagingNucleus(objects, matchedCases);
+    applyStagingPush(objects);
+    zoomTowardStaging(objects);
+  } else {
+    // Sphere already present: animate matched stars to it (replaces existing set)
+    animateStarsToStaging(objects, matchedCases);
   }
 }
 
