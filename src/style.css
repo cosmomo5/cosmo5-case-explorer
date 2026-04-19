@@ -77,7 +77,10 @@ body.constellation #divider-line{display:block}
 .sl.hover{background:rgba(14,16,32,.92);border-color:rgba(232,177,90,.55);
   color:#fff;font-size:12px;padding:4px 11px;letter-spacing:.07em;
   text-shadow:0 0 8px rgba(4,6,15,.9)}
-.sl.show{opacity:.12}
+/* Phase 17: .show is both a visibility gate AND the interactivity gate.
+   During planetary overture, labels have no .show class → pointer-events:none → inert.
+   Post-overture, inline opacity from updateStarLabels modulates the .12 baseline. */
+.sl.show{opacity:.12;pointer-events:auto;cursor:pointer}
 .sl.gather-hide{display:none !important}
 /* Observatory plate cluster label */
 .cl{position:absolute;top:0;left:0;

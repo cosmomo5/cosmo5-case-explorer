@@ -13,6 +13,7 @@ import { resolveStarAppearance } from '../data/star-state';
 import type { StarState } from '../data/star-state';
 import { computeConcentricOrbits, ringPositionAt, autoSelectRingDimension, buildRingLine, disposeRingLines, getDimensionValue } from './orbitals/concentric';
 import type { RingOrbit, RingDimension, ConcentricConfig } from './orbitals/concentric';
+import { createStarLabel, type StarLabelHandlers } from './star-labels';
 import type { EnrichedCaseStudy } from '../data/enrich';
 import type { ShortlistEntry } from '../data/shortlist-store';
 import {
@@ -53,6 +54,8 @@ export interface SceneObjects {
   nucleusMeshes: Map<string, THREE.Mesh>;
   nucleusLabels: Map<string, HTMLDivElement>;
   starMeshes: THREE.Mesh[];
+  /** Phase 17: per-case .sl label, keyed by case id. Position + opacity updated each tick. */
+  starLabels: Map<string, HTMLDivElement>;
   starOrbits: StarOrbit[];
   nucleusOrbits: Record<string, NucleusOrbitData>;
   filterState: FilterState;
@@ -124,6 +127,7 @@ export function buildOrbitalScene(
   groupMode: GroupMode,
   scene: THREE.Scene,
   labelContainer: HTMLElement,
+  starLabelHandlers?: StarLabelHandlers,
 ): SceneObjects {
   const groups = groupBy(cases, groupMode);
   const nucleusOrbits = computeNucleusOrbits(groups);
@@ -131,7 +135,13 @@ export function buildOrbitalScene(
   const nucleusMeshes = new Map<string, THREE.Mesh>();
   const nucleusLabels = new Map<string, HTMLDivElement>();
   const starMeshes: THREE.Mesh[] = [];
+  const starLabels = new Map<string, HTMLDivElement>();
   const starOrbits: StarOrbit[] = [];
+  // Handlers default to no-ops when not provided (test scenes don't need them).
+  const resolvedStarLabelHandlers: StarLabelHandlers = starLabelHandlers ?? {
+    onClick: () => {},
+    isClickEnabled: () => false,
+  };
 
   for (const [key, nucOrbit] of Object.entries(nucleusOrbits)) {
     const color = NUCLEUS_COLORS[key] ?? DEFAULT_COLOR;
@@ -195,6 +205,10 @@ export function buildOrbitalScene(
       scene.add(star);
       starMeshes.push(star);
       starOrbits.push(starOrbit);
+
+      // Phase 17: per-case star label
+      const slDiv = createStarLabel(c, labelContainer, resolvedStarLabelHandlers);
+      starLabels.set(c.id, slDiv);
     }
   }
 
@@ -205,6 +219,7 @@ export function buildOrbitalScene(
     nucleusMeshes,
     nucleusLabels,
     starMeshes,
+    starLabels,
     starOrbits,
     nucleusOrbits,
     filterState: createFilterState(),

@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { createStarfield } from './scene/background/starfield';
 import { createRenderer } from './scene/renderer';
 import { buildOrbitalScene, tickOrbits, focusSphere, unfocusSphere, switchRingDimension, syncShortlistToStarState } from './scene/scene-state';
+import { updateStarLabels } from './scene/star-labels';
 import type { RingDimension } from './scene/orbitals/concentric';
 import type { CaseStudy } from './data/types';
 import { enrichCases } from './data/enrich';
@@ -115,7 +116,27 @@ async function boot() {
     const labelContainer = document.getElementById('star-labels') as HTMLElement;
     const layoutController = createLayoutController();
 
-    const sceneObjects = buildOrbitalScene(cases, 'vertical', scene, labelContainer);
+    // Phase 17 star-label wiring. `overtureComplete` is declared further down
+    // (shared with the cluster-label tick logic). Handlers close over these
+    // via reference — readingPanel is assigned after buildOrbitalScene but
+    // clicks don't fire until overtureComplete is true, which is also after
+    // readingPanel exists.
+    let overtureCompleteRef = { value: false };
+    let readingPanelRef: ReadingPanel | null = null;
+    const starLabelHandlers = {
+      onClick: (c: CaseStudy) => {
+        if (!readingPanelRef) return;
+        // Pass null nucleusKey when not in constellation view — Phase 17 slice 1
+        // made the ReadingPanel tolerate this. The view-state machine routes
+        // to origin='global' vs origin='constellation' based on current state.
+        const currentView = viewState.getState();
+        const nucleusKey = currentView.kind === 'constellation' ? currentView.nucleusKey : null;
+        readingPanelRef.open(c, nucleusKey);
+      },
+      isClickEnabled: () => overtureCompleteRef.value,
+    };
+
+    const sceneObjects = buildOrbitalScene(cases, 'vertical', scene, labelContainer, starLabelHandlers);
     sceneObjects.controls = controls;
     sceneObjects.camera = camera;
     sceneObjects.scene = scene;
@@ -133,6 +154,8 @@ async function boot() {
 
     // ── ReadingPanel (wired to layoutController, viewState, shortlistStore) ──
     const readingPanel = new ReadingPanel(layoutController, viewState, shortlistStore, sceneObjects);
+    // Phase 17: expose to star-label click handlers declared earlier.
+    readingPanelRef = readingPanel;
 
     // ── ShortlistTrack: mount into bottom track zone ─────────────────────
     const trackContainer = document.getElementById('track-zone')!;
@@ -217,7 +240,10 @@ async function boot() {
       // choreographer just revealed.
       if (prev.kind === 'planetary' && next.kind === 'global') {
         choreographer.choreographPlanetaryToGlobal(sceneObjects, planetGroup, {
-          onComplete: () => { overtureComplete = true; },
+          onComplete: () => {
+            overtureComplete = true;
+            overtureCompleteRef.value = true; // Phase 17: wake star-label clicks
+          },
         });
       }
     });
@@ -264,6 +290,26 @@ async function boot() {
         const showLabel = overtureComplete || labelThreshold > 0 || isFocused;
         if (showLabel && !div.classList.contains('show')) div.classList.add('show');
         if (!showLabel && div.classList.contains('show') && !isFocused) div.classList.remove('show');
+      }
+
+      // Phase 17: update star label positions + distance-based opacity.
+      // Labels only appear post-overture (overtureComplete gate) and when the
+      // star itself should be visible (focused-cluster-only rule in-cluster,
+      // all stars otherwise — in-cluster rule implemented in slice 3).
+      if (overtureComplete && sceneObjects.starLabels.size > 0) {
+        const entries = sceneObjects.starMeshes
+          .map(star => {
+            const caseId = star.userData.caseStudy?.id as string | undefined;
+            if (!caseId) return null;
+            const label = sceneObjects.starLabels.get(caseId);
+            if (!label) return null;
+            // Add .show class so pointer-events + cursor apply; inline opacity
+            // (from updateStarLabels) modulates the CSS baseline.
+            if (!label.classList.contains('show')) label.classList.add('show');
+            return { star, label };
+          })
+          .filter((e): e is { star: THREE.Mesh; label: HTMLDivElement } => e !== null);
+        updateStarLabels(entries, camera, sceneContainer.clientWidth, sceneContainer.clientHeight);
       }
 
       // Position ring labels at the rightmost screen-x point of each ring.

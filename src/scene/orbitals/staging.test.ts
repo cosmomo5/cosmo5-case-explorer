@@ -86,6 +86,7 @@ function makeSceneObjects(cases: EnrichedCaseStudy[]): SceneObjects {
     nucleusMeshes,
     nucleusLabels: new Map(),
     starMeshes,
+    starLabels: new Map(),
     starOrbits: [],
     nucleusOrbits,
     filterState: createFilterState(),
