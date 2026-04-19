@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v3.3
 milestone_name: — Resolve the Observatory
-status: phase-17-context-locked
-stopped_at: "2026-04-19 — Phase 17 discuss-phase complete. CONTEXT.md + DISCUSSION-LOG.md written. ROADMAP edited: Phase 17 renamed to 'Star Labels Always-On + Label-Click Nav + Contextual Bottom-Right Panel' (merged with former Phase 22); Phase 22 marked [~ merged into 17]; Phase 26 scope adjusted (label slider removal reversed). 15 decisions locked (D-01 through D-15). Category: polish (primary) + feature sliver. Next action: load design-research-reflex + design-sensibility, update DESIGN-STATE.md with Phase 17 constraint set, then drive implementation via design-review-apparatus with TDD inside for click-handler + ReadingPanel decouple slivers. Do NOT run /gsd-plan-phase — polish loop owns this phase."
-last_updated: "2026-04-19T17:10:00.000Z"
-last_activity: "2026-04-19 — Phase 17 discuss-phase. Label click semantics rewritten from ENTER_CONSTELLATION (MILESTONE plain reading) to direct reading-panel open (Mo's richer interpretation); slider stays as opacity control of record (reverses Phase 26 plan); Phase 22 scope merged into 17; proof-type/impact-scale filtering flagged BLOCKED on derived fields."
+status: phase-17-code-complete-pending-uat
+stopped_at: "2026-04-19 — Phase 17 code complete: 4 slices committed (0fcb9e5 ReadingPanel decouple, 981f710 .sl build from scratch + click, 1a2987c in-cluster visibility, 3552463 view-scoped panel + slider). Tests 308/308 green; typecheck clean; build 239.80 kB gzipped (baseline 239 kB, no regression). Dead depth-per-year + keyboard-hints HTML removed as part of panel restructure (Phase 26 scope trimmed). Next action: Playwright MCP → Windows Chrome visual UAT against DESIGN-STATE Phase 17 constraint set (6 gates: post-overture .sl opacity at .12; click opens reading panel with correct case; in-cluster mode hides other-cluster .sl; hover produces .hover gold border; .sl click inert during overture; bottom-right panel shows slider always + grouping switcher only in constellation mode). On pass: add sign-off line to DESIGN-STATE.md, /gsd-transition 17."
+last_updated: "2026-04-19T18:05:00.000Z"
+last_activity: "2026-04-19 — Phase 17 code implementation. 4 commits on draft. Discovery: .sl DOM never ported from v2 to v3 — built from scratch rather than reinstated. Distance-based opacity falloff added (near .12, far 0) to carry density reduction without control chrome. Slider repurposed to drive star-label max opacity (Off/Observed/Near-read/Read-clear). Reading panel decoupled from focusedKey — view-state machine now carries origin so CLOSE_READING returns to the opening view."
 progress:
   total_phases: 12
   completed_phases: 1

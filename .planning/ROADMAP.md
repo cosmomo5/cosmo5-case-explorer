@@ -30,7 +30,7 @@
 - [ ] **Phase 23: Star Motion + Dim/Highlight Polish** — `transition-choreographer.ts` + `star-flight.ts` tuned to astrophotographic timing. Single `--ease` preserved.
 - [ ] **Phase 24: Theme + Token Audit** *(Kimi dispatch)* — Coral staging sphere replaced or named; ad-hoc opacities named (`--dim-matched`, `--dim-unmatched`, `--ghost`, `--glow`).
 - [ ] **Phase 25: Font + Size Audit + Overlap Regression** *(Kimi dispatch)* — Font families correct across all DOM; scale tightened to 4–5 sizes; viewport sweep at 1280×800, 1440×900, 1920×1080, 2560×1440.
-- [ ] **Phase 26: Removals** *(Kimi dispatch)* — Gathered button, depth-per-year (carried from merged Phase 22), old shortcuts, unused graticule. **Label slider removal REVERSED per 2026-04-19 Phase 17 discuss-phase (D-06/D-07)** — slider stays as the opacity control of record.
+- [ ] **Phase 26: Removals** *(Kimi dispatch)* — Gathered button, old shortcuts, unused graticule. **Depth-per-year removed in Phase 17 slice 4 (2026-04-19)** — taken earlier since the bottom-right panel was already being restructured. **Label slider removal REVERSED per 2026-04-19 Phase 17 discuss-phase (D-06/D-07)** — slider stays as the opacity control of record.
 - [ ] **Phase 27: Final QA + Ship Gate** — Full 60–90s flow; Vercel preview; closes v3.2 P7-01 + P7-06.
 
 ---
