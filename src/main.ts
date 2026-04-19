@@ -253,11 +253,18 @@ async function boot() {
 
     // ── Filter panel (inside filters sidebar) ───────────────────────────
     const filterPanelEl = document.getElementById('filters') as HTMLElement;
-    mountFilterPanel(filterPanelEl, sceneObjects, (newMode) => {
-      regroupScene(sceneObjects, newMode, scene);
-    }, () => {
-      exitFocus();
-    });
+    mountFilterPanel(
+      filterPanelEl,
+      sceneObjects,
+      (newMode) => {
+        regroupScene(sceneObjects, newMode, scene);
+      },
+      () => {
+        exitFocus();
+      },
+      cases,
+      () => { /* label sync handled by tick loop */ }
+    );
 
     // ── Label opacity control ────────────────────────────────────────────
     let labelThreshold = 0; // 0 = auto (show on hover only), 100 = all visible
