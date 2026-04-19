@@ -458,8 +458,6 @@ export function applyFilterWave(
     const matches = matchesFilter(c, filterState);
     const targetOpacity = matches ? 0.85 : nonMatchOpacity;
 
-    star.userData.starState = matches ? 'filterMatch' : 'filterDim';
-
     const mat = star.material as THREE.MeshBasicMaterial;
     // Kill any in-progress tween on this material so rapid re-queries don't stack
     gsap.killTweensOf(mat);
@@ -873,9 +871,8 @@ export function switchRingDimension(
  *
  * Precedence rules (matches star-state.ts order):
  *   - 'reading' and 'ghost' are NEVER touched — they have higher precedence
- *   - Shortlisted stars: idle / filterMatch / filterDim / undefined → 'selected'
+ *   - Shortlisted stars: idle / selected / undefined → 'selected'
  *   - De-shortlisted stars: 'selected' → 'idle' (only exact 'selected' is reset)
- *   - filterMatch / filterDim states are owned by applyFilter — not reset here
  *
  * Called by main.ts on every ShortlistStore mutation (wired in 06-04).
  */
@@ -895,11 +892,10 @@ export function syncShortlistToStarState(
     if (currentState === 'reading' || currentState === 'ghost') continue;
 
     if (shortlistedIds.has(caseId)) {
-      // Promote idle / filterMatch / filterDim / selected → selected
+      // Promote idle / selected → selected
       star.userData.starState = 'selected';
     } else if (currentState === 'selected') {
       // Was shortlisted, now removed — restore to idle
-      // filterDim / filterMatch are left alone (applyFilter owns them)
       star.userData.starState = 'idle';
     }
   }
