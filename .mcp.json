@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "/mnt/c/Users/moham/Documents/Thales/work-tech/case-study-explorer/.claude/scripts/playwright-mcp-cdp.sh"
+    }
+  }
+}

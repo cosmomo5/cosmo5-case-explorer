@@ -24,6 +24,42 @@ npm run test     # vitest run (unit tests in src/**/*.test.ts)
 npm run preview  # preview dist/
 ```
 
+## Playwright MCP — Direction A (CDP attach to Windows Chrome)
+
+**Topology.** Chrome runs on Windows with `--remote-debugging-port=9222` and an isolated profile at `C:\Tmp\PlaywrightProfile`. The `@playwright/mcp` server runs in WSL via `node.exe` (Windows Node) and attaches to Chrome over CDP through WSL2 mirrored networking. Decision rationale: `.planning/DECISIONS.md` (2026-04-19 Playwright topology entry).
+
+**Pieces.**
+- Wrapper script: `.claude/scripts/playwright-mcp-cdp.sh` — health-checks the CDP endpoint, relaunches Chrome via `powershell.exe Start-Process` if down, then `exec`s the MCP server with stdio passthrough.
+- MCP config: `.mcp.json` at project root — points Claude Code at the wrapper.
+- Windows Task Scheduler job: `PlaywrightChromeCDP` — launches Chrome at every Windows login. Re-runs up to 3 times if Chrome exits. Survives reboots.
+
+**Verifying it's healthy.**
+```bash
+# CDP endpoint reachable from WSL (mirrored networking)
+curl -s http://localhost:9222/json/version | head -3
+
+# MCP wrapper boots and lists tools
+{
+  echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"t","version":"0"}}}'
+  echo '{"jsonrpc":"2.0","method":"notifications/initialized"}'
+  echo '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
+  sleep 2
+} | timeout 15s ./.claude/scripts/playwright-mcp-cdp.sh 2>&1 | head -5
+```
+
+**Operational ceremony.** None per session. Chrome is up at login (Task Scheduler) or auto-launched by the wrapper. If you ever need to reset:
+
+```powershell
+# From PowerShell (or via /mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe from WSL)
+Get-ScheduledTask -TaskName 'PlaywrightChromeCDP' | Disable-ScheduledTask    # pause auto-launch
+Get-Process chrome | Where-Object { $_.MainWindowTitle -eq '' } | Stop-Process -Force   # kill headless Chrome instances
+Start-ScheduledTask -TaskName 'PlaywrightChromeCDP'                          # relaunch fresh
+```
+
+**When using Playwright MCP for UAT or polish review.** Prefer `browser_snapshot` (accessibility tree, fast, LLM-native) for DOM probes. Use `browser_take_screenshot` only for visual verification — image bytes are expensive to round-trip. `browser_evaluate` is the right call for class/attribute checks like `body.classList.contains('planetary')` or `document.querySelectorAll('.cl.show').length`.
+
+**WSL-only constraint.** The agent runs in WSL; Chrome must run on Windows. Never `npx playwright install` inside WSL — that's the broken path that ran `chrome.exe` from a Linux process and triggered the documented bug cluster (microsoft/playwright-mcp #883, #1172, GPU/dxg crashes). The current setup is the working alternative.
+
 ## Design Spec
 
 The authoritative design document is `docs/superpowers/specs/2026-04-13-dimensional-explorer-design.md`. It supersedes sections 3, 5, 6 of the prior spec (`2026-04-12-gravitational-spheres-design.md`). When in doubt, the 04-13 spec wins.
