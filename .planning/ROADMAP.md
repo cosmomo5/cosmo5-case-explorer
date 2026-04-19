@@ -165,6 +165,20 @@ Plans:
 4. Lighthouse desktop ≥80. Bundle <800KB gzipped JS.
 5. Vercel preview deployed, Mo approves. STATE.md + card updated.
 
+#### Phase 19: Remove Query Input — Filter Panel Only
+**Goal:** Delete the text-query input, history chips, hint states, and `FilterState.searchText` field shipped in Phase 18. After this phase, filtering is facet-only (Country / Service / Year / Proof Type / Impact). The unified column shell and its collapse/expand behavior from Phase 18 stay intact.
+**Depends on:** Phase 18.
+**Context:** `.planning/phases/19-remove-query-input/19-CONTEXT.md`
+**Category:** feature / removal (repurposed 2026-04-19 from brainstorm spike "Text-Input-Drives-Stars"; original idea preserved as `.planning/seeds/SEED-001-text-input-drives-stars.md`).
+**Success Criteria:**
+1. No `<input>` element, `.query-history` container, `.query-chip`, `.query-hint`, or suggestion-chip handler in `src/ui/filter-panel.ts`.
+2. No `searchText` field in `FilterState`; no `searchText` branch in `matchesFilter`; no `searchText` wiring in `keyword-map.ts`.
+3. `addQueryToHistory` + `loadQueryHistory` + their localStorage key removed from `src/data/persistence.ts`.
+4. `.query-history` / `.query-chip` rules removed from `src/style.css`.
+5. `src/tests/filter-searchtext.test.ts` deleted; query-input tests removed from `src/ui/unified-column.test.ts`; column-shell + auto-expand tests (8-9) preserved.
+6. `tsc` clean; `npm run test` green (expected 290/290, minus ~13 query-specific tests); `npm run build` succeeds with bundle size down 2-5 kB gzipped from 239.37 baseline.
+7. Visual regression: expanded column shows header + readout + accordion only. Collapsed tab state unchanged (D-02..D-05 preserved).
+
 ---
 
 ## Completed Milestones
