@@ -5,7 +5,7 @@ import type { CaseStudy } from '../data/types';
 import { groupBy, getKeyForCase } from '../data/grouping';
 import { computeNucleusOrbits, nucleusPositionAt } from './orbitals/nucleus-orbit';
 import { computeStarOrbit, starPositionAt } from './orbitals/star-orbit';
-import type { SceneObjects } from './scene-state';
+import type { SceneObjects, ClusterLabelHandlers } from './scene-state';
 import { clearFilter } from './scene-state';
 
 const DEFAULT_COLOR = 0xfff4dd;
@@ -22,6 +22,7 @@ export function regroupScene(
   objects: SceneObjects,
   newMode: GroupMode,
   scene: THREE.Scene,
+  clusterLabelHandlers?: ClusterLabelHandlers,
 ): void {
   clearFilter(objects);
   objects.groupMode = newMode;
@@ -89,6 +90,13 @@ export function regroupScene(
       div.style.setProperty('--cl-accent', colorHex);
       div.style.setProperty('--cl-glow', `rgba(${glowRgb},0.45)`);
       div.innerHTML = `<span class="cl-name">${key}</span><span class="cl-count">${nucOrbit.cases.length}</span>`;
+      if (clusterLabelHandlers) {
+        div.addEventListener('click', (e) => {
+          if (!clusterLabelHandlers.isClickEnabled()) return;
+          e.stopPropagation();
+          clusterLabelHandlers.onEnterFocus(key);
+        });
+      }
       labelContainer.appendChild(div);
       objects.nucleusLabels.set(key, div);
     }

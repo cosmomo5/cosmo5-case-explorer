@@ -135,7 +135,15 @@ async function boot() {
       isClickEnabled: () => overtureCompleteRef.value,
     };
 
-    const sceneObjects = buildOrbitalScene(cases, 'vertical', scene, labelContainer, starLabelHandlers);
+    // Phase 20.1: cluster-label click → enterFocus. Closes over overtureCompleteRef
+    // so clicks are no-ops during the planetary overture, same guard as starLabelHandlers.
+    // enterFocus is declared further down but closures resolve at call-time.
+    const clusterLabelHandlers = {
+      onEnterFocus: (key: string) => { enterFocus(key); },
+      isClickEnabled: () => overtureCompleteRef.value,
+    };
+
+    const sceneObjects = buildOrbitalScene(cases, 'vertical', scene, labelContainer, starLabelHandlers, clusterLabelHandlers);
     sceneObjects.controls = controls;
     sceneObjects.camera = camera;
     sceneObjects.scene = scene;
@@ -262,7 +270,7 @@ async function boot() {
       filterPanelEl,
       sceneObjects,
       (newMode) => {
-        regroupScene(sceneObjects, newMode, scene);
+        regroupScene(sceneObjects, newMode, scene, clusterLabelHandlers);
       },
       () => {
         exitFocus();

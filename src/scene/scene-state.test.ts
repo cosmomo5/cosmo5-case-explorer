@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 import type { ShortlistEntry } from '../data/shortlist-store';
 import * as THREE from 'three';
 
@@ -14,9 +14,11 @@ vi.mock('gsap', () => ({
 
 import {
   applyFilter,
+  buildOrbitalScene,
   syncShortlistToStarState,
   tickOrbits,
   type SceneObjects,
+  type ClusterLabelHandlers,
 } from './scene-state';
 import type { EnrichedCaseStudy } from '../data/enrich';
 import { ProofType } from '../data/proof-type';
@@ -480,5 +482,85 @@ describe('planetaryActive gate', () => {
     const before = star.position.clone();
     tickOrbits(sceneObjects, 1000, camera);
     expect(star.position.equals(before)).toBe(true);
+  });
+});
+
+// ── Phase 20.1 — cluster-label click wiring ───────────────────────────────────
+
+describe('buildOrbitalScene cluster-label click → enterFocus (Phase 20.1)', () => {
+  // jsdom lacks canvas 2d context; stub createRadialGradient so createGlowTexture runs
+  beforeAll(() => {
+    const fakeGrad = { addColorStop: () => {} };
+    (HTMLCanvasElement.prototype as any).getContext = () => ({
+      createRadialGradient: () => fakeGrad,
+      fillStyle: '',
+      fillRect: () => {},
+    });
+  });
+
+  const mediaCase = makeCase('media-1');
+  mediaCase.services = ['Video Ads']; // maps to 'Media' vertical via SERVICE_TO_VERTICAL
+
+  it('calls onEnterFocus with the nucleus key when a .cl div is clicked and isClickEnabled returns true', () => {
+    const scene = new THREE.Scene();
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    const onEnterFocus = vi.fn();
+    const handlers: ClusterLabelHandlers = {
+      onEnterFocus,
+      isClickEnabled: () => true,
+    };
+
+    buildOrbitalScene([mediaCase], 'vertical', scene, container, undefined, handlers);
+
+    const clDiv = container.querySelector('.cl') as HTMLElement;
+    expect(clDiv).not.toBeNull();
+
+    clDiv.click();
+
+    expect(onEnterFocus).toHaveBeenCalledOnce();
+    expect(onEnterFocus).toHaveBeenCalledWith(expect.any(String));
+
+    document.body.removeChild(container);
+  });
+
+  it('does not call onEnterFocus when isClickEnabled returns false (overture gate)', () => {
+    const scene = new THREE.Scene();
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    const onEnterFocus = vi.fn();
+    const handlers: ClusterLabelHandlers = {
+      onEnterFocus,
+      isClickEnabled: () => false,
+    };
+
+    buildOrbitalScene([mediaCase], 'vertical', scene, container, undefined, handlers);
+
+    const clDiv = container.querySelector('.cl') as HTMLElement;
+    expect(clDiv).not.toBeNull();
+
+    clDiv.click();
+
+    expect(onEnterFocus).not.toHaveBeenCalled();
+
+    document.body.removeChild(container);
+  });
+
+  it('no-ops when no clusterLabelHandlers provided (backwards compat)', () => {
+    const scene = new THREE.Scene();
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    expect(() => {
+      buildOrbitalScene([mediaCase], 'vertical', scene, container);
+    }).not.toThrow();
+
+    const clDiv = container.querySelector('.cl') as HTMLElement;
+    expect(clDiv).not.toBeNull();
+    expect(() => clDiv.click()).not.toThrow();
+
+    document.body.removeChild(container);
   });
 });

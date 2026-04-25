@@ -20,6 +20,11 @@ import { STAGING_KEY } from './staging';
 
 export type SceneMode = 'global' | 'focused';
 
+export interface ClusterLabelHandlers {
+  onEnterFocus: (nucleusKey: string) => void;
+  isClickEnabled: () => boolean;
+}
+
 
 
 /** Convert a THREE hex color int to "r,g,b" string for CSS rgba() usage */
@@ -120,6 +125,7 @@ export function buildOrbitalScene(
   scene: THREE.Scene,
   labelContainer: HTMLElement,
   starLabelHandlers?: StarLabelHandlers,
+  clusterLabelHandlers?: ClusterLabelHandlers,
 ): SceneObjects {
   const groups = groupBy(cases, groupMode);
   const nucleusOrbits = computeNucleusOrbits(groups);
@@ -170,6 +176,13 @@ export function buildOrbitalScene(
     div.style.setProperty('--cl-accent', colorHex);
     div.style.setProperty('--cl-glow', `rgba(${glowRgb},0.45)`);
     div.innerHTML = `<span class="cl-name">${key}</span><span class="cl-count">${nucOrbit.cases.length}</span>`;
+    if (clusterLabelHandlers) {
+      div.addEventListener('click', (e) => {
+        if (!clusterLabelHandlers.isClickEnabled()) return;
+        e.stopPropagation();
+        clusterLabelHandlers.onEnterFocus(key);
+      });
+    }
     labelContainer.appendChild(div);
     nucleusLabels.set(key, div);
 
