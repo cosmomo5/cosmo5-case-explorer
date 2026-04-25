@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as THREE from 'three';
+import { gsap } from 'gsap';
 
 // Capture onComplete callbacks so tests can trigger them manually
 let capturedOnComplete: (() => void) | undefined;
@@ -105,6 +106,7 @@ describe('TransitionChoreographer', () => {
 import { createPlanet } from '../scene/planet';
 import { starPositionAt } from '../scene/orbitals/star-orbit';
 import { createTransitionChoreographer as createChoreographer } from './transition-choreographer';
+import { clearEntryFraming } from '../scene/entry-framing';
 
 describe('choreographPlanetaryToGlobal — final beat (phase 16-03)', () => {
   let controls: CameraControls;
@@ -231,4 +233,111 @@ describe('choreographPlanetaryToGlobal — final beat (phase 16-03)', () => {
       (window as any).matchMedia = origMM;
     }
   }, 10000);
+});
+
+// ── Plan 01.1-04: choreographPlanetaryToGlobal — offset-clearing tween (RED) ──
+
+describe('choreographPlanetaryToGlobal offset clearing', () => {
+  let controls: CameraControls;
+  let origMatchMedia: typeof window.matchMedia;
+
+  beforeEach(() => {
+    AUTO_FIRE_COMPLETE = true;
+    capturedOnComplete = undefined;
+    document.body.className = '';
+    document.body.classList.add('planetary');
+    controls = new CameraControls(new THREE.PerspectiveCamera(), document.createElement('div'));
+    // Default: full-motion (matchMedia returns false for reduce queries)
+    origMatchMedia = window.matchMedia;
+    (window as any).matchMedia = (q: string) => ({
+      matches: false,
+      media: q,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    });
+    // Clear gsap.to call history so tests can inspect only the calls they care about
+    vi.mocked(gsap.to).mockClear();
+  });
+
+  afterEach(() => {
+    AUTO_FIRE_COMPLETE = false;
+    (window as any).matchMedia = origMatchMedia;
+  });
+
+  function makeOffsetFixture() {
+    const scene = new THREE.Scene();
+    const planet = createPlanet(scene);
+    const nucleusLabels = new Map<string, HTMLDivElement>();
+
+    const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 3000);
+    camera.position.set(80, 880, 280);
+    // Simulate Entry state: apply a view offset (cx:72%, cy:58% at 1280×800)
+    camera.setViewOffset(1280, 800, -281.6, -64, 1280, 800);
+
+    const sceneObjects: any = {
+      scene,
+      camera,
+      controls,
+      starMeshes: [],
+      nucleusMeshes: new Map(),
+      nucleusLabels,
+      planetaryActive: true,
+    };
+
+    const choreographer = createChoreographer(controls);
+    return { sceneObjects, planet, choreographer, camera };
+  }
+
+  it('fires offset-clearing GSAP proxy tween when camera has view offset', async () => {
+    const { sceneObjects, planet, choreographer } = makeOffsetFixture();
+
+    await choreographer.choreographPlanetaryToGlobal(sceneObjects, planet);
+
+    // Find the call where gsap.to received a proxy object with dx and dy properties
+    const calls = vi.mocked(gsap.to).mock.calls;
+    const offsetCall = calls.find(
+      ([target]) => target !== null && typeof target === 'object' && 'dx' in (target as object) && 'dy' in (target as object),
+    );
+
+    expect(offsetCall).toBeDefined();
+    const [, config] = offsetCall!;
+    expect((config as Record<string, unknown>).dx).toBe(0);
+    expect((config as Record<string, unknown>).dy).toBe(0);
+    expect((config as Record<string, unknown>).duration).toBe(1.2);
+  });
+
+  it('calls clearEntryFraming (clearViewOffset) on offset tween completion', async () => {
+    const { sceneObjects, planet, choreographer, camera } = makeOffsetFixture();
+    const clearSpy = vi.spyOn(camera, 'clearViewOffset');
+
+    await choreographer.choreographPlanetaryToGlobal(sceneObjects, planet);
+
+    // Find the offset proxy tween's onComplete and fire it manually
+    // (AUTO_FIRE_COMPLETE fires it during the call, but we want to assert the spy was invoked)
+    expect(clearSpy).toHaveBeenCalled();
+  });
+
+  it('offset-clearing tween duration scales to 0.4s under prefers-reduced-motion', async () => {
+    // Override matchMedia to simulate reduced-motion preference
+    (window as any).matchMedia = (q: string) => ({
+      matches: q.includes('reduce'),
+      media: q,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    });
+
+    const { sceneObjects, planet, choreographer } = makeOffsetFixture();
+
+    await choreographer.choreographPlanetaryToGlobal(sceneObjects, planet);
+
+    const calls = vi.mocked(gsap.to).mock.calls;
+    const offsetCall = calls.find(
+      ([target]) => target !== null && typeof target === 'object' && 'dx' in (target as object) && 'dy' in (target as object),
+    );
+
+    expect(offsetCall).toBeDefined();
+    const [, config] = offsetCall!;
+    // 1.2s × 0.33 reduced-motion scale = 0.396s ≈ 0.4s
+    expect((config as Record<string, unknown>).duration).toBeCloseTo(1.2 * 0.33, 5);
+  });
 });
