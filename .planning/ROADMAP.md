@@ -31,8 +31,8 @@
 **Research:** `.planning/phases/01-foundation/01-RESEARCH.md`
 
 **Plans:** 4 plans (3 execute, 1 human-verify)
-- [ ] 01-01-PLAN.md — Create entry-screen.ts module with DOM structure and CTA listener
-- [ ] 01-02-PLAN.md — Add Entry screen CSS (layout, typography, pulsing dot animation)
+- [x] 01-01-PLAN.md (2026-04-25) — Create entry-screen.ts module with DOM structure and CTA listener
+- [x] 01-02-PLAN.md (2026-04-25) — Add Entry screen CSS (layout, typography, pulsing dot animation)
 - [ ] 01-03-PLAN.md — Wire entry-screen.ts into main.ts boot sequence, ENTER_FIELD dispatch, fade choreography
 - [ ] 01-04-PLAN.md — Human visual verification (browser UAT)
 
