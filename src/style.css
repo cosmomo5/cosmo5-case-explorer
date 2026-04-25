@@ -192,7 +192,10 @@ header.wordmark-corner {
 }
 .catalog-readout .cr-sep { color: rgba(255, 255, 255, 0.18); }
 body.constellation .catalog-readout { opacity: 0; }
-body:has(.entry-screen) .catalog-readout { opacity: 0 !important; }
+body:has(.entry-screen) .catalog-readout,
+body:has(.entry-screen) #observatory-header,
+body:has(.entry-screen) .cl,
+body:has(.entry-screen) #star-labels { opacity: 0 !important; pointer-events: none; }
 
 /* ── Breadcrumb (constellation mode) ── */
 .crumb{position:fixed;z-index:10;left:50%;top:84px;transform:translateX(-50%);
