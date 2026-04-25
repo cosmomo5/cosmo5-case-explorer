@@ -28,6 +28,7 @@ import { gatherStarsToPlanet, PLANET_SPIN_RATE } from './scene/planetary-gather'
 import { mountObservatoryHeader } from './ui/observatory-header';
 import { mountCalibrationOverture, type CalibrationOvertureHandle } from './ui/calibration-overture';
 import { mountEntryScreen } from './ui/entry-screen';
+import { applyEntryFraming } from './scene/entry-framing';
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.globalTimeline.timeScale(0);
@@ -158,6 +159,25 @@ async function boot() {
     // that state until viewState transitions planetary → global.
     const planetGroup = createPlanet(scene);
     gatherStarsToPlanet(sceneObjects, { x: 0, y: 0, z: 0 }, PLANET_RADIUS);
+
+    // ── Entry scene composition (Phase 01.1) ───────────────────────────
+    // Hide all 116 case-stars during Entry. They will be revealed via the
+    // existing releaseStarsToHomes tween inside choreographPlanetaryToGlobal.
+    for (const star of sceneObjects.starMeshes) {
+      star.visible = false;
+      const sMat = star.material as THREE.MeshBasicMaterial;
+      sMat.opacity = 0;
+      const glowSp = star.userData.glowSprite as THREE.Sprite | undefined;
+      if (glowSp) {
+        const spMat = glowSp.material as THREE.SpriteMaterial;
+        spMat.opacity = 0;
+      }
+    }
+
+    // Apply Entry camera framing (planet rendered at cx:72%, cy:58%).
+    // Pattern B: ResizeObserver reads camera.view?.enabled directly and
+    // re-applies on resize — no separate flag needed (D-01.1-02, D-01.1-06).
+    applyEntryFraming(camera, sceneContainer.clientWidth, sceneContainer.clientHeight);
 
     // ── Phase 16-03: mount calibration overture (Acts I + II) ──────────
     // Starts immediately; the skippable handler below consumes overtureHandle.cancel().
