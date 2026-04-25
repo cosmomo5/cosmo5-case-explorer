@@ -1677,8 +1677,6 @@ header.wordmark-corner,
   z-index: 101;
 }
 
-/* Pre-set scene hidden at load time so GSAP fromTo has a clean start.
-   Applied globally; GSAP will animate opacity 0→1 on Entry→State 1 transition. */
-#scene-container {
-  opacity: 0;
-}
+/* During Entry state the scene-container is visible (globe spins on the right).
+   The .entry-screen overlay sits on top. Scene content (stars, labels) that
+   belongs to State 1 is gated by JS visibility, not by container opacity. */
