@@ -24,9 +24,10 @@ import { mountReviewMode } from './ui/review-mode';
 import { LoaderController } from './ui/loader';
 import { ComparisonMode } from './scene/comparison-mode';
 import { createPlanet, PLANET_RADIUS } from './scene/planet';
-import { gatherStarsToPlanet } from './scene/planetary-gather';
+import { gatherStarsToPlanet, PLANET_SPIN_RATE } from './scene/planetary-gather';
 import { mountObservatoryHeader } from './ui/observatory-header';
 import { mountCalibrationOverture, type CalibrationOvertureHandle } from './ui/calibration-overture';
+import { mountEntryScreen } from './ui/entry-screen';
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.globalTimeline.timeScale(0);
@@ -121,6 +122,9 @@ async function boot() {
     // clicks don't fire until overtureComplete is true, which is also after
     // readingPanel exists.
     let overtureCompleteRef = { value: false };
+    // Guard flag: entry screen has been dismissed (CTA clicked). Prevents double-fire
+    // of ENTER_FIELD and gates the GSAP State 1 fade-in in the viewState subscriber.
+    let entryScreenDismissed = false;
     let readingPanelRef: ReadingPanel | null = null;
     const starLabelHandlers = {
       onClick: (c: CaseStudy) => {
@@ -246,6 +250,22 @@ async function boot() {
       // so the tick loop stops stripping .show off the cluster labels the
       // choreographer just revealed.
       if (prev.kind === 'planetary' && next.kind === 'global') {
+        // Plan 01-03 D-06: Entry → State 1 fade-in.
+        // #scene-container is pre-set to opacity:0 in style.css (Plan 01-02).
+        // Fade it in at 600ms with the exact spec ease. Only fires when the
+        // entry screen was dismissed (entryScreenDismissed = true); bypassed
+        // on any direct ENTER_FIELD dispatch that skips the entry screen.
+        if (entryScreenDismissed) {
+          gsap.fromTo(
+            '#scene-container',
+            { opacity: 0 },
+            {
+              opacity: 1,
+              duration: 0.6,
+              ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
+            }
+          );
+        }
         choreographer.choreographPlanetaryToGlobal(sceneObjects, planetGroup, {
           onComplete: () => {
             overtureComplete = true;
@@ -326,6 +346,13 @@ async function boot() {
       requestAnimationFrame(tick);
       controls.update(clock.getDelta()); // camera-controls requires delta
       tickOrbits(sceneObjects, t, camera);
+
+      // Entry Globe spin (ENTRY-01 spec: 0.6× continuous rotation).
+      // Uses rAF timestamp `t` (ms) for frame-rate independent rotation.
+      // Gated to planetary state so spin stops once ENTER_FIELD fires.
+      if (viewState.getState().kind === 'planetary') {
+        planetGroup.group.rotation.y = (t / 1000) * PLANET_SPIN_RATE;
+      }
 
       // Update cluster label positions every frame
       for (const [key, div] of sceneObjects.nucleusLabels.entries()) {
@@ -720,9 +747,11 @@ async function boot() {
       setTimeout(() => loaderCtrl.done(), 400);
     }
 
-    // ── Phase 16-03: skippable — click / Enter / Space during planetary ──
-    // Cancels the calibration overture and dispatches ENTER_FIELD. Once
-    // viewState is no longer planetary, this handler is a no-op; second
+    // ── Phase 16-03 / Plan 01-03: skippable — click / Enter / Space during planetary ──
+    // Cancels the calibration overture and mounts the Entry screen overlay.
+    // ENTER_FIELD is dispatched from the Entry CTA, not here — this separation
+    // ensures the entry overlay is visible before the ViewStateMachine transitions.
+    // Once viewState is no longer planetary, this handler is a no-op; second
     // gestures do nothing.
     const commitPlanetary = (ev?: Event) => {
       if (viewState.getState().kind !== 'planetary') return;
@@ -733,7 +762,16 @@ async function boot() {
         if (ev.key === ' ') ev.preventDefault();
       }
       overtureHandle.cancel();
-      viewState.dispatch({ type: 'ENTER_FIELD' });
+      // ── Entry screen mounts only after overture completes ──────────────────
+      // ANTI-PATTERN GUARD: entry overlay must NOT be on-screen during calibration.
+      // Only reached here after overture signals completion (user clicked/keyed).
+      mountEntryScreen(document.body, {
+        onEnter: () => {
+          if (entryScreenDismissed) return; // guard against double-fire
+          entryScreenDismissed = true;
+          viewState.dispatch({ type: 'ENTER_FIELD' });
+        },
+      });
     };
     document.addEventListener('click', commitPlanetary);
     document.addEventListener('keydown', (e) => {

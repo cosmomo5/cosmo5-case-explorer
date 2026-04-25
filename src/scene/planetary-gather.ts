@@ -7,6 +7,14 @@ import { starPositionAt } from './orbitals/star-orbit';
 export interface Vec3 { x: number; y: number; z: number; }
 
 /**
+ * Entry Globe spin rate in radians per second.
+ * Spec: 0.6× of a reference 1 rev/30s spin = (2π/30) × 0.6 ≈ 0.126 rad/s.
+ * Applied in the main.ts tick loop while ViewState.kind === 'planetary'.
+ * One full rotation every ~50 seconds — cinematic, unhurried.
+ */
+export const PLANET_SPIN_RATE = (Math.PI * 2 / 30) * 0.6; // 0.6× reference
+
+/**
  * Fibonacci sphere — evenly distributes N points on the surface of a sphere.
  * Golden-angle + z-linear formulation; no pole clumping.
  */
