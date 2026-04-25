@@ -84,11 +84,17 @@ export function snapStarsToHomes(objects: SceneObjects): void {
  * Tween every planetary-target star from its current surface position to its
  * orbital home. Clears the flag on completion so tickOrbits resumes control.
  * Respects prefers-reduced-motion (0.2s instead of 1.2s).
+ *
+ * D-01.1-03: Also reveals each star by setting visible=true synchronously then
+ * tweening MeshBasicMaterial.opacity 0→0.85 (and SpriteMaterial.opacity 0→baseOpacity
+ * for the glow sprite). Delay 0.15s so opacity fades in mid-position-tween.
  */
 export function releaseStarsToHomes(objects: SceneObjects): Promise<void> {
   const prefersReduced = typeof window !== 'undefined'
     && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const duration = prefersReduced ? 0.2 : 1.2;
+  const opacityDuration = prefersReduced ? 0.2 : 0.8;
+  const opacityDelay = prefersReduced ? 0 : 0.15;
 
   const pending: Promise<void>[] = [];
   for (const star of objects.starMeshes) {
@@ -98,6 +104,30 @@ export function releaseStarsToHomes(objects: SceneObjects): Promise<void> {
       star.userData.isPlanetaryTarget = false;
       continue;
     }
+
+    // Reveal: set visible before tween so the mesh renders during the opacity fade-in
+    star.visible = true;
+    const sMat = star.material as THREE.MeshBasicMaterial;
+    gsap.to(sMat, {
+      opacity: 0.85,
+      duration: opacityDuration,
+      delay: opacityDelay,
+      ease: 'power2.out',
+    });
+
+    // Reveal glow sprite opacity from 0 to its stored baseOpacity
+    const glowSp = star.userData.glowSprite as THREE.Sprite | undefined;
+    if (glowSp) {
+      const spMat = glowSp.material as THREE.SpriteMaterial;
+      const baseOpacity = (glowSp.userData.baseOpacity as number) ?? 0.65;
+      gsap.to(spMat, {
+        opacity: baseOpacity,
+        duration: opacityDuration,
+        delay: opacityDelay,
+        ease: 'power2.out',
+      });
+    }
+
     pending.push(new Promise<void>((resolve) => {
       gsap.killTweensOf(star.position);
       gsap.to(star.position, {
