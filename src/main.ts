@@ -250,6 +250,22 @@ async function boot() {
       // so the tick loop stops stripping .show off the cluster labels the
       // choreographer just revealed.
       if (prev.kind === 'planetary' && next.kind === 'global') {
+        // Plan 01-03 D-06: Entry → State 1 fade-in.
+        // #scene-container is pre-set to opacity:0 in style.css (Plan 01-02).
+        // Fade it in at 600ms with the exact spec ease. Only fires when the
+        // entry screen was dismissed (entryScreenDismissed = true); bypassed
+        // on any direct ENTER_FIELD dispatch that skips the entry screen.
+        if (entryScreenDismissed) {
+          gsap.fromTo(
+            '#scene-container',
+            { opacity: 0 },
+            {
+              opacity: 1,
+              duration: 0.6,
+              ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
+            }
+          );
+        }
         choreographer.choreographPlanetaryToGlobal(sceneObjects, planetGroup, {
           onComplete: () => {
             overtureComplete = true;
