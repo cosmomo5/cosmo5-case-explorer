@@ -15,7 +15,7 @@
     "ai_integration_phase": true,
     "skip_discuss": false,
     "research_before_questions": false,
-    "use_worktrees": true,
+    "use_worktrees": false,
     "tdd_mode": true,
     "_auto_chain_active": false
   },

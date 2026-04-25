@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v3.4
 milestone_name: — Dimensional Navigation
-status: unknown
-last_updated: "2026-04-25T19:56:06.086Z"
+status: phase_complete
+last_updated: "2026-04-25T20:30:00.000Z"
 progress:
-  total_phases: 1
-  completed_phases: 0
-  total_plans: 4
-  completed_plans: 3
-  percent: 75
+  total_phases: 2
+  completed_phases: 1
+  total_plans: 9
+  completed_plans: 8
+  percent: 88
 ---
 
 # Project State
@@ -26,13 +26,13 @@ See: `.planning/PROJECT.md`, `.planning/MILESTONE-v3.4.md` (current), `.planning
 
 ## Current Position
 
-Phase: --phase (01.1) — EXECUTING
-Plan: 1 of --name
+**Phase 01.1: Entry Scene Composition — COMPLETE** (2026-04-25)
 **Milestone:** v3.4 (opened 2026-04-25)
-**Phase:** None started — bootstrap complete, Phase 1 next.
 **Branch:** `draft` — all work continues here.
 
-Next action: `/gsd-plan-phase 1` (Entry screen — replan after context captured 2026-04-25)
+Phase 01.1 closed gaps 01-G1 (planet framing) and 01-G2 (case-star visibility) via 5 plans across 4 waves. All Playwright UAT tests (8, 9, 10) PASSED on Windows Chrome via CDP. Test suite: 321/321 passing, build clean.
+
+Next action: `/gsd-progress` to pick the next v3.4 phase, or `/gsd-spec-phase 2` for the next milestone phase per `MILESTONE-v3.4.md` (free-float foundation).
 
 ## v3.3 Closure Record
 
@@ -66,28 +66,36 @@ The v3.4 handoff supersedes all remaining v3.3 phases. Key open items from v3.3 
 
 ## Session Continuity
 
-Last session: 2026-04-25T19:55:58.426Z
+Last session: 2026-04-25 — Phase 01.1 executed end-to-end and verified.
 
 **What happened:**
 
-1. Phase 1 scope redirected: inquiry sentence dropped from v3.4 entirely. Phase 1 = Entry screen.
-2. Key decisions captured in `.planning/phases/01-foundation/01-CONTEXT.md`:
-   - D-02: Inquiry sentence dropped from v3.4 entirely (cases orbit invisible center point in State 1)
-   - D-03: Reframe `planetary-gather.ts` as Entry Globe (do not rebuild)
-   - D-04: Entry always shows on every session load (no skip-for-returning-users)
-   - D-05: Handoff copy is final (headline, body, CTA, telemetry plate)
-   - D-06: CTA click → ENTER_FIELD dispatch → 200ms fade to black → State 1 600ms ease-in
-   - D-07: State 1 boots to free float (all 116 cases drift freely, no orbital structure)
-3. Pre-existing 01-01/01-02/01-03 plans are stale — replan required.
+1. **Phase 01.1 executed** in 4 waves across 5 plans:
+   - Wave 0 (Plan 01): TDD — `entry-framing.ts` pure module + 6 unit tests
+   - Wave 1 (Plan 02): Boot wiring (`main.ts` + `renderer.ts`) — hide stars, apply Entry framing, ResizeObserver gated re-apply
+   - Wave 2 Plan 03: TDD — `releaseStarsToHomes` extended with star reveal opacity tween
+   - Wave 2 Plan 04: TDD — `choreographPlanetaryToGlobal` extended with offset-clearing GSAP proxy tween
+   - Wave 3 (Plan 05): Manual UAT via Playwright Windows Chrome CDP — all 3 tests PASSED
+2. **Test suite:** 321/321 passing (was 316), build clean, tsc clean
+3. **Gaps closed:** 01-G1 (planet framing cx 72.1% / cy 57.9%) and 01-G2 (case-stars hidden during Entry, revealed on ENTER_FIELD)
+4. **12 atomic commits** on `draft` (3 per implementation plan: RED + GREEN + SUMMARY) plus 1 UAT commit
+
+**Tooling notes carried forward:**
+
+- `gsd-sdk phase-plan-index` wave grouping disagreed with plan frontmatter (put UAT plan in Wave 1 instead of Wave 3). Followed frontmatter. Worth a memory entry.
+- `Agent(isolation: "worktree")` created worktree from stale base commit `136ed5f` (pre-TypeScript v2). Disabled with `workflow.use_worktrees: false`. Root cause not investigated; flagged before re-enabling.
+- Two Playwright MCP servers wired: project's `mcp__playwright__*` (CDP attach to Windows Chrome) is the correct tool. Always check `navigator.userAgent` shows `Windows NT` before UAT.
+- WebGL canvas pixel readback returns blank (`preserveDrawingBuffer` is false). Use OS-level screenshots for visual verification, not pixel sampling.
+- Entry overlay mounts only after the first user gesture (click/Enter/Space) — this triggers `commitPlanetary` which cancels the calibration overture and mounts EntryScreen. Then ENTER_OBSERVATORY click dispatches `ENTER_FIELD`. Two-step gesture flow is by design (D-04 + Phase 16-03 skippable pattern).
 
 **Resume path:**
 
 1. Read this block.
 2. Read `.planning/MILESTONE-v3.4.md` for the v3.4 phase table.
-3. Read `.planning/phases/01-foundation/01-CONTEXT.md` for locked decisions.
-4. Run `/gsd-plan-phase 1` to replan Phase 1 as Entry screen.
+3. Run `/gsd-progress` to confirm phase 01.1 closed and surface next phase.
+4. Run `/gsd-spec-phase 2` (or whichever phase MILESTONE-v3.4.md sequences next).
 
-**Planned Phase:** 01.1 (entry-scene-composition-globe-framing-gather-state-camera-tr) — 5 plans — 2026-04-25T19:02:40.554Z
+**Completed Phase:** 01.1 (entry-scene-composition-globe-framing-gather-state-camera-tr) — 5/5 plans, all tests passed — 2026-04-25
 
 ## Roadmap Evolution
 
