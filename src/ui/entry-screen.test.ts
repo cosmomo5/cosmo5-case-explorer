@@ -26,7 +26,7 @@ describe('mountEntryScreen', () => {
     mountEntryScreen(container, { onEnter: vi.fn() });
     const btn = container.querySelector('.entry-cta') as HTMLButtonElement | null;
     expect(btn).not.toBeNull();
-    expect(btn!.textContent).toContain('ENTER OBSERVATORY →');
+    expect(btn!.textContent).toContain('ENTER OBSERVATORY');
   });
 
   // ENTRY-08 — class is added immediately on click
@@ -68,12 +68,12 @@ describe('mountEntryScreen', () => {
     expect(container.querySelector('.entry-screen')).not.toBeNull();
   });
 
-  // ENTRY-06 — pulsing dot markup
-  it('pulsing dot span is present with correct content', () => {
+  // ENTRY-06 — pulsing dot markup (CSS circle, empty span)
+  it('pulsing dot span is present', () => {
     const container = makeContainer();
     mountEntryScreen(container, { onEnter: vi.fn() });
     const dot = container.querySelector('.entry-cta-dot') as HTMLElement | null;
     expect(dot).not.toBeNull();
-    expect(dot!.textContent).toBe('●');
+    expect(dot!.tagName.toLowerCase()).toBe('span');
   });
 });

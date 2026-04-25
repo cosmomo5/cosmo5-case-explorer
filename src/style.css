@@ -1646,7 +1646,17 @@ header.wordmark-corner,
 
 .entry-cta-dot {
   display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
+  flex-shrink: 0;
   animation: entry-dot-pulse 1.8s ease-in-out infinite;
+}
+
+.entry-cta-arrow {
+  color: rgba(255,255,255,0.4);
 }
 
 @keyframes entry-dot-pulse {
@@ -1667,14 +1677,21 @@ header.wordmark-corner,
 
 .entry-telemetry {
   position: fixed;
-  bottom: 28px;
-  left: 28px;
+  bottom: 32px;
+  right: 32px;
+  text-align: right;
   font-family: 'DM Mono', monospace;
   font-size: clamp(8px, 0.55vw, 11px);
   letter-spacing: 0.14em;
   opacity: 0.32;
   color: rgba(255,255,255,1);
+  line-height: 1.8;
   z-index: 101;
+}
+
+.entry-telemetry .et-accent {
+  color: var(--teal);
+  opacity: 1;
 }
 
 /* During Entry state the scene-container is visible (globe spins on the right).

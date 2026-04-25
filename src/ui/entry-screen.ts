@@ -24,7 +24,7 @@ export function mountEntryScreen(
     <div class="entry-hero">
       <p class="entry-eyebrow">— COSMO5 / OBSERVATORY / 2026.04</p>
       <h1 class="entry-headline">
-        A cosmos of <em>proof</em>,<br>
+        A cosmos<br>of <em>proof</em>,<br>
         <span class="entry-headline-secondary">observed.</span>
       </h1>
       <p class="entry-body">
@@ -32,12 +32,15 @@ export function mountEntryScreen(
         Navigate by gravity. Read by instrument.
       </p>
       <button class="entry-cta" type="button">
-        <span class="entry-cta-dot">●</span>
-        ENTER OBSERVATORY →
+        <span class="entry-cta-dot"></span>
+        ENTER OBSERVATORY
+        <span class="entry-cta-arrow">→</span>
       </button>
     </div>
     <div class="entry-telemetry">
-      116 cases · 13 markets · 7 verticals · 2014 — 2025
+      <div><span class="et-accent">116</span> cases</div>
+      <div><span class="et-accent">13</span> markets · <span class="et-accent">7</span> verticals</div>
+      <div>2014 — 2025</div>
     </div>
   `;
 
