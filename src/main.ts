@@ -24,7 +24,7 @@ import { mountReviewMode } from './ui/review-mode';
 import { LoaderController } from './ui/loader';
 import { ComparisonMode } from './scene/comparison-mode';
 import { createPlanet, PLANET_RADIUS } from './scene/planet';
-import { gatherStarsToPlanet } from './scene/planetary-gather';
+import { gatherStarsToPlanet, PLANET_SPIN_RATE } from './scene/planetary-gather';
 import { mountObservatoryHeader } from './ui/observatory-header';
 import { mountCalibrationOverture, type CalibrationOvertureHandle } from './ui/calibration-overture';
 import { mountEntryScreen } from './ui/entry-screen';
@@ -346,6 +346,13 @@ async function boot() {
       requestAnimationFrame(tick);
       controls.update(clock.getDelta()); // camera-controls requires delta
       tickOrbits(sceneObjects, t, camera);
+
+      // Entry Globe spin (ENTRY-01 spec: 0.6× continuous rotation).
+      // Uses rAF timestamp `t` (ms) for frame-rate independent rotation.
+      // Gated to planetary state so spin stops once ENTER_FIELD fires.
+      if (viewState.getState().kind === 'planetary') {
+        planetGroup.group.rotation.y = (t / 1000) * PLANET_SPIN_RATE;
+      }
 
       // Update cluster label positions every frame
       for (const [key, div] of sceneObjects.nucleusLabels.entries()) {
