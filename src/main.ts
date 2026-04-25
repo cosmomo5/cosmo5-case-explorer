@@ -753,21 +753,21 @@ async function boot() {
     // ensures the entry overlay is visible before the ViewStateMachine transitions.
     // Once viewState is no longer planetary, this handler is a no-op; second
     // gestures do nothing.
+    let entryScreenMounted = false;
     const commitPlanetary = (ev?: Event) => {
       if (viewState.getState().kind !== 'planetary') return;
+      if (entryScreenMounted) return; // guard: only mount once
       if (ev instanceof KeyboardEvent) {
         const tgt = ev.target as HTMLElement | null;
         const tag = tgt?.tagName?.toLowerCase();
         if (tag === 'input' || tag === 'textarea') return;
         if (ev.key === ' ') ev.preventDefault();
       }
+      entryScreenMounted = true;
       overtureHandle.cancel();
-      // ── Entry screen mounts only after overture completes ──────────────────
-      // ANTI-PATTERN GUARD: entry overlay must NOT be on-screen during calibration.
-      // Only reached here after overture signals completion (user clicked/keyed).
       mountEntryScreen(document.body, {
         onEnter: () => {
-          if (entryScreenDismissed) return; // guard against double-fire
+          if (entryScreenDismissed) return;
           entryScreenDismissed = true;
           viewState.dispatch({ type: 'ENTER_FIELD' });
         },

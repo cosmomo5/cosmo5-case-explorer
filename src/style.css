@@ -192,6 +192,7 @@ header.wordmark-corner {
 }
 .catalog-readout .cr-sep { color: rgba(255, 255, 255, 0.18); }
 body.constellation .catalog-readout { opacity: 0; }
+body:has(.entry-screen) .catalog-readout { opacity: 0 !important; }
 
 /* ── Breadcrumb (constellation mode) ── */
 .crumb{position:fixed;z-index:10;left:50%;top:84px;transform:translateX(-50%);
@@ -1667,7 +1668,7 @@ header.wordmark-corner,
 .entry-telemetry {
   position: fixed;
   bottom: 28px;
-  right: 28px;
+  left: 28px;
   font-family: 'DM Mono', monospace;
   font-size: clamp(8px, 0.55vw, 11px);
   letter-spacing: 0.14em;
