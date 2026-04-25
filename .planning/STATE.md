@@ -2,10 +2,8 @@
 gsd_state_version: 1.0
 milestone: v3.4
 milestone_name: Dimensional Navigation
-status: v3.4-bootstrap-complete
-stopped_at: "v3.3 closed 5/12 + 20.1. Phase 20.1 (cluster-label click wiring) shipped 2026-04-25: commit 98b63ce on draft. 304/304 tests. v3.4 MILESTONE-v3.4.md written. Next: /gsd-discuss-phase 1 (Inquiry Sentence component)."
+status: phase-1-context-complete
 last_updated: "2026-04-25T00:00:00.000Z"
-last_activity: 2026-04-25
 progress:
   total_phases: 13
   completed_phases: 0
@@ -32,11 +30,12 @@ See: `.planning/PROJECT.md`, `.planning/MILESTONE-v3.4.md` (current), `.planning
 **Phase:** None started — bootstrap complete, Phase 1 next.
 **Branch:** `draft` — all work continues here.
 
-Next action: `/gsd-discuss-phase 1` (Inquiry Sentence component — `src/ui/inquiry-sentence.ts` greenfield)
+Next action: `/gsd-plan-phase 1` (Entry screen — replan after context captured 2026-04-25)
 
 ## v3.3 Closure Record
 
 v3.3 closed 2026-04-25 with 5/12 phases shipped + decimal hotfix 20.1:
+
 - Phase 16: planetary overture ✓
 - Phase 17: star labels always-on ✓
 - Phase 18: unified left column ✓
@@ -46,6 +45,7 @@ v3.3 closed 2026-04-25 with 5/12 phases shipped + decimal hotfix 20.1:
 - Phases 21–27: superseded by v3.4 redesign
 
 The v3.4 handoff supersedes all remaining v3.3 phases. Key open items from v3.3 carried into v3.4 scope:
+
 - Phase 21 width token (340→380) → absorbed into v3.4 Phase 9 reading-panel treatment
 - Phase 22 focus-hint cleanup → may fold into v3.4 Phase 10 entry reframe
 - Phases 24/25/26 token/font/removal audits → v3.4 Phase 12 (Kimi)
@@ -64,16 +64,23 @@ The v3.4 handoff supersedes all remaining v3.3 phases. Key open items from v3.3 
 
 ## Session Continuity
 
-Last session: 2026-04-25 — bridge session.
+Last session: 2026-04-25 — Phase 1 discuss-phase complete.
 
 **What happened:**
-1. Phase 20.1 hotfix implemented and committed (98b63ce): wired `.cl` cluster-label click → `enterFocus` via `ClusterLabelHandlers` interface. 3 integration tests added. 304/304 tests. Build clean.
-2. v3.3 formally closed (5/12 + 20.1).
-3. MILESTONE-v3.4.md written at `.planning/MILESTONE-v3.4.md`.
-4. STATE.md updated to v3.4 context.
-5. Project card updated.
+
+1. Phase 1 scope redirected: inquiry sentence dropped from v3.4 entirely. Phase 1 = Entry screen.
+2. Key decisions captured in `.planning/phases/01-foundation/01-CONTEXT.md`:
+   - D-02: Inquiry sentence dropped from v3.4 entirely (cases orbit invisible center point in State 1)
+   - D-03: Reframe `planetary-gather.ts` as Entry Globe (do not rebuild)
+   - D-04: Entry always shows on every session load (no skip-for-returning-users)
+   - D-05: Handoff copy is final (headline, body, CTA, telemetry plate)
+   - D-06: CTA click → ENTER_FIELD dispatch → 200ms fade to black → State 1 600ms ease-in
+   - D-07: State 1 boots to free float (all 116 cases drift freely, no orbital structure)
+3. Pre-existing 01-01/01-02/01-03 plans are stale — replan required.
 
 **Resume path:**
+
 1. Read this block.
-2. Read `.planning/MILESTONE-v3.4.md` for the v3.4 phase table and critical files inventory.
-3. Run `/gsd-discuss-phase 1` — Inquiry Sentence component.
+2. Read `.planning/MILESTONE-v3.4.md` for the v3.4 phase table.
+3. Read `.planning/phases/01-foundation/01-CONTEXT.md` for locked decisions.
+4. Run `/gsd-plan-phase 1` to replan Phase 1 as Entry screen.
