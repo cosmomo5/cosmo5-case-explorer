@@ -2,9 +2,10 @@
 phase: 1
 slug: foundation
 status: draft
-nyquist_compliant: false
+nyquist_compliant: true
 wave_0_complete: false
-created: 2026-04-13
+created: 2026-04-25
+supersedes: 2026-04-13 version (stale FND-01..FND-06 data-layer scope; Phase 1 redirected to Entry screen per D-01 in 01-CONTEXT.md)
 ---
 
 # Phase 1 — Validation Strategy
@@ -18,7 +19,7 @@ created: 2026-04-13
 | Property | Value |
 |----------|-------|
 | **Framework** | Vitest 2.x |
-| **Config file** | `vite.config.ts` (test.environment: 'node') |
+| **Config file** | `vite.config.ts` (test.environment: 'happy-dom' for DOM tests) |
 | **Quick run command** | `npx vitest run` |
 | **Full suite command** | `npx vitest run` |
 | **Estimated runtime** | ~3 seconds |
@@ -29,33 +30,36 @@ created: 2026-04-13
 
 - **After every task commit:** Run `npx vitest run`
 - **After every plan wave:** Run `npx vitest run`
-- **Before `/gsd:verify-work`:** Full suite must be green
+- **Before `/gsd-verify-work`:** Full suite must be green
 - **Max feedback latency:** 5 seconds
 
 ---
 
 ## Per-Task Verification Map
 
-| Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
-|---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 01-01 | 01 | 1 | FND-01 | unit | `npx vitest run src/data/view-state.test.ts` | ❌ W0 | ⬜ pending |
-| 01-02 | 01 | 1 | FND-02, FND-03 | unit | `npx vitest run src/data/shortlist-store.test.ts` | ❌ W0 | ⬜ pending |
-| 01-03 | 01 | 1 | FND-04 | unit | `npx vitest run src/data/proof-type.test.ts` | ❌ W0 | ⬜ pending |
-| 01-04 | 01 | 1 | FND-05 | unit | `npx vitest run src/data/impact-scale.test.ts` | ❌ W0 | ⬜ pending |
-| 01-05 | 01 | 1 | FND-06 | unit | `npx vitest run src/data/star-state.test.ts` | ❌ W0 | ⬜ pending |
-| 01-06 | 02 | 2 | FND-01 | unit | `npx vitest run src/data/view-state.test.ts` | ❌ W0 | ⬜ pending |
+| Task | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
+|------|------|------|-------------|-----------|-------------------|-------------|--------|
+| entry-screen module | 01-01 | 1 | ENTRY-02, ENTRY-06, ENTRY-08, ENTRY-10 | unit (DOM) | `npx vitest run src/ui/entry-screen.test.ts` | ❌ W0 | ⬜ pending |
+| entry-screen tests | 01-01 | 1 | ENTRY-02, ENTRY-06, ENTRY-08, ENTRY-10 | unit (DOM) | `npx vitest run src/ui/entry-screen.test.ts` | ❌ W0 | ⬜ pending |
+| Entry CSS | 01-02 | 1 | ENTRY-03, ENTRY-04, ENTRY-05, ENTRY-07, ENTRY-12 | visual (manual) | `npx vitest run` (full suite) | n/a | ⬜ pending |
+| main.ts wiring | 01-03 | 2 | ENTRY-01, ENTRY-08, ENTRY-09 | integration + visual | `npx vitest run` + browser UAT | n/a | ⬜ pending |
+| Visual UAT checkpoint | 01-04 | 3 | ENTRY-01..ENTRY-12 (ex. ENTRY-11) | manual visual | Browser: `npm run dev` | n/a | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+
+*ENTRY-11 (ViewStateMachine 'entry' screen state) is deferred to Phase 2 per RESEARCH.md scope decision.*
 
 ---
 
 ## Wave 0 Requirements
 
-- [ ] `src/data/view-state.test.ts` — stubs for FND-01
-- [ ] `src/data/shortlist-store.test.ts` — stubs for FND-02, FND-03
-- [ ] `src/data/proof-type.test.ts` — stubs for FND-04
-- [ ] `src/data/impact-scale.test.ts` — stubs for FND-05
-- [ ] `src/data/star-state.test.ts` — stubs for FND-06
+- [ ] `src/ui/entry-screen.test.ts` — created by Plan 01-01 Task 2. Covers ENTRY-02, ENTRY-06, ENTRY-08, ENTRY-10.
+  - Test 1: `mountEntryScreen` appends `.entry-screen` div to parent
+  - Test 2: CTA button exists with text `ENTER OBSERVATORY →`
+  - Test 3: CTA click adds `entry-screen--exiting` class immediately
+  - Test 4: CTA click calls `onEnter` callback after 200ms
+  - Test 5: No localStorage read on mount (ENTRY-10)
+  - Test 6: Root container has no background color (transparent overlay)
 
 *Existing tests (`filter.test.ts`, `grouping.test.ts`, orbital `*.test.ts`) continue passing unmodified.*
 
@@ -65,17 +69,22 @@ created: 2026-04-13
 
 | Behavior | Requirement | Why Manual | Test Instructions |
 |----------|-------------|------------|-------------------|
-| Enriched cases propagate through buildOrbitalScene | FND-04, FND-05 | Integration with Three.js boot | Start dev server, verify no errors in console |
+| Entry globe visible on right half | ENTRY-01, ENTRY-12 | Three.js canvas rendering | Open browser, confirm globe spins right of editorial |
+| Headline typography (Fraunces italic "proof" in gold) | ENTRY-04 | Font rendering | Visual inspection in browser |
+| Pulsing dot animation | ENTRY-06 | CSS keyframe | Observe CTA dot in browser |
+| 200ms fade + 600ms State 1 reveal timing | ENTRY-08 | Animation timing | Click CTA, observe transition |
+| State 1 free-float (116 cases drifting) | ENTRY-09 | Three.js scene | Inspect scene after CTA click |
+| Calibration overture → Entry screen sequence | ENTRY-02 | Boot sequence timing | Fresh page load, observe overture then entry |
 
 ---
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 5s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 test stub (01-01 Task 2 creates the stub)
+- [x] Sampling continuity: wave 0 test + per-task verify commands present
+- [x] Wave 0 covers all DOM-testable requirements
+- [x] No watch-mode flags
+- [x] Feedback latency < 5s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** pending execution
