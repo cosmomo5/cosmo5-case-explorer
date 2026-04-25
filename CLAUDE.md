@@ -64,6 +64,35 @@ Start-ScheduledTask -TaskName 'PlaywrightChromeCDP'                          # r
 
 The authoritative design document is `docs/superpowers/specs/2026-04-13-dimensional-explorer-design.md`. It supersedes sections 3, 5, 6 of the prior spec (`2026-04-12-gravitational-spheres-design.md`). When in doubt, the 04-13 spec wins.
 
+## Design Handoff Is the Acceptance Criterion
+
+The v3.4 design handoff at `~/Desktop/Case Study Explorer - design_handoff/` (mirror at `~/Downloads/Case Study Explorer.html`) is the **acceptance criterion for every phase in this milestone**, not a loose reference. A phase is not "done" until what's in the browser matches the corresponding handoff screen.
+
+**Files:**
+- `README.md` — narrative spec: layouts, copy, typography, interaction model, design philosophy
+- `Case Study Explorer.html` — interactive prototype showing every state with real animations
+- `source/screens-entry.jsx` — Entry state (`EntryQuiet` is canonical for v3.4)
+- `source/screens-gather.jsx` — State 1 unorganized (filtering / gather)
+- `source/screens-organize.jsx` — State 1 organized (planets around inquiry)
+- `source/screens-state3.jsx` — State 2 constellation focus
+- `source/scene-primitives.jsx` — `Globe`, `Starfield`, `Nebula`, planet, ring components
+
+**Before planning a phase:** read the handoff section that corresponds to the phase's scope. Plans must explicitly trace each visible element (layout, typography, copy, animation, telemetry, chrome) to its handoff source. If the handoff specifies something the plan doesn't cover, the plan is incomplete — do not start execution.
+
+**Before claiming a phase is done:** open the matching handoff screen alongside the running app. Reach parity on:
+1. Layout (positions, sizes, proportions of every named element)
+2. Typography (family, weight, size, letter-spacing, line-height, color)
+3. Copy (exact strings — eyebrows, headlines, body, CTAs, telemetry)
+4. Chrome density (what's visible vs hidden in this state — `density='minimal'`, `catalog={false}`, etc.)
+5. Composition (which elements coexist on screen — Entry has globe-right + editorial-left + telemetry-right; nothing else)
+6. Animations (timing, easing, what fades vs slides vs spins)
+
+If parity isn't reached, the phase is in `gaps_found` or `human_needed` state, not `passed`. Plan-scope omissions count as gaps — Phase 1's editorial overlay shipped correctly but missed the Entry-state Globe composition; that's a real gap, not a Phase 2 problem.
+
+**Where handoff and existing repo conflict:** the handoff README explicitly says defer to the repo's reality and ask. Don't silently re-skin around the conflict — surface it, get a decision, then execute.
+
+**The aesthetic premise the handoff carries:** *a cosmos of proof, observed* — analog observatory, instrument calibration, gravity as the organizing metaphor. Every screen should feel like arriving at an observatory, not landing on a SaaS homepage. If a build choice trades that feeling for convenience, flag it.
+
 ## Design Register
 
 The visual register is analog-era precision — observatory instruments, not SaaS dashboards. Three references:
