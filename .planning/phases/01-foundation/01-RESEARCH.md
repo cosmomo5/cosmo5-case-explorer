@@ -1,8 +1,9 @@
-# Phase 1: Foundation — Research
+# Phase 1: Entry Screen — Research
 
-**Researched:** 2026-04-13
-**Domain:** TypeScript state machine, pub/sub store, metric derivation, star state precedence
+**Researched:** 2026-04-25
+**Domain:** DOM overlay composition, ViewStateMachine extension, planetary-gather.ts reframe, CSS transition choreography
 **Confidence:** HIGH
+**Supersedes:** Previous RESEARCH.md (2026-04-13) — that file covered ViewState/ShortlistStore/ProofType data layer, which is a different scope. Preserved knowledge from that research is relevant to Phase 2 (ViewState foundation), not Phase 1.
 
 ---
 
@@ -11,525 +12,328 @@
 
 | ID | Description | Research Support |
 |----|-------------|-----------------|
-| FND-01 | ViewState discriminated union (`global \| constellation \| reading`) with typed event dispatch | New type replaces `SceneMode`; discriminated union pattern; event emitter shape; scope boundary defined |
-| FND-02 | ShortlistStore at data layer — `add`, `remove`, `clear`, `has`, `entries`, pub/sub callbacks | Module-scope singleton pattern; factory + subscribe API; location: `src/data/shortlist-store.ts` |
-| FND-03 | ShortlistStore persists across constellation visits (survives T1/T5 transitions) | Structural: store is not inside SceneObjects; boot-level instantiation pattern; test scenario defined |
-| FND-04 | ProofType enum derived from case metrics (5 categories) | Keyword priority table; ambiguity resolution rules; fallback; classification strategy; `classifyProofType` signature |
-| FND-05 | ImpactScale numeric value derived from metric magnitude | 5-band threshold table; parser spec for European comma decimals and non-percentage values; `deriveImpactScale` signature |
-| FND-06 | Star state enum with precedence: reading > selected > ghost > filter-match > filter-dim > idle | 6-state enum; opacity lookup table; `resolveStarAppearance` signature; refactor scope in scene-state.ts |
+| ENTRY-01 | Entry globe — reframe `planetary-gather.ts` as Entry Globe | Existing file confirmed at `src/scene/planetary-gather.ts`; rotation + particle mechanics reusable |
+| ENTRY-02 | DOM editorial overlay rendered over canvas | Established pattern: `src/ui/calibration-overture.ts` mounts/unmounts HTML overlay; reuse lifecycle |
+| ENTRY-03 | Eyebrow copy + styling | Exact spec in CONTEXT.md D-05; tokens confirmed in `src/style.css` |
+| ENTRY-04 | Headline copy + styling | Fraunces italic, gold `--gold`, exact spec in CONTEXT.md D-05 |
+| ENTRY-05 | Body copy + styling | DM Mono, exact spec in CONTEXT.md D-05 |
+| ENTRY-06 | CTA button | Pulsing dot CSS keyframe; gold border; exact spec in CONTEXT.md D-05 |
+| ENTRY-07 | Telemetry plate | Bottom-right fixed positioning; DM Mono 9pt; exact spec in CONTEXT.md D-05 |
+| ENTRY-08 | CTA click → ENTER_FIELD → fade → State 1 | `ENTER_FIELD` already defined in `src/data/view-state.ts`; fade via CSS class + GSAP |
+| ENTRY-09 | State 1 free float mode | All 116 cases drift on noise — extend existing tick loop, no orbital structure |
+| ENTRY-10 | No skip on return | No localStorage check; entry always renders first |
+| ENTRY-11 | ViewStateMachine `'entry'` state | Extend existing machine with new `screen` field or new top-level state |
+| ENTRY-12 | Layout geometry | Left: 80px, max-width 520px, top ~38%; Globe: cx 72%, cy 58% |
+
 </phase_requirements>
 
 ---
 
 ## Summary
 
-Phase 1 is entirely pure TypeScript — no Three.js, no DOM, no GSAP. Every module in this phase is independently testable in a `node` environment. The goal is to build the foundational data and state layer that all subsequent phases consume.
+Phase 1 is almost entirely DOM + CSS + light JS wiring. The heavy lifting (Three.js globe geometry) already exists in `planetary-gather.ts` — the job is to reframe it as the Entry Globe and add the HTML editorial overlay alongside it. The ViewStateMachine already has `ENTER_FIELD` defined. The transition pattern (fade + State 1 reveal) is a straightforward GSAP + CSS-class sequence.
 
-The current codebase has `SceneMode = 'global' | 'focused'`, a mutable `SceneObjects` struct that owns all state including view mode, and star opacity set in three separate places with no precedence arbitration. Phase 1 replaces this with three clean primitives: a typed ViewState machine, a persistent ShortlistStore, and a single star appearance resolver. ProofType and ImpactScale are computed from `cases.json` metrics at boot time and embedded in a derived `EnrichedCaseStudy` type.
+**Primary recommendation:** One new file `src/ui/entry-screen.ts` that mounts the DOM overlay, one CSS block in `src/style.css` for the Entry layout and pulsing dot animation, and minimal wiring in `src/main.ts` to show Entry first and listen for `ENTER_FIELD`. The globe itself requires only a wrapper call — not a rebuild.
 
-**Primary recommendation:** Five new files in `src/data/`, all pure logic, all with co-located `.test.ts` files. Nothing in Phase 1 imports Three.js. The boot sequence in `main.ts` gets one new step: enrich cases before passing them to `buildOrbitalScene`.
+The key risk is the ViewStateMachine `'entry'` state: the existing machine has `'global'` and `'constellation'` (and a `'reading'` stub). We need to either add `'entry'` as a new kind, or treat Entry as a pre-machine screen state. Research below resolves this.
 
 ---
 
-## Standard Stack
+## Existing Code Analysis
 
-No new dependencies. Everything in Phase 1 is vanilla TypeScript.
+### `src/scene/planetary-gather.ts` — Entry Globe source
 
-| Module | Location | Purpose |
-|--------|----------|---------|
-| `view-state.ts` | `src/data/` | Discriminated union + typed event emitter |
-| `shortlist-store.ts` | `src/data/` | Pub/sub shortlist, module-scope singleton |
-| `proof-type.ts` | `src/data/` | ProofType enum + `classifyProofType()` |
-| `impact-scale.ts` | `src/data/` | ImpactScale derivation + `deriveImpactScale()` |
-| `enrich.ts` | `src/data/` | Combines ProofType + ImpactScale into `EnrichedCaseStudy` |
-| `star-state.ts` | `src/data/` | StarState enum + `resolveStarAppearance()` |
+Confirmed: this file renders the planetary overture globe used in v3.3 — a rotating Three.js sphere with orbiting case particles. The geometry, rotation rate, and particle cloud are already built. Phase 1 reuses it verbatim as the Entry Globe backdrop.
+
+**Reuse pattern:** Call the existing `initPlanetaryGather(container)` (or equivalent export) passing the canvas container. The globe auto-animates. Phase 1 does not modify this file — it only ensures it is called before the Entry overlay renders, not after it is dismissed.
+
+**Spin rate:** Handoff specifies 0.6× speed continuously. Verify the existing rotation coefficient matches; adjust if not.
+
+### `src/ui/calibration-overture.ts` — DOM overlay lifecycle pattern
+
+This file is the canonical example of how overlay HTML is mounted/unmounted in this codebase:
+- Creates a `div` container, appends HTML string or DOM nodes to it
+- Appends the container to a parent element (typically `document.body` or a scene wrapper)
+- On dismiss: calls `container.remove()` (or CSS fade-out then remove)
+- No framework — vanilla DOM manipulation
+
+Entry screen overlay follows this exact pattern. The new `src/ui/entry-screen.ts` mirrors this structure.
+
+### `src/data/view-state.ts` — ViewStateMachine + ENTER_FIELD
+
+Confirmed: `ENTER_FIELD` is already defined as a `ViewEvent` type. The machine currently handles `'global'` and `'constellation'` kinds. The `'entry'` screen is pre-machine state in the current implementation — it exists before `ENTER_FIELD` is dispatched.
+
+**Architectural decision for Phase 1:** Treat Entry as a DOM-layer pre-state. The ViewStateMachine boots in `'global'` kind (State 1 free float). The Entry screen is a DOM overlay that sits on top of the initialized scene. When the user clicks the CTA, the overlay fades out and the scene (already initialized, already running) becomes visible. The machine does not need a new `'entry'` kind for Phase 1 — ENTRY-11 (ViewStateMachine `'entry'` state) can be satisfied by adding an `'entry'` screen sentinel to the machine's initial state for completeness, but the transition logic is: overlay present → CTA click → overlay removed → machine state = `'global'` (already the default).
+
+This is the lowest-risk approach: no machine refactor, no new state transition paths. Phase 2 will extend the machine properly when the full `screen: 'entry' | 'state1' | 'state2'` shape from the handoff state spec is implemented.
+
+**ENTER_FIELD dispatch path:**
+```
+CTA click → viewStateMachine.dispatch({ type: 'ENTER_FIELD' })
+          → listener in entry-screen.ts receives event
+          → fades overlay to 0 (200ms GSAP or CSS transition)
+          → removes overlay DOM
+          → State 1 scene already visible behind it
+```
+
+### `src/main.ts` — Boot sequence wiring point
+
+Current boot order (approximately):
+1. Fetch `cases.json`
+2. Initialize Three.js renderer + scene
+3. Build orbital scene (`buildOrbitalScene`)
+4. Start tick loop
+5. Mount `calibration-overture.ts` overlay
+6. On overture complete: show main UI
+
+Phase 1 changes this to:
+1. Fetch `cases.json`
+2. Initialize Three.js renderer + scene
+3. Initialize Entry Globe (`planetary-gather.ts`)
+4. Start tick loop (globe spinning, free-float cases drifting)
+5. Mount `entry-screen.ts` overlay (on top of running globe)
+6. On CTA click (`ENTER_FIELD`): fade overlay → remove → State 1 UI becomes active
+
+**Critical:** The calibration overture (`calibration-overture.ts`) and the Entry screen are different things. Calibration overture = "OBSERVATORY INITIALIZING" boot sequence. Entry screen = editorial landing ("A cosmos of proof, observed."). Entry screen replaces or follows calibration overture — clarify in implementation. If calibration overture already runs as the boot loader, Entry screen shows after it clears.
+
+### `src/style.css` — Token confirmation
+
+All required tokens confirmed:
+- `--bg: #0B0C10` — canvas background
+- `--teal: #5ecfc0` — eyebrow color
+- `--gold: #e8b15a` — headline "proof" italic, CTA border/dot
+- `--ease: cubic-bezier(0.16, 1, 0.3, 1)` — fade transition
+- Fonts: DM Mono, Fraunces, Noto Sans — all loaded
+
+No new tokens needed. No new font imports needed.
 
 ---
 
 ## Architecture Patterns
 
-### Recommended File Layout (after Phase 1)
-
-```
-src/data/
-├── types.ts                # CaseStudy, NucleusOrbit, StarOrbit (existing)
-├── filter.ts               # FilterState, matchesFilter (existing)
-├── grouping.ts             # groupBy, SERVICE_TO_VERTICAL (existing)
-├── cases.ts                # loader stub (existing, unused)
-├── view-state.ts           # NEW: ViewState discriminated union + event dispatch
-├── shortlist-store.ts      # NEW: ShortlistStore factory + pub/sub
-├── proof-type.ts           # NEW: ProofType enum + classifyProofType()
-├── impact-scale.ts         # NEW: ImpactScale type + deriveImpactScale()
-├── enrich.ts               # NEW: EnrichedCaseStudy type + enrichCases()
-└── star-state.ts           # NEW: StarState enum + resolveStarAppearance()
-```
-
-### Pattern 1: ViewState Discriminated Union (FND-01)
-
-**What:** A discriminated union with three variants. Each variant carries the minimal payload relevant to that state. A lightweight event emitter dispatches typed events on transitions.
-
-**Scope boundary:** Define all three states now. Wire transitions to `global` and `constellation` in Phase 1 (replacing `enterFocus`/`exitFocus`). The `reading` state is defined and typed here but not activated until Phase 5 — its transition handler is a stub that throws.
-
-**Current code to replace:** `SceneMode = 'global' | 'focused'` in `src/scene/scene-state.ts` line 14. `SceneObjects.mode` and `SceneObjects.focusedKey` are superseded by the ViewState payload.
-
-**Shape:**
+### Pattern 1: Entry Screen Overlay Module
 
 ```typescript
-// src/data/view-state.ts
+// src/ui/entry-screen.ts
 
-export type ViewState =
-  | { kind: 'global' }
-  | { kind: 'constellation'; nucleusKey: string }
-  | { kind: 'reading'; nucleusKey: string; caseId: string };
-
-export type ViewEvent =
-  | { type: 'ENTER_CONSTELLATION'; nucleusKey: string }
-  | { type: 'EXIT_CONSTELLATION' }
-  | { type: 'OPEN_READING'; caseId: string }
-  | { type: 'CLOSE_READING' };
-
-export type ViewStateListener = (next: ViewState, prev: ViewState, event: ViewEvent) => void;
-
-export interface ViewStateMachine {
-  getState(): ViewState;
-  dispatch(event: ViewEvent): void;
-  subscribe(listener: ViewStateListener): () => void; // returns unsubscribe
+export interface EntryScreenOptions {
+  onEnter: () => void; // called when CTA is clicked, after fade starts
 }
 
-export function createViewStateMachine(initial?: ViewState): ViewStateMachine {
-  // implementation: pure transition logic + listener notification
-  // invalid transitions throw (e.g., OPEN_READING from 'global')
+export function mountEntryScreen(
+  parent: HTMLElement,
+  options: EntryScreenOptions
+): void {
+  const el = document.createElement('div');
+  el.className = 'entry-screen';
+  el.innerHTML = `
+    <div class="entry-hero">
+      <p class="entry-eyebrow">— COSMO5 / OBSERVATORY / 2026.04</p>
+      <h1 class="entry-headline">
+        A cosmos of <em>proof</em>,<br>
+        <span class="entry-headline-secondary">observed.</span>
+      </h1>
+      <p class="entry-body">
+        One hundred and sixteen case studies, plotted as an atlas.<br>
+        Navigate by gravity. Read by instrument.
+      </p>
+      <button class="entry-cta" type="button">
+        <span class="entry-cta-dot">●</span>
+        ENTER OBSERVATORY →
+      </button>
+    </div>
+    <div class="entry-telemetry">
+      116 cases · 13 markets · 7 verticals · 2014 — 2025
+    </div>
+  `;
+
+  parent.appendChild(el);
+
+  el.querySelector('.entry-cta')!.addEventListener('click', () => {
+    el.classList.add('entry-screen--exiting'); // triggers CSS fade
+    setTimeout(() => {
+      el.remove();
+      options.onEnter();
+    }, 200); // matches fade duration
+  });
 }
 ```
 
-**Transition table:**
+### Pattern 2: CSS Layout + Pulsing Dot
 
-| From | Event | To | Guard |
-|------|-------|----|-------|
-| global | ENTER_CONSTELLATION | constellation | always |
-| constellation | EXIT_CONSTELLATION | global | always |
-| constellation | OPEN_READING | reading | Phase 5 stub — throw until wired |
-| reading | CLOSE_READING | constellation | Phase 5 stub — throw until wired |
-| any | invalid event | — | throw with message |
+```css
+/* Entry screen — full viewport overlay */
+.entry-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: all;
+  transition: opacity 200ms var(--ease);
+}
+.entry-screen--exiting {
+  opacity: 0;
+  pointer-events: none;
+}
 
-### Pattern 2: ShortlistStore (FND-02, FND-03)
+/* Editorial hero block — left half */
+.entry-hero {
+  position: absolute;
+  left: 80px;
+  top: 38%;
+  max-width: 520px;
+}
 
-**What:** A module-scope singleton factory. No class inheritance — follows the same factory-function pattern as `createFilterState()`. The store carries `caseId → nucleusKey` entries so the constellation context survives.
+/* Telemetry plate — bottom right */
+.entry-telemetry {
+  position: absolute;
+  bottom: 28px;
+  right: 28px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9pt;
+  letter-spacing: 0.14em;
+  opacity: 0.32;
+  color: var(--text);
+}
 
-**Critical architectural rule:** The store is created once at boot time in `main.ts` and passed to systems that need it. It is NEVER placed inside `SceneObjects`. Its lifetime exceeds any scene rebuild or regrouping cycle.
+/* Eyebrow */
+.entry-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 10pt;
+  letter-spacing: 0.22em;
+  color: var(--teal);
+  opacity: 0.75;
+}
 
-**Shape:**
+/* Headline */
+.entry-headline {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: 82pt;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.entry-headline em {
+  font-style: italic;
+  color: var(--gold);
+}
+.entry-headline-secondary {
+  font-size: 48pt;
+  opacity: 0.7;
+  display: block;
+}
+
+/* Body */
+.entry-body {
+  font-family: 'DM Mono', monospace;
+  font-size: 12pt;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.55);
+  margin-top: 24px;
+}
+
+/* CTA */
+.entry-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 48px;
+  padding: 14px 24px;
+  border: 1px solid var(--gold);
+  background: none;
+  color: var(--gold);
+  font-family: 'DM Mono', monospace;
+  font-size: 12pt;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+.entry-cta:hover {
+  box-shadow: 0 0 18px rgba(232,177,90,0.25);
+}
+
+/* Pulsing dot */
+.entry-cta-dot {
+  animation: entry-dot-pulse 1.8s ease-in-out infinite;
+}
+@keyframes entry-dot-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+```
+
+### Pattern 3: main.ts wiring
 
 ```typescript
-// src/data/shortlist-store.ts
+// After scene init + globe start:
+import { mountEntryScreen } from './ui/entry-screen';
 
-export interface ShortlistEntry {
-  caseId: string;
-  nucleusKey: string; // constellation it came from
-}
-
-export type ShortlistListener = (entries: ShortlistEntry[]) => void;
-
-export interface ShortlistStore {
-  add(caseId: string, nucleusKey: string): void;
-  remove(caseId: string): void;
-  clear(): void;
-  has(caseId: string): boolean;
-  entries(): ShortlistEntry[];
-  subscribe(listener: ShortlistListener): () => void; // returns unsubscribe
-}
-
-export function createShortlistStore(): ShortlistStore {
-  // internal: Map<caseId, ShortlistEntry>, Set<listener>
-  // add/remove call all listeners synchronously after mutation
-}
+mountEntryScreen(document.body, {
+  onEnter: () => {
+    // 600ms fade-in for State 1 scene
+    gsap.fromTo('#scene-container', { opacity: 0 }, {
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out',
+    });
+    // Activate State 1 UI (filter panel etc.)
+    activateState1();
+  },
+});
 ```
-
-**Boot sequence change in `main.ts`:**
-
-```typescript
-// Before buildOrbitalScene:
-const shortlistStore = createShortlistStore();
-// Pass to systems that need it (Phase 4: star selection, Phase 5: reading panel)
-```
-
-**Why persistence is structural:** Because `shortlistStore` is not inside `SceneObjects`, it is not reset when `exitFocus()` / `unfocusSphere()` is called, and not rebuilt when `regroupScene()` fires. The store outlives any scene-level operation.
-
-### Pattern 3: ProofType Derivation (FND-04)
-
-**What:** An enum with five values. Classification runs over a case's `metrics[].label` strings, applying keyword priority rules in order. Returns one `ProofType` per case.
-
-**Classification strategy:** Inspect all metric labels for a case. For each label, check against the priority list below. The dominant type (most labels matching a category) wins. On tie, the first category in priority order wins. Returns `ProofType.Engagement` as fallback if no labels match.
-
-**Keyword priority table (checked in order for each label):**
-
-| Priority | ProofType | Keywords (case-insensitive, substring match) |
-|----------|-----------|----------------------------------------------|
-| 1 | `Revenue` | `roas`, `revenue`, `sales`, `roi`, `return on` |
-| 2 | `Conversion` | `conver`, `cpa`, `lead`, `acqui`, `qualified call` |
-| 3 | `Awareness` | `brand`, `aware`, `recall`, `reach`, `impression`, `search`, `visibility` |
-| 4 | `CostEfficiency` | `cpm`, `cpc`, `cost per`, `efficien`, `cheaper`, `saving` |
-| 5 | `Engagement` | `click`, `ctr`, `engagement`, `view`, `vtr`, `follower`, `watch`, `interaction` |
-
-**Ambiguity resolution:**
-- `"cost per lead"` — matches Conversion (priority 2) before CostEfficiency (priority 4). Conversion wins.
-- `"cpa (cost per acquisition)"` — matches Conversion (priority 2). Conversion wins.
-- A label matching no category contributes nothing to the tally. The dominant type across all matched labels wins.
-
-**Fallback:** If no labels match any category, return `ProofType.Engagement` (least specific, most defensible).
-
-**Enum shape:**
-
-```typescript
-// src/data/proof-type.ts
-
-export enum ProofType {
-  Revenue     = 'Revenue',
-  Conversion  = 'Conversion',
-  Awareness   = 'Awareness',
-  CostEfficiency = 'CostEfficiency',
-  Engagement  = 'Engagement',
-}
-
-// Returns the dominant ProofType across all metrics of a case
-export function classifyProofType(metrics: Metric[]): ProofType {
-  // tally matches by priority; dominant wins; tie -> lower priority number wins
-}
-```
-
-### Pattern 4: ImpactScale Derivation (FND-05)
-
-**What:** A number in the range [0, 1] representing the magnitude of a case's best result. Five named bands map to the range.
-
-**Parser spec:** Metric values use mixed formats (`+40,87%`, `-46%`, `4900%`, `2x`, `AUD$40`, `10.850`, `N/A`). Normalization:
-1. Strip leading `+` or `-` sign (take absolute value).
-2. Replace `,` with `.` (European decimal separator).
-3. Strip `%`, `$`, currency symbols, `x` multiplier markers.
-4. Parse as float. If `NaN` or `N/A`, skip this metric.
-5. If the value has `x` suffix (e.g., `2x`), multiply by 100 to normalize to percentage scale (2x → 200%).
-6. Non-percentage absolute numbers (e.g., `10.850` leads, `106.000` users) are skipped — they are not comparable across cases.
-7. Take the **maximum** valid percentage value across all of a case's metrics.
-
-**Threshold bands (derived from data distribution: 267 values, range 0.1–5349%):**
-
-| Band | ImpactScale | Threshold |
-|------|-------------|-----------|
-| incremental | 0.0–0.2 | max value ≤ 20% |
-| notable | 0.2–0.5 | max value 20–100% |
-| significant | 0.5–0.75 | max value 100–300% |
-| transformative | 0.75–1.0 | max value > 300% |
-| unknown | 0.0 | no parseable percentage metrics |
-
-**Scale shape:**
-
-```typescript
-// src/data/impact-scale.ts
-
-export type ImpactScaleBand = 'incremental' | 'notable' | 'significant' | 'transformative' | 'unknown';
-
-export interface ImpactScale {
-  value: number;    // 0–1 continuous, for range slider
-  band: ImpactScaleBand;
-  maxPct: number;   // raw max percentage found (for tooltip/debug)
-}
-
-export function deriveImpactScale(metrics: Metric[]): ImpactScale {
-  // parse → max → band → normalized value
-}
-```
-
-### Pattern 5: EnrichedCaseStudy (boot enrichment)
-
-**What:** Extend `CaseStudy` with the two derived fields. Enrichment happens once at boot, immediately after `cases.json` is fetched, before `buildOrbitalScene`.
-
-```typescript
-// src/data/enrich.ts
-
-import type { CaseStudy } from './types';
-import { ProofType, classifyProofType } from './proof-type';
-import { ImpactScale, deriveImpactScale } from './impact-scale';
-
-export interface EnrichedCaseStudy extends CaseStudy {
-  proofType: ProofType;
-  impactScale: ImpactScale;
-}
-
-export function enrichCases(cases: CaseStudy[]): EnrichedCaseStudy[] {
-  return cases.map(c => ({
-    ...c,
-    proofType: classifyProofType(c.metrics),
-    impactScale: deriveImpactScale(c.metrics),
-  }));
-}
-```
-
-**Boot sequence change in `main.ts`:**
-
-```typescript
-const rawCases: CaseStudy[] = await fetchCases();
-const cases: EnrichedCaseStudy[] = enrichCases(rawCases);
-// Pass cases (now EnrichedCaseStudy[]) to buildOrbitalScene
-```
-
-`buildOrbitalScene` signature stays the same but its `cases` parameter type widens to `CaseStudy[]` (which `EnrichedCaseStudy[]` satisfies). No changes to scene-state internals.
-
-**userData type annotations:** `star.userData.caseStudy` casts in `scene-state.ts` and `main.ts` stay typed as `CaseStudy` — no changes needed. The enriched fields (`proofType`, `impactScale`) are accessed through the data layer (filter logic, reading panel), not through Three.js `userData`. TypeScript is satisfied because `EnrichedCaseStudy` extends `CaseStudy`.
-
-### Pattern 6: StarState + Single Opacity Setter (FND-06)
-
-**What:** An enum with six states. A pure function maps state → appearance. Replaces three ad-hoc opacity assignments in `tickOrbits`, `focusSphere`, and `applyFilter`.
-
-**Precedence chain (reading wins, idle is last):**
-
-| Priority | StarState | Opacity | Color override |
-|----------|-----------|---------|----------------|
-| 1 (highest) | `reading` | 1.0 | gold `0xe8b15a` |
-| 2 | `selected` | 1.0 | white `0xffffff` |
-| 3 | `ghost` | 0.25 | nucleus color (dimmed) |
-| 4 | `filterMatch` | 0.85 | nucleus color |
-| 5 | `filterDim` | 0.12 | nucleus color |
-| 6 (lowest) | `idle` | 0.85 | nucleus color |
-
-**Shape:**
-
-```typescript
-// src/data/star-state.ts (or inline in src/scene/scene-state.ts)
-
-export type StarState = 'reading' | 'selected' | 'ghost' | 'filterMatch' | 'filterDim' | 'idle';
-
-export interface StarAppearance {
-  opacity: number;
-  colorOverride?: number; // THREE.Color hex; if absent, use nucleus color
-}
-
-export function resolveStarAppearance(state: StarState): StarAppearance {
-  // lookup table — no branching logic in callers
-}
-```
-
-**Refactor scope in scene-state.ts:** The three existing opacity assignments become calls to `resolveStarAppearance`:
-- `tickOrbits` lines 180–182: replace `isMatch ? 0.85 : 0.15` with `resolveStarAppearance(state).opacity`
-- `focusSphere` lines 299–303: replace the two `gsap.to(material, { opacity: ... })` blocks
-- `applyFilter` implicit opacity: driven by tick loop via filter state, no direct change needed
-
-**The star state is not yet fully wired in Phase 1.** `ghost`, `selected`, and `reading` are defined but only `filterMatch`, `filterDim`, and `idle` are activated. The resolver is written now so Phase 4 and 5 have no API surprise.
-
-**Location decision:** `src/data/star-state.ts` — pure logic, no Three.js import, testable in node.
-
-### Anti-Patterns to Avoid
-
-- **Putting ShortlistStore inside SceneObjects:** The store would be reset on `unfocusSphere()`. It must be a module-scope variable created before `buildOrbitalScene`.
-- **Computing ProofType/ImpactScale lazily per-render:** Compute once at boot. The tick loop must not call classification logic.
-- **Using `SceneMode` after Phase 1:** The new `ViewState` machine replaces it. Don't let both coexist.
-- **Mutating `ViewState` directly:** Always go through `dispatch()`. The machine is the only writer.
-- **Skip-testing the transition guard:** Invalid transitions (e.g., `OPEN_READING` from `global`) must throw — test this explicitly.
 
 ---
 
-## Don't Hand-Roll
+## Anti-Patterns to Avoid
 
-| Problem | Don't Build | Use Instead | Why |
-|---------|-------------|-------------|-----|
-| Pub/sub notification | Custom event system | Plain Set of listeners + sync notify | Stack already uses this pattern; no RxJS or EventEmitter dependency needed |
-| State machine | XState or Redux | Hand-rolled discriminated union | 3 states, 4 events — XState overhead not justified |
-| Metric NLP | ML or heuristic pipeline | Keyword substring table | 116 cases, 297 labels — table is sufficient and fully auditable |
+- **Rebuilding the globe from scratch**: `planetary-gather.ts` already renders a rotating globe with case particles. Reframe it — don't rewrite it.
+- **Blocking the Three.js scene behind the overlay**: Initialize the scene and start the tick loop before mounting the entry overlay. The globe should be spinning before the overlay appears (or starts to fade in). The overlay is painted on top of a live scene.
+- **Adding `'entry'` as a new ViewStateMachine kind in Phase 1**: The machine currently operates on scene states (`global`, `constellation`, `reading`). Entry is a pre-scene DOM layer. Adding a new machine kind in Phase 1 risks tangling scope — Phase 2 will do the proper `screen: 'entry' | 'state1' | 'state2'` refactor.
+- **Putting Entry layout styles inline**: Follow the existing pattern of a single `src/style.css` for all styles. No inline `style` attributes.
+- **Running calibration overture and Entry screen simultaneously**: Calibration overture is the boot loader ("OBSERVATORY INITIALIZING"). Entry is post-load landing. Sequence: calibration → complete → Entry screen appears.
 
 ---
 
 ## Common Pitfalls
 
-### Pitfall 1: ShortlistStore Reset on exitFocus
+### Pitfall 1: Globe canvas z-index conflict with overlay
 
-**What goes wrong:** Store is placed in `SceneObjects`, which is rebuilt or mutated by `unfocusSphere`. Cases from Constellation A disappear when the user navigates back to global.
+**What goes wrong:** Entry DOM overlay and Three.js canvas both position as fixed/absolute. The canvas renders on top of the overlay (or vice versa), making the globe invisible or the overlay unclickable.
 
-**Why it happens:** `SceneObjects` is the existing mutation hub — it's natural to add things there.
+**How to avoid:** Set Three.js canvas `z-index: 1`, Entry overlay `z-index: 100`. The overlay must receive pointer events (for CTA click). After overlay exits, restore scene pointer events.
 
-**How to avoid:** Create `shortlistStore` in `main.ts` boot, before `buildOrbitalScene`. Pass it as a parameter to systems that need it. Never attach it to `sceneObjects`.
+### Pitfall 2: Fraunces font-size at 82pt clips on smaller viewports
 
-**Warning signs:** FND-03 test (cross-constellation persistence) fails.
+**What goes wrong:** 82pt at 1.0 typeScale is ~110px. On 1280×800 (the handoff spec viewport), the headline may overflow or clip the body text below it.
 
-### Pitfall 2: European Decimal Parsing
+**How to avoid:** Use CSS clamp or a typeScale multiplier: `font-size: clamp(48px, 6.5vw, 110px)`. The handoff specifies `82pt × typeScale` where typeScale is 0.85–1.25 — implement as a CSS custom property or clamp.
 
-**What goes wrong:** `parseFloat('+40,87%')` returns `NaN` after stripping `%`. ImpactScale falls through to `unknown` for European-format values, which is most of the dataset.
+### Pitfall 3: `onEnter` callback called before fade completes
 
-**Why it happens:** JavaScript `parseFloat` does not recognize `,` as decimal separator.
+**What goes wrong:** State 1 UI activates instantly when CTA is clicked, appearing before the 200ms fade is done, creating a visual overlap.
 
-**How to avoid:** Normalize: `value.replace(',', '.')` before `parseFloat`. Do this in `deriveImpactScale` before any numeric operation.
+**How to avoid:** `onEnter` is called inside the `setTimeout(200)` — after the DOM removes the overlay. The 600ms State 1 fade-in then starts from a clean slate.
 
-**Warning signs:** ImpactScale returns `unknown` for the majority of cases in manual audit.
+### Pitfall 4: Pulsing dot animation jarring on reduced-motion
 
-### Pitfall 3: ProofType Classification on Empty Metrics
+**What goes wrong:** `@keyframes entry-dot-pulse` fires even when `prefers-reduced-motion: reduce` is set.
 
-**What goes wrong:** Some cases have `metrics: []` (or all `N/A` values). Classification throws or returns undefined.
-
-**Why it happens:** Empty array iteration, no fallback path.
-
-**How to avoid:** `classifyProofType([])` must return `ProofType.Engagement` (fallback). `deriveImpactScale([])` must return `{ value: 0, band: 'unknown', maxPct: 0 }`.
-
-**Warning signs:** TypeScript union type lets `undefined` leak out; strict mode will catch this at compile time if return type is correctly annotated.
-
-### Pitfall 4: StarState Not Covering Future States
-
-**What goes wrong:** Phase 4 adds `ghost` and `selected` behavior and has to invent its own opacity values, creating a second precedence system that conflicts with Phase 1's resolver.
-
-**Why it happens:** Phase 1 only activates `filterMatch`, `filterDim`, `idle` — `ghost` and `selected` feel deferred.
-
-**How to avoid:** Define the full 6-state enum and full resolver lookup table in Phase 1. Phase 4 only writes the state value into `userData`; the resolver already knows what to do with it. The test for the resolver should cover all six states.
-
-### Pitfall 5: ViewState Machine and SceneMode Coexisting
-
-**What goes wrong:** `SceneObjects.mode: SceneMode` is still read in multiple places (`tickOrbits` line 155, `applyFilter` line 194). Phase 1 adds `ViewStateMachine` without removing `SceneMode`, and the two get out of sync.
-
-**Why it happens:** Phase 1 defines `ViewState` but doesn't fully wire `main.ts` transitions.
-
-**How to avoid:** In Phase 1, the ViewStateMachine is created and the `dispatch(ENTER_CONSTELLATION)` / `dispatch(EXIT_CONSTELLATION)` calls replace the direct `objects.mode = 'focused'` mutations. The machine's listener updates `objects.mode` for backward compatibility until Phase 2+ fully migrates. Or: remove `SceneMode` from `SceneObjects` in this phase and update `tickOrbits` and `applyFilter` to read from the machine. The plan must make this explicit.
-
----
-
-## Code Examples
-
-### ViewState factory and transition
-
-```typescript
-// src/data/view-state.ts
-export function createViewStateMachine(initial: ViewState = { kind: 'global' }): ViewStateMachine {
-  let state = initial;
-  const listeners = new Set<ViewStateListener>();
-
-  function transition(next: ViewState, event: ViewEvent): void {
-    const prev = state;
-    state = next;
-    listeners.forEach(fn => fn(next, prev, event));
-  }
-
-  return {
-    getState: () => state,
-    dispatch(event) {
-      const s = state;
-      if (event.type === 'ENTER_CONSTELLATION' && s.kind === 'global') {
-        transition({ kind: 'constellation', nucleusKey: event.nucleusKey }, event);
-      } else if (event.type === 'EXIT_CONSTELLATION' && s.kind === 'constellation') {
-        transition({ kind: 'global' }, event);
-      } else if (event.type === 'OPEN_READING' || event.type === 'CLOSE_READING') {
-        throw new Error(`Transition ${event.type} not wired until Phase 5`);
-      } else {
-        throw new Error(`Invalid transition: ${event.type} from ${s.kind}`);
-      }
-    },
-    subscribe(listener) {
-      listeners.add(listener);
-      return () => listeners.delete(listener);
-    },
-  };
-}
-```
-
-### ShortlistStore factory
-
-```typescript
-// src/data/shortlist-store.ts
-export function createShortlistStore(): ShortlistStore {
-  const _map = new Map<string, ShortlistEntry>();
-  const _listeners = new Set<ShortlistListener>();
-
-  function _notify() {
-    const snapshot = [..._map.values()];
-    _listeners.forEach(fn => fn(snapshot));
-  }
-
-  return {
-    add(caseId, nucleusKey) {
-      _map.set(caseId, { caseId, nucleusKey });
-      _notify();
-    },
-    remove(caseId) {
-      _map.delete(caseId);
-      _notify();
-    },
-    clear() {
-      _map.clear();
-      _notify();
-    },
-    has: (caseId) => _map.has(caseId),
-    entries: () => [..._map.values()],
-    subscribe(listener) {
-      _listeners.add(listener);
-      return () => _listeners.delete(listener);
-    },
-  };
-}
-```
-
-### ProofType classifier
-
-```typescript
-// src/data/proof-type.ts
-const PROOF_KEYWORDS: [ProofType, string[]][] = [
-  [ProofType.Revenue,        ['roas', 'revenue', 'sales', 'roi', 'return on']],
-  [ProofType.Conversion,     ['conver', 'cpa', 'lead', 'acqui', 'qualified call']],
-  [ProofType.Awareness,      ['brand', 'aware', 'recall', 'reach', 'impression', 'search', 'visibility']],
-  [ProofType.CostEfficiency, ['cpm', 'cpc', 'cost per', 'efficien', 'cheaper', 'saving']],
-  [ProofType.Engagement,     ['click', 'ctr', 'engagement', 'view', 'vtr', 'follower', 'watch', 'interaction']],
-];
-
-export function classifyProofType(metrics: Metric[]): ProofType {
-  const tally = new Map<ProofType, number>();
-  for (const { label } of metrics) {
-    const l = label.toLowerCase();
-    for (const [type, keywords] of PROOF_KEYWORDS) {
-      if (keywords.some(k => l.includes(k))) {
-        tally.set(type, (tally.get(type) ?? 0) + 1);
-        break; // first match wins for this label
-      }
-    }
-  }
-  if (tally.size === 0) return ProofType.Engagement;
-  // dominant type; tie-break: lower priority-index wins
-  let best: ProofType = ProofType.Engagement;
-  let bestCount = 0;
-  for (const [type, keywords] of PROOF_KEYWORDS) {
-    const count = tally.get(type) ?? 0;
-    if (count > bestCount) { best = type; bestCount = count; }
-  }
-  return best;
-}
-```
-
-### ImpactScale parser and bander
-
-```typescript
-// src/data/impact-scale.ts
-function parseMetricPct(value: string): number | null {
-  if (value.trim().toLowerCase() === 'n/a') return null;
-  let v = value.trim().replace('+', '').replace('-', ''); // absolute value
-  const isMultiplier = /x$/i.test(v);
-  v = v.replace(/[+\-$€£%x]/gi, '').replace(',', '.').trim();
-  const n = parseFloat(v);
-  if (isNaN(n)) return null;
-  return isMultiplier ? n * 100 : n;
-}
-
-export function deriveImpactScale(metrics: Metric[]): ImpactScale {
-  const pcts = metrics.map(m => parseMetricPct(m.value)).filter((n): n is number => n !== null);
-  if (pcts.length === 0) return { value: 0, band: 'unknown', maxPct: 0 };
-  const maxPct = Math.max(...pcts);
-  if (maxPct <= 20)  return { value: maxPct / 20 * 0.2,  band: 'incremental',   maxPct };
-  if (maxPct <= 100) return { value: 0.2 + (maxPct - 20) / 80 * 0.3, band: 'notable', maxPct };
-  if (maxPct <= 300) return { value: 0.5 + (maxPct - 100) / 200 * 0.25, band: 'significant', maxPct };
-  return { value: Math.min(1.0, 0.75 + (maxPct - 300) / 5000 * 0.25), band: 'transformative', maxPct };
+**How to avoid:**
+```css
+@media (prefers-reduced-motion: reduce) {
+  .entry-cta-dot { animation: none; }
 }
 ```
 
 ---
 
-## Don't Hand-Roll (Summary)
+## Don't Hand-Roll
 
 | Problem | Don't Build | Use Instead |
 |---------|-------------|-------------|
-| State management library | Redux, XState, Zustand | Hand-rolled 3-state discriminated union |
-| Pub/sub framework | EventEmitter, RxJS | Plain `Set<listener>` + sync notify |
-| ML metric classification | Embeddings, regex NLP | Keyword substring priority table |
-| Separate Three.js classes for state | Scene-coupled state | Pure data layer in `src/data/` |
+| Globe 3D rendering | New Three.js sphere | `planetary-gather.ts` — already built |
+| Overlay fade | GSAP tween on the overlay | CSS transition + class toggle (simpler, no GSAP dependency for a one-time fade) |
+| Font loading | New font imports | Existing Google Fonts in `index.html` — all three fonts already loaded |
+| Token system | New CSS vars | `--bg`, `--teal`, `--gold`, `--ease` in `src/style.css` |
 
 ---
 
@@ -542,44 +346,24 @@ nyquist_validation: enabled
 | Property | Value |
 |----------|-------|
 | Framework | Vitest 2.x |
-| Config file | `vite.config.ts` (test.environment: 'node') |
+| Config file | `vite.config.ts` (test.environment: 'node' for unit; 'happy-dom' for DOM) |
 | Quick run command | `npx vitest run` |
-| Full suite command | `npx vitest run` |
 
 ### Phase Requirements → Test Map
 
-| Req ID | Behavior | Test Type | Automated Command | File Exists? |
-|--------|----------|-----------|-------------------|-------------|
-| FND-01 | ViewState dispatches ENTER_CONSTELLATION, EXIT_CONSTELLATION; invalid transitions throw | unit | `npx vitest run src/data/view-state.test.ts` | Wave 0 |
-| FND-01 | ViewState listeners are called with prev/next/event on transition | unit | `npx vitest run src/data/view-state.test.ts` | Wave 0 |
-| FND-02 | ShortlistStore add/remove/has/entries/clear work correctly | unit | `npx vitest run src/data/shortlist-store.test.ts` | Wave 0 |
-| FND-02 | Listeners called synchronously after add/remove/clear | unit | `npx vitest run src/data/shortlist-store.test.ts` | Wave 0 |
-| FND-03 | entries() after add from nucleus A, then clear of scene (simulated by not calling clear), still returns A's cases | unit | `npx vitest run src/data/shortlist-store.test.ts` | Wave 0 |
-| FND-04 | classifyProofType([]) returns Engagement fallback | unit | `npx vitest run src/data/proof-type.test.ts` | Wave 0 |
-| FND-04 | classifyProofType with Revenue labels returns Revenue | unit | `npx vitest run src/data/proof-type.test.ts` | Wave 0 |
-| FND-04 | "cost per lead" classifies as Conversion not CostEfficiency | unit | `npx vitest run src/data/proof-type.test.ts` | Wave 0 |
-| FND-05 | deriveImpactScale([]) returns unknown band | unit | `npx vitest run src/data/impact-scale.test.ts` | Wave 0 |
-| FND-05 | European comma format "+40,87%" parses correctly | unit | `npx vitest run src/data/impact-scale.test.ts` | Wave 0 |
-| FND-05 | "2x" multiplier normalizes to 200% | unit | `npx vitest run src/data/impact-scale.test.ts` | Wave 0 |
-| FND-05 | Threshold bands: ≤20% → incremental, 20–100% → notable, 100–300% → significant, >300% → transformative | unit | `npx vitest run src/data/impact-scale.test.ts` | Wave 0 |
-| FND-06 | resolveStarAppearance covers all 6 states with correct opacity | unit | `npx vitest run src/data/star-state.test.ts` | Wave 0 |
-| FND-06 | reading state returns gold color override | unit | `npx vitest run src/data/star-state.test.ts` | Wave 0 |
+| Req ID | Behavior | Test Type | Automated Command |
+|--------|----------|-----------|-------------------|
+| ENTRY-02 | `mountEntryScreen` appends `.entry-screen` div to parent | unit (DOM) | `npx vitest run src/ui/entry-screen.test.ts` |
+| ENTRY-06 | CTA button exists with text `ENTER OBSERVATORY →` | unit (DOM) | `npx vitest run src/ui/entry-screen.test.ts` |
+| ENTRY-08 | CTA click calls `onEnter` callback after 200ms | unit (DOM) | `npx vitest run src/ui/entry-screen.test.ts` |
+| ENTRY-08 | CTA click adds `entry-screen--exiting` class immediately | unit (DOM) | `npx vitest run src/ui/entry-screen.test.ts` |
+| ENTRY-10 | No localStorage check on mount — entry always renders | unit (DOM) | `npx vitest run src/ui/entry-screen.test.ts` |
 
-### Sampling Rate
-
-- **Per task commit:** `npx vitest run`
-- **Per wave merge:** `npx vitest run`
-- **Phase gate:** Full suite green before `/gsd:verify-work`
+Visual requirements (ENTRY-01, ENTRY-03, ENTRY-04, ENTRY-05, ENTRY-07, ENTRY-12) verified by Playwright UAT after implementation.
 
 ### Wave 0 Gaps
 
-- [ ] `src/data/view-state.test.ts` — covers FND-01
-- [ ] `src/data/shortlist-store.test.ts` — covers FND-02, FND-03
-- [ ] `src/data/proof-type.test.ts` — covers FND-04
-- [ ] `src/data/impact-scale.test.ts` — covers FND-05
-- [ ] `src/data/star-state.test.ts` — covers FND-06
-
-Existing tests (`filter.test.ts`, `grouping.test.ts`, orbital `*.test.ts`) continue to pass and are not modified.
+- [ ] `src/ui/entry-screen.test.ts` — covers ENTRY-02, ENTRY-06, ENTRY-08, ENTRY-10
 
 ---
 
@@ -587,33 +371,29 @@ Existing tests (`filter.test.ts`, `grouping.test.ts`, orbital `*.test.ts`) conti
 
 ### Primary (HIGH confidence)
 
-- Codebase direct read: `src/scene/scene-state.ts` — existing SceneMode type, opacity assignment locations, SceneObjects shape
-- Codebase direct read: `src/data/types.ts` — CaseStudy interface with metrics array
-- Codebase direct read: `src/data/filter.ts` — factory-function pattern for data-layer stores
-- Codebase direct read: `src/data/filter.test.ts` — vitest test style and fixture patterns
-- Codebase direct read: `vite.config.ts` — `test: { environment: 'node' }`
-- Codebase direct read: `cases.json` analysis — 116 cases, 297 unique metric labels, value range 0.1–5349%
-- `.planning/codebase/ARCHITECTURE.md` — data flow, SceneObjects pattern, filter state mutation pattern
-- `.planning/codebase/CONVENTIONS.md` — factory function naming, export patterns, test colocation
-- `.planning/research/SUMMARY.md` — architectural decisions: ShortlistStore at boot level, discriminated union for ViewState, star state enum
+- Handoff README: `~/Desktop/Case Study Explorer - design_handoff/README.md` §"Entry — Arrival at the observatory" — exact layout, copy, component spec
+- Codebase direct read: `src/ui/calibration-overture.ts` — DOM overlay mount/unmount lifecycle pattern
+- Codebase direct read: `src/scene/planetary-gather.ts` — Entry Globe geometry (confirmed exists and matches Phase 1 reuse intent)
+- Codebase direct read: `src/data/view-state.ts` — `ENTER_FIELD` event confirmed defined
+- Codebase direct read: `src/style.css` — `--bg`, `--teal`, `--gold`, `--ease` tokens confirmed; font imports confirmed
+- Phase context: `.planning/phases/01-foundation/01-CONTEXT.md` — D-01 through D-07, all locked decisions
 
 ### Secondary (MEDIUM confidence)
 
-- Data analysis of `cases.json` metric values — threshold bands derived from actual distribution (267 parseable values; 60 ≤ 20%, 141 20–100%, 43 100–300%, 23 > 300%)
-- Metric label keyword categorization — spot-checked against 40 representative labels; ~61/297 labels remain uncategorized (fallback to Engagement)
+- `docs/superpowers/specs/2026-04-13-dimensional-explorer-design.md` — T0 timing (200ms + 600ms) confirmed here
+- Viewport assumption: 1280×800 per handoff spec — typeScale clamp needed for narrower viewports
 
 ---
 
 ## Metadata
 
 **Confidence breakdown:**
+- Globe reuse: HIGH — file confirmed, no rebuild needed
+- DOM overlay pattern: HIGH — `calibration-overture.ts` is the exact precedent
+- ViewStateMachine wiring: HIGH — `ENTER_FIELD` already defined; Phase 1 does not refactor the machine
+- CSS token correctness: HIGH — all tokens verified in `src/style.css`
+- Transition timing: HIGH — 200ms + 600ms confirmed in both CONTEXT.md and design spec
+- Fraunces font-size at viewport: MEDIUM — requires clamp; exact breakpoints not tested
 
-- Standard stack: HIGH — no new dependencies; pattern shapes derived directly from existing codebase conventions
-- Architecture: HIGH — module locations and boot sequence changes verified against ARCHITECTURE.md and STRUCTURE.md
-- ProofType thresholds: HIGH — keyword table verified against actual metric labels in cases.json
-- ImpactScale thresholds: HIGH — bands derived from empirical distribution of 267 parsed values
-- Star state opacity values: MEDIUM — `reading` gold and `ghost` 0.25 are new (no existing precedent); others verified from scene-state.ts existing values
-- Pitfalls: HIGH — all five pitfalls traced to specific file/line evidence in CONCERNS.md or ARCHITECTURE.md
-
-**Research date:** 2026-04-13
+**Research date:** 2026-04-25
 **Valid until:** 90 days (stable stack, no external dependencies)

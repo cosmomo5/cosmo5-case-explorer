@@ -328,5 +328,41 @@ Filled during roadmap creation. Phases 8–15.
 - Unmapped: 0 ✓
 
 ---
+
+## v3.4 Requirements — Dimensional Navigation
+
+**Defined:** 2026-04-25
+**Core Value:** A considered internal place where the Cosmo5 strategy/sales team builds, returns to, and studies their mental library of proof. Closer to a museum's study room than a pitch deck.
+**Aesthetic premise:** *"A cosmos of proof, navigable as an atlas — observed, not advertised."*
+**Design authority:** `~/Desktop/Case Study Explorer - design_handoff/README.md` — authoritative for all layout, copy, interaction model. Do not lose this reference.
+**Source:** `.planning/MILESTONE-v3.4.md`
+
+### Entry Screen (Phase 1)
+
+- [ ] **ENTRY-01**: Entry globe — `planetary-gather.ts` reframed as Entry Globe. Rotating sphere (radius 220, spin 0.6× speed) with orbiting case particles. No rebuild from scratch.
+- [ ] **ENTRY-02**: DOM editorial overlay — eyebrow, headline, body, CTA, telemetry plate rendered as positioned HTML over the globe canvas. Exact handoff copy (see D-05 in `phases/01-foundation/01-CONTEXT.md`).
+- [ ] **ENTRY-03**: Eyebrow: `— COSMO5 / OBSERVATORY / 2026.04` — DM Mono 10pt, teal `#5ecfc0`, opacity 0.75, letter-spacing 0.22em.
+- [ ] **ENTRY-04**: Headline: `"A cosmos of proof, observed."` — Fraunces 300 82pt, weight italic on "proof" in gold `#e8b15a`. "observed." on own line at 48pt, opacity 0.7.
+- [ ] **ENTRY-05**: Body: `"One hundred and sixteen case studies, plotted as an atlas. / Navigate by gravity. Read by instrument."` — DM Mono 12pt, line-height 1.7, rgba(255,255,255,0.55).
+- [ ] **ENTRY-06**: CTA: `"● ENTER OBSERVATORY →"` — inline-flex, padding 14×24, 1px gold border, gold pulsing dot, no fill. Hover = subtle glow.
+- [ ] **ENTRY-07**: Telemetry plate bottom-right: `116 cases · 13 markets · 7 verticals · 2014 — 2025` — DM Mono 9pt, opacity 0.32, letter-spacing 0.14em.
+- [ ] **ENTRY-08**: CTA click → dispatches `ENTER_FIELD` on ViewStateMachine → 200ms fade to black → State 1 fades in 600ms cubic-bezier(0.16, 1, 0.3, 1).
+- [ ] **ENTRY-09**: State 1 boots to free float mode — all 116 cases drift freely with low-frequency noise. No orbital structure on initial load.
+- [ ] **ENTRY-10**: Entry always shows on every session load. No localStorage skip for returning users.
+- [ ] **ENTRY-11**: ViewStateMachine extended with `'entry'` screen state. `ENTER_FIELD` event defined and dispatched from CTA.
+- [ ] **ENTRY-12**: Layout: left half editorial (left: 80px, max-width 520px, top ~38%), right half globe (cx: 72%, cy: 58%).
+
+### v3.4 Traceability
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| ENTRY-01 through ENTRY-12 | Phase 1 | Pending |
+
+**Coverage (v3.4):**
+- v3.4 Phase 1 requirements: 12 total
+- Mapped to Phase 1: 12 ✓
+
+---
 *v3.1 requirements defined: 2026-04-13. v3.1 shipped 2026-04-14.*
 *v3.2 requirements defined: 2026-04-14 — from MILESTONE-v3.2.md after 5 open questions resolved with Mo.*
+*v3.4 requirements defined: 2026-04-25 — Phase 1 Entry screen (scope redirect from inquiry sentence, D-02).*

@@ -70,21 +70,25 @@ State 1 unifies "gather" and "organize-by" into a single view with a mode toggle
 
 ## Phase Roadmap
 
+**Phase 1 scope redirect (2026-04-25):** Inquiry sentence dropped from v3.4 (D-02 in `01-CONTEXT.md`). Phase 1 = Entry screen (formerly Phase 10). Phase 10 slot absorbed into Phase 1; no Phase 10 remains. Context: `phases/01-foundation/01-CONTEXT.md`.
+
+**Design authority:** `~/Desktop/Case Study Explorer - design_handoff/README.md` — authoritative for all layout, copy, interaction model. This is the primary handoff artifact that started the v3.4 reconstruction. Do not lose this reference.
+
 | # | Phase | Surface | Agent | Verify |
 |---|---|---|---|---|
-| 1 | Inquiry sentence component | `src/ui/inquiry-sentence.ts` greenfield. Static reading first (filter → words), then live cross-fade per word (240ms). Integrates into filter-panel state. | Claude | Unit: filter state → sentence string. Visual: sentence renders at center, placeholders italic. |
-| 2 | Filter panel rebuild to handoff spec | `filter-panel.ts`: left rail 264w, top:84/left:28/bottom:28; 5-group accordion; impact slider; Gather copy to handoff spec; footer telemetry. Confirm 7-vertical mapping. | Claude | Unit: accordion expand/collapse, chip toggle, count display. Visual: left-rail layout matches handoff. |
-| 3 | Organize panel (right rail) | New `src/ui/organize-panel.ts` — 6 dimension buttons, sub-orbit picker, planet/case counter. Wires to view-state `organize.dimension`. | Claude | Unit: dimension switch dispatches to view-state. Visual: right-rail position, gold active state. |
-| 4 | Solar layout (organize-by) | `regroup.ts` / `scene-state.ts` — planets on orbital ring around inquiry sentence position, size by √count. `state1Mode: 'organized'` drives this layout. | Claude | Unit: planet count = group count, positions on ring. Visual: planets orbit inquiry center. |
-| 5 | Sub-orbit layering | Year-rings inside each planet (1.E mode). Same mechanic reused at State 2 scale. Wires `organize.subDim`. | Claude | Unit: year-ring count per planet = distinct years in group. Visual: rings visible inside planets. |
-| 6 | State 2 face-on rings + editorial cards | `scene-state.ts` ring layout (RING_CONFIG: r=150/260/370/460) + new card components with country chips (name→code map for 13 countries). | Claude | Unit: cards render correct client/metric/country. Visual: ring layout, card tether, country chip. |
-| 7 | Minimap + peripheral constellations + related groups | `src/ui/minimap.ts`, `src/ui/peripheral-constellations.ts`, `src/ui/related-groups.ts` — all sympathetic visual, glass-morph. | Claude | Visual: minimap shows current group haloed, peripherals at 38% opacity, related-groups right rail. |
-| 8 | Staging dock (compact) + shortlist refactor | New `src/ui/staging-dock.ts` — replaces current shortlist-track surfaces in State 2. Gold border, wordmark + metric chips, "PRESENT →" CTA. | Claude | Unit: pin action adds chip to dock. Visual: dock bottom-center, compact, no overlap with cards. |
-| 9 | Warm State 2 atmosphere + reading-panel treatment | CSS-only on `body.constellation`: warm radial gradient (amber→plum→black). `body.reading .scene-container { opacity: 0.4 }`. Reading panel width 340→380. | Claude | Visual: warm tint visible in State 2. Scene dims to 40% behind reading panel. |
-| 10 | Entry screen reframe | `planetary-gather.ts` becomes Entry Globe; CTA wiring (ENTER OBSERVATORY → State 1 fade); editorial hero block (headline, body, CTA per handoff spec). | Claude | Visual: entry screen matches handoff layout. CTA click → State 1 transition. |
-| 11 | Transitions (T0/T1/T5) tuned to handoff timings | `transition-choreographer.ts`: T0 entry→state1 (200ms fade + 600ms); T1 state1→state2 (660ms — already matches); T5 state2→state1 (840ms — matches T5 ~20% slower). | Claude | Unit: duration values match spec. Visual: transitions feel gravitational, no janky cuts. |
-| 12 | Token + font + opacity audit + removals | Strip any drift from handoff token table. Remove v3.3 legacy surfaces no longer needed. | Kimi | Build clean. Visual: no stray colors, no orphaned UI elements. |
-| 13 | Full-flow QA + Vercel preview | 60–90s flow: arrive → filter → gather → organize → drill → pin → present. Playwright Windows-Chrome CDP. | Claude | Playwright: full flow green. Vercel preview approved by Mo. |
+| 1 | Entry screen | Reframe `planetary-gather.ts` as Entry Globe. DOM overlay: eyebrow, headline, body, CTA, telemetry plate (exact handoff copy). CTA wires `ENTER_FIELD` → 200ms fade to black → State 1 fades in 600ms. State 1 boots to free float. | Claude | Visual: entry layout matches handoff. CTA click → State 1 transition. |
+| 2 | ViewState + State 1 free-float foundation | `src/data/view-state.ts`: `screen: 'entry' \| 'state1' \| 'state2'`, typed events. State 1 free-float mode (all 116 cases drift on noise). Replaces old `SceneMode`. | Claude | Unit: ViewState transitions. Visual: 116 cases drift freely in State 1. |
+| 3 | Inquiry sentence component | `src/ui/inquiry-sentence.ts` greenfield. Static reading first (filter → words), then live cross-fade per word (240ms). Center of State 1. | Claude | Unit: filter state → sentence string. Visual: sentence at center, placeholders italic. |
+| 4 | Filter panel rebuild to handoff spec | `filter-panel.ts`: left rail 264w, top:84/left:28/bottom:28; 5-group accordion; impact slider; Gather CTA copy. Confirm 7-vertical mapping. | Claude | Unit: accordion expand/collapse, chip toggle, count display. Visual: left-rail layout matches handoff. |
+| 5 | Gather animation + gathered mode | Gather click → cases spiral to orbit inquiry (700ms, cubic-bezier(0.65,0,0.35,1)). `state1Mode: 'gathered'`. Non-matching cases fade to 0.08 drift. | Claude | Unit: gathered cases orbit inquiry position. Visual: gravitational pull animation. |
+| 6 | Organize panel + solar layout | New `src/ui/organize-panel.ts` (6 dimensions). `regroup.ts` solar layout — planets on ring around inquiry, size √count. `state1Mode: 'organized'`. | Claude | Unit: planet count = group count. Visual: planets orbit inquiry center. |
+| 7 | Sub-orbit layering | Year-rings inside each planet (mode 1.E). Wires `organize.subDim`. | Claude | Unit: year-ring count per planet = distinct years in group. Visual: rings inside planets. |
+| 8 | State 2 face-on rings + editorial cards | Ring layout (RING_CONFIG: r=150/260/370/460) + card components with country chips (13 countries name→code map). | Claude | Unit: cards render correct client/metric/country. Visual: ring layout, card tether, country chip. |
+| 9 | Minimap + peripheral constellations + related groups | `src/ui/minimap.ts`, `src/ui/peripheral-constellations.ts`, `src/ui/related-groups.ts` — glass-morph. | Claude | Visual: minimap haloed, peripherals at 38% opacity, related-groups rail. |
+| 10 | Staging dock (compact) + shortlist refactor | New `src/ui/staging-dock.ts` — replaces shortlist-track in State 2. Gold border, wordmark + metric chips, "PRESENT →". | Claude | Unit: pin adds chip to dock. Visual: dock bottom-center, compact. |
+| 11 | Warm State 2 atmosphere + reading-panel treatment | CSS-only on `body.constellation`: warm radial gradient (amber→plum→black). Scene dims to 0.4 behind reading panel. Reading panel 340→380px. | Claude | Visual: warm tint in State 2. Scene dims behind panel. |
+| 12 | Token + font + opacity audit + removals | Strip drift from handoff token table. Remove v3.3 legacy surfaces. | Kimi | Build clean. No stray colors, no orphaned UI. |
+| 13 | Full-flow QA + Vercel preview | 60–90s flow: Entry → filter → gather → organize → drill → pin → present. Playwright Windows-Chrome CDP. | Claude | Playwright: full flow green. Vercel preview approved by Mo. |
 
 ---
 
