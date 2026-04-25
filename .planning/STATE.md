@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v3.4
 milestone_name: — Dimensional Navigation
 status: unknown
-last_updated: "2026-04-25T15:41:56.398Z"
+last_updated: "2026-04-25T19:02:40.599Z"
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 4
-  completed_plans: 0
-  percent: 0
+  completed_plans: 3
+  percent: 75
 ---
 
 # Project State
@@ -87,7 +87,7 @@ Last session: 2026-04-25 — Phase 1 discuss-phase complete.
 3. Read `.planning/phases/01-foundation/01-CONTEXT.md` for locked decisions.
 4. Run `/gsd-plan-phase 1` to replan Phase 1 as Entry screen.
 
-**Planned Phase:** 01 (Entry Screen) — 4 plans — 2026-04-25T15:12:01.382Z
+**Planned Phase:** 01.1 (entry-scene-composition-globe-framing-gather-state-camera-tr) — 5 plans — 2026-04-25T19:02:40.554Z
 
 ## Roadmap Evolution
 
