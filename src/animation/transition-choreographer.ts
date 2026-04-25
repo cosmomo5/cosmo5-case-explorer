@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import type { SceneObjects } from '../scene/scene-state';
 import { disposePlanet, type PlanetGroup } from '../scene/planet';
 import { releaseStarsToHomes, snapStarsToHomes } from '../scene/planetary-gather';
+import { clearEntryFraming } from '../scene/entry-framing';
 
 export interface TransitionState {
   inProgress: boolean;
@@ -123,6 +124,36 @@ export function createTransitionChoreographer(controls: CameraControls) {
     const prefersReduced = typeof window !== 'undefined'
       && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const s = prefersReduced ? 0.33 : 1.0;
+
+    // (0) Clear Entry camera offset over the 1.2s window (parallel with sequences 1–5).
+    // Runs only when a view offset is active (i.e., Entry framing was applied at boot).
+    // Safety: camera-controls does not touch camera.view — safe to tween in parallel.
+    const camera = objects.camera as THREE.PerspectiveCamera;
+    if (camera.view?.enabled) {
+      const containerEl = typeof document !== 'undefined'
+        ? document.getElementById('scene-container')
+        : null;
+      const W = containerEl?.clientWidth ?? (typeof window !== 'undefined' ? window.innerWidth : 1280);
+      const H = containerEl?.clientHeight ?? (typeof window !== 'undefined' ? window.innerHeight : 800);
+
+      const proxy = {
+        dx: camera.view.offsetX,
+        dy: camera.view.offsetY,
+      };
+
+      gsap.to(proxy, {
+        dx: 0,
+        dy: 0,
+        duration: 1.2 * s,
+        ease: 'power1.inOut',
+        onUpdate: () => {
+          camera.setViewOffset(W, H, proxy.dx, proxy.dy, W, H);
+        },
+        onComplete: () => {
+          clearEntryFraming(camera);
+        },
+      });
+    }
 
     // (1) Dim planet core
     gsap.to(planet.sphere.material as THREE.MeshStandardMaterial, {

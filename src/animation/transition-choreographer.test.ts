@@ -106,7 +106,6 @@ describe('TransitionChoreographer', () => {
 import { createPlanet } from '../scene/planet';
 import { starPositionAt } from '../scene/orbitals/star-orbit';
 import { createTransitionChoreographer as createChoreographer } from './transition-choreographer';
-import { clearEntryFraming } from '../scene/entry-framing';
 
 describe('choreographPlanetaryToGlobal — final beat (phase 16-03)', () => {
   let controls: CameraControls;
