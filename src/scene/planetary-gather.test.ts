@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import * as THREE from 'three';
 import { fibonacciSphere, gatherStarsToPlanet, releaseStarsToHomes } from './planetary-gather';
 import type { SceneObjects } from './scene-state';
@@ -158,5 +158,78 @@ describe('releaseStarsToHomes', () => {
       expect(star.position.y).toBeCloseTo(targets[i].y, 2);
       expect(star.position.z).toBeCloseTo(targets[i].z, 2);
     }
+  });
+});
+
+describe('releaseStarsToHomes reveal', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    // Clean up any window mock set for reduced-motion tests
+    if ((globalThis as any)._matchMediaMock) {
+      (globalThis as any).window = undefined;
+      delete (globalThis as any)._matchMediaMock;
+    }
+  });
+
+  it('sets star.visible = true and tweens opacity 0 → 0.85', () => {
+    const gsapToSpy = vi.spyOn(gsap, 'to').mockReturnValue({} as any);
+    vi.spyOn(gsap, 'killTweensOf').mockReturnValue(undefined as any);
+
+    const objects = makeFakeSceneObjects(2);
+    gatherStarsToPlanet(objects, { x: 0, y: 0, z: 0 }, 30);
+
+    // Stars are hidden at boot (as set by Wave 1 wiring in main.ts)
+    objects.starMeshes.forEach(star => {
+      star.visible = false;
+      (star.material as THREE.MeshBasicMaterial).opacity = 0;
+    });
+
+    // Act: releaseStarsToHomes is synchronous for visibility + opacity tweens;
+    // the returned Promise won't resolve (onComplete never fires with mock) but
+    // all synchronous work (visible flip + gsap.to calls) happens immediately.
+    releaseStarsToHomes(objects);
+
+    // Every isPlanetaryTarget star must be visible=true after the call
+    for (const star of objects.starMeshes) {
+      expect(star.visible).toBe(true);
+    }
+
+    // gsap.to must have been called with each star's material and opacity: 0.85
+    const allCalls = gsapToSpy.mock.calls;
+    for (const star of objects.starMeshes) {
+      const mat = star.material as THREE.MeshBasicMaterial;
+      const opacityCall = allCalls.find(
+        ([target, config]) => target === mat && (config as any).opacity === 0.85,
+      );
+      expect(opacityCall).toBeDefined();
+    }
+  });
+
+  it('respects reduced-motion: opacity tween duration is ≤ 0.2s', () => {
+    // Inject window.matchMedia returning matches=true into the node environment
+    (globalThis as any).window = {
+      matchMedia: (_query: string) => ({ matches: true }),
+    };
+    (globalThis as any)._matchMediaMock = true;
+
+    const gsapToSpy = vi.spyOn(gsap, 'to').mockReturnValue({} as any);
+    vi.spyOn(gsap, 'killTweensOf').mockReturnValue(undefined as any);
+
+    const objects = makeFakeSceneObjects(1);
+    gatherStarsToPlanet(objects, { x: 0, y: 0, z: 0 }, 30);
+    objects.starMeshes[0].visible = false;
+    (objects.starMeshes[0].material as THREE.MeshBasicMaterial).opacity = 0;
+
+    releaseStarsToHomes(objects);
+
+    // Under reduced-motion, the opacity tween duration must be ≤ 0.2s
+    const allCalls = gsapToSpy.mock.calls;
+    const mat = objects.starMeshes[0].material as THREE.MeshBasicMaterial;
+    const opacityCall = allCalls.find(
+      ([target, config]) => target === mat && (config as any).opacity === 0.85,
+    );
+    expect(opacityCall).toBeDefined();
+    const config = opacityCall![1] as any;
+    expect(config.duration).toBeLessThanOrEqual(0.2);
   });
 });
