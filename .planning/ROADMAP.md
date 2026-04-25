@@ -89,3 +89,13 @@ Key decisions from v3.3 → v3.4 transition:
 See `.planning/MILESTONES.md` for archived milestone records.
 
 - **v3.1 — Dimensional Explorer** (shipped 2026-04-14, 9 phases 0–7 + 6.5)
+
+### Phase 01.1: Entry scene composition — Globe framing, gather state, camera transition on ENTER_FIELD (INSERTED)
+
+**Goal:** [Urgent work - to be planned]
+**Requirements**: TBD
+**Depends on:** Phase 1
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 01.1 to break down)

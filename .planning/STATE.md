@@ -88,3 +88,7 @@ Last session: 2026-04-25 — Phase 1 discuss-phase complete.
 4. Run `/gsd-plan-phase 1` to replan Phase 1 as Entry screen.
 
 **Planned Phase:** 01 (Entry Screen) — 4 plans — 2026-04-25T15:12:01.382Z
+
+## Roadmap Evolution
+
+- Phase 01.1 inserted after Phase 1 (2026-04-25): Entry scene composition — Globe framing, gather state, camera transition on ENTER_FIELD. Reason: Phase 1 UAT found two real gaps (G1 planet framing, G2 case-star gather) — the Entry-state Globe composition was a scope omission in the original Phase 1 plans (which only covered the editorial DOM/CSS overlay).
