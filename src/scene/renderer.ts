@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import CameraControls from 'camera-controls';
+import { applyEntryFraming } from './entry-framing';
 
 CameraControls.install({ THREE });
 
@@ -55,6 +56,16 @@ export function createRenderer(canvas: HTMLCanvasElement, container: HTMLElement
   const onContainerResize = () => {
     const w = container.clientWidth;
     const h = container.clientHeight;
+
+    // Re-apply Entry framing if camera has view offset active (Entry state).
+    // Pattern B (D-01.1-06): read camera.view?.enabled directly — the authoritative
+    // source. During State 1/2, clearViewOffset() sets enabled=false, so this
+    // guard is automatically inactive post-Entry. Offsets are absolute pixels and
+    // must be re-derived at the new viewport size (RESEARCH.md § "Resize safety").
+    if (camera.view?.enabled) {
+      applyEntryFraming(camera, w, h);
+    }
+
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h, false); // false = don't override canvas CSS dimensions
