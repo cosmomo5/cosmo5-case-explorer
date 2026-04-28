@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v3.4
 milestone_name: — Dimensional Navigation
 status: unknown
-last_updated: "2026-04-28T11:37:13.195Z"
+last_updated: "2026-04-28T12:06:05.566Z"
 progress:
   total_phases: 1
   completed_phases: 0
@@ -100,3 +100,5 @@ Last session: --stopped-at
 ## Roadmap Evolution
 
 - Phase 01.1 inserted after Phase 1 (2026-04-25): Entry scene composition — Globe framing, gather state, camera transition on ENTER_FIELD. Reason: Phase 1 UAT found two real gaps (G1 planet framing, G2 case-star gather) — the Entry-state Globe composition was a scope omission in the original Phase 1 plans (which only covered the editorial DOM/CSS overlay).
+
+**Planned Phase:** 02 (layout) — 3 plans — 2026-04-28T12:06:05.529Z
