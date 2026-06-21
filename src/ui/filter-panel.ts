@@ -133,8 +133,8 @@ function buildAccordionSections(
     const chips = values.map(v => {
       const count = counts.get(v) ?? 0;
       const isOn = isValueActive(obj, dim, v) ? ' on' : '';
-      const isDim = count === 0 ? ' dim' : '';
-      return `<div class="fchip${isOn}${isDim}" data-dim="${dim}" data-value="${v}">${v} <span class="fchip-count">${count}</span></div>`;
+      const disabled = count === 0 ? ' disabled' : '';
+      return `<button class="fchip${isOn}" data-dim="${dim}" data-value="${v}"${disabled}>${v}<span class="fchip-count">${count}</span></button>`;
     }).join('');
 
     return `
@@ -270,9 +270,6 @@ export function mountFilterPanel(
     container.querySelectorAll('.fchip[data-dim][data-value]').forEach(chip => {
       chip.addEventListener('click', () => {
         const el = chip as HTMLElement;
-        // Dim chips (0 count) are non-interactive
-        if (el.classList.contains('dim')) return;
-
         const dim = el.dataset.dim as FilterDimension;
         const value = el.dataset.value!;
         const f = createFilterState();

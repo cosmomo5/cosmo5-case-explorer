@@ -439,12 +439,26 @@ body.gather-on .cl{opacity:0 !important;pointer-events:none !important;
   color:rgba(255,255,255,.88);
   font-family:'DM Mono',monospace;font-size:11.5px;font-weight:400;
   letter-spacing:.05em;padding:6px 10px;border-radius:2px;cursor:pointer;
-  transition:background .15s,border-color .15s,color .15s;white-space:nowrap}
-.fchip:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.22)}
+  transition:background .15s,border-color .15s,color .15s;white-space:nowrap;
+  /* button reset */
+  appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;gap:4px}
+.fchip:hover:not(:disabled){background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.22)}
+.fchip:focus-visible{outline:1px solid var(--gold);outline-offset:2px}
 .fchip.on {
   border-color: var(--gold);
   color: var(--gold);
   background: rgba(232,177,90,.12);
+}
+.fchip:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.fchip-count {
+  font-size: 9px;
+  font-weight: 300;
+  color: rgba(255,255,255,.38);
+  letter-spacing: 0;
 }
 .fchip .dot{display:inline-block;width:6px;height:6px;border-radius:50%;
   vertical-align:1px;margin-right:4px;background:var(--fc-dot,var(--gold));
@@ -599,6 +613,7 @@ body.reading .gather-button {
   border-color: var(--teal);
   color: var(--teal);
 }
+.mode-chip:focus-visible { outline: 1px solid var(--teal); outline-offset: 2px; }
 
 /* ── Country rail (constellation mode nav) ── */
 .rail{position:fixed;z-index:9;left:50%;top:128px;transform:translateX(-50%) translateY(-8px);
@@ -848,18 +863,21 @@ body.constellation .cc-constellation-only{display:block;margin-top:12px;
   border-color:rgba(94,207,192,.8);color:rgb(94,207,192)}
 .ring-switcher button:hover:not(.active){border-color:rgba(94,207,192,.5);
   color:rgba(94,207,192,.9)}
+.ring-switcher button:focus-visible{outline:1px solid var(--teal);outline-offset:2px}
 
 /* ── Accordion filter panel (05-02) ── */
 .fgroup-header {
   display: flex; align-items: center; width: 100%;
   padding: 6px 8px; background: transparent; border: none;
-  color: var(--col-text, #e0e0e0); cursor: pointer; font-size: 11px;
+  color: var(--text); cursor: pointer; font-size: 11px;
   letter-spacing: 0.06em; text-transform: uppercase;
+  appearance: none; -webkit-appearance: none;
 }
 .fgroup-header:hover { background: rgba(255,255,255,0.04); }
+.fgroup-header:focus-visible { outline: 1px solid var(--teal); outline-offset: -2px; }
 
 .fgroup-label { flex: 1; text-align: left; }
-.fgroup-badge { font-size: 10px; color: var(--teal, #5ecfc0); margin-right: 4px; }
+.fgroup-badge { font-size: 10px; color: var(--teal); margin-right: 4px; }
 .fgroup-arrow { font-size: 9px; transition: transform 180ms var(--ease); }
 .fgroup[data-open] .fgroup-arrow { transform: rotate(180deg); }
 
@@ -868,7 +886,16 @@ body.constellation .cc-constellation-only{display:block;margin-top:12px;
   transition: max-height 180ms var(--ease);
   padding: 0 8px;
 }
-.fgroup[data-open] .fgroup-body { max-height: 200px; }
+.fgroup[data-open] .fgroup-body {
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 6px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(232,177,90,.2) transparent;
+}
 
 /* ── Reading Panel: Instrument Readout ── */
 
@@ -1038,6 +1065,7 @@ body.constellation .cc-constellation-only{display:block;margin-top:12px;
   border-color: var(--teal);
   color: var(--bg);
 }
+.rp-shortlist-btn:focus-visible { outline: 1px solid var(--gold); outline-offset: 2px; }
 
 /* Close button */
 #rp-close {
@@ -1227,6 +1255,8 @@ body.constellation #track-zone {
   opacity: 0.4;
   cursor: not-allowed;
 }
+.rl-review:focus-visible,
+.rl-compare:focus-visible { outline: 1px solid var(--gold); outline-offset: 2px; }
 
 /* ── Review Mode Overlay ── */
 .review-mode {

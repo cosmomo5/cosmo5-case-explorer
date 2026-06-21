@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { ShortlistEntry, ShortlistStore } from '../data/shortlist-store';
 import { ShortlistTrack } from './shortlist-track';
+import type { ShortlistCardData } from './shortlist-track';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -151,19 +152,21 @@ describe('ShortlistTrack', () => {
     expect(container.children.length).toBeGreaterThan(0);
   });
 
-  it('uses getCaseLabel function when provided to display human-readable label', () => {
+  it('uses getCase function when provided to display client, sector, metric', () => {
     const { store, fire } = makeStore([]);
-    const getLabel = (id: string) => id === 'c1' ? 'Acme Corp' : id;
-    new ShortlistTrack(container, store, vi.fn(), getLabel);
+    const getCase = (id: string): ShortlistCardData | undefined =>
+      id === 'c1' ? { client: 'Acme Corp', sector: 'Media', metric: '+30%' } : undefined;
+    new ShortlistTrack(container, store, vi.fn(), getCase);
 
     fire([{ caseId: 'c1', nucleusKey: 'Media' }]);
 
     const card = container.querySelector('.rl-card') as HTMLElement;
-    const clientSpan = card.querySelector('.rl-client') as HTMLElement;
-    expect(clientSpan.textContent).toBe('Acme Corp');
+    expect(card.querySelector('.rl-client')?.textContent).toBe('Acme Corp');
+    expect(card.querySelector('.rl-sector')?.textContent).toBe('Media');
+    expect(card.querySelector('.rl-metric')?.textContent).toBe('+30%');
   });
 
-  it('falls back to caseId when no getCaseLabel provided', () => {
+  it('falls back to caseId when no getCase provided', () => {
     const { store, fire } = makeStore([]);
     new ShortlistTrack(container, store, vi.fn());
 
